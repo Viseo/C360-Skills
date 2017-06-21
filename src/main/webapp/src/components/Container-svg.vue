@@ -35,6 +35,8 @@
 <script>
   import CustomCircle from "./customcircle.vue"
   import CloseCross from "./CloseCross.vue"
+  import config from '../config/config'
+  import axios from 'axios'
 
   export default {
 //    name: 'container-svg',
@@ -63,18 +65,21 @@
     },
     methods: {
       removeLink(link){
-        this.$http.post('http://localhost:8083/api/removelink', link).then(
-          response => {
+          let self = this;
+        axios.post(config.server + '/api/removelink', link)
+          .then(function (response){
+
             console.log(response);
-            this.getAllLinks();
+            self.getAllLinks();
           }, response => {
             console.log(response);
           })
       },
       linkPositionX(){
-        if (this.selectedlink != '') {
-          var x1 = parseFloat(this.getPositionXById(this.selectedlink.skill1.id))-3;
-          var x2 = parseInt(this.getPositionXById(this.selectedlink.skill2.id))-3;
+        let self = this;
+        if (self.selectedlink != '') {
+          var x1 = parseFloat(self.getPositionXById(self.selectedlink.skill1.id))-3;
+          var x2 = parseInt(self.getPositionXById(self.selectedlink.skill2.id))-3;
           var total = (x1 + x2) / 2;
           return total
         }
@@ -82,9 +87,10 @@
           return 0
       },
       linkPositionY(){
+        let self = this;
         if (this.selectedlink != '') {
-          var y1 = parseInt(this.getPositionYById(this.selectedlink.skill1.id)) - 3;
-          var y2 = parseInt(this.getPositionYById(this.selectedlink.skill2.id)) - 3;
+          var y1 = parseInt(self.getPositionYById(self.selectedlink.skill1.id)) - 3;
+          var y2 = parseInt(self.getPositionYById(self.selectedlink.skill2.id)) - 3;
           var somme = y1+y2;
           return somme/2
         }
@@ -105,62 +111,65 @@
       },
 
       getPositionXById(id){
-        return this.waitForElementToDisplay(id,0,"cx");
+        let self = this;
+        return self.waitForElementToDisplay(id,0,"cx");
       },
 
       getPositionYById(id){
-       return this.waitForElementToDisplay(id,0,"cy");
+        let self = this;
+        return self.waitForElementToDisplay(id,0,"cy");
       },
       selectSkill(skill){
-        if (this.selectedSkill.skill1 == '')
-          this.selectedSkill.skill1 = skill;
+        let self = this;
+        if (self.selectedSkill.skill1 == '')
+          self.selectedSkill.skill1 = skill;
         else {
-          this.selectedSkill.skill2 = skill;
-          this.$http.post('http://localhost:8083/api/addlink', this.selectedSkill).then(
-          response => {
-                console.log(response);
-          }, response => {
-            console.log(response);
-          }).then(
-            function () {
-              this.selectedSkill = {
+          self.selectedSkill.skill2 = skill;
+          axios.post(config.server + '/api/addlink', self.selectedSkill)
+           .then( function () {
+              self.selectedSkill = {
                 skill1:'',
                 skill2:''
               };
-              this.getAllSkills();
-              this.getAllLinks();
+              self.getAllSkills();
+              self.getAllLinks();
             }
           );
         }
       },
       positionX(integ){
-          console.log()
-        return this.posX + ((integ) % 8) * 150;
+        let self = this;
+        console.log()
+        return self.posX + ((integ) % 8) * 150;
       },
       positionY(integ){
-        return this.posY + Math.floor((integ) / 8) * 150;
+        let self = this;
+        return self.posY + Math.floor((integ) / 8) * 150;
       },
       addCircle() {
-        if(this.label != '' && this.label != 'Nouvelle') {
-          this.addSkill();
-          this.text.push(this.text1);
-          this.newSkillClicked = false;
-          this.numberOfCircle++;
-          this.label = 'Nouvelle';
+        let self = this;
+        if(this.label != '' && self.label != 'Nouvelle') {
+          self.addSkill();
+          self.text.push(self.text1);
+          self.newSkillClicked = false;
+          self.numberOfCircle++;
+          self.label = 'Nouvelle';
         }
       },
       addSkill(){
-        var skill = {"label": this.label};
-        this.$http.post('http://localhost:8083/api/addskill/', skill).then(response => {
-          this.getAllSkills();
-        }, response => {
-          console.log(response);
-        });
+        let self = this;
+        var skill = {"label": self.label};
+        axios.post(config.server + '/api/addskill/', skill)
+          .then(function (response)
+          {
+          self.getAllSkills();
+        })
       },
       getAllSkills(){
-        this.$http.get("http://localhost:8083/api/skills/").then(response => {
-          this.skills = response.body;
-          this.skills.sort(function (a, b) {
+        let self = this;
+        axios.get(config.server + "/api/skills/").then(function (response){
+          self.skills = response.body;
+          self.skills.sort(function (a, b) {
             return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);
           });
         }, response => {
@@ -168,12 +177,13 @@
         });
       },
       getAllLinks(){
-        this.showCross=false;
-        this.$http.get("http://localhost:8083/api/links/").then(response => {
-          this.links = response.body;
-          if(this.selectedlink=='')
-              this.showCross =false;
-          this.links.sort(function (a, b) {
+        let self = this;
+        self.showCross=false;
+        axios.get(config.server + "/api/links/").then(function (response){
+          self.links = response.body;
+          if(self.selectedlink=='')
+            self.showCross =false;
+          self.links.sort(function (a, b) {
             return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);
           });
         }, response => {
