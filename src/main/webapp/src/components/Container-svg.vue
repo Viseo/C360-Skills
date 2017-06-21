@@ -1,8 +1,5 @@
 <template>
   <div>
-    <div class="header"><br>
-      <h1>Spike SVG</h1></div>
-
     <div class="svg-content" id="test">
       <b class="mybstyle">Administration des compétences</b>
       <hr class="myhrline">
@@ -36,7 +33,7 @@
 </template>
 
 <script>
-  import CustomCircle from "./customcircle"
+  import CustomCircle from "./customcircle.vue"
   import CloseCross from "./CloseCross.vue"
 
   export default {

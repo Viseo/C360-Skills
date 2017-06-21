@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import VueResource from 'vue-resource'
 import mainPage from '../components/pages/mainPage.vue'
+import addSkillsPage from '../components/pages/addSkillsPage.vue'
 import navigationMenu from '../components/layout/signInUpMenu.vue'
 
 Vue.use(VueResource);
@@ -23,6 +24,11 @@ export default new Router({
      {
        path: "/",
        redirect: "/login"
+     },
+     {
+       path: '/addSkills',
+       name: 'addSkills',
+       component: addSkillsPage
      }
    ]
  })

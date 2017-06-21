@@ -1,15 +1,16 @@
 <template>
   <div>
-  <HeaderSkills></HeaderSkills>
-  <router-view></router-view>
+    <HeaderSkills></HeaderSkills>
+    <ContainerSvg></ContainerSvg>
   </div>
 </template>
 
 <script>
 import HeaderSkills from '../layout/skillsHeader.vue'
+import ContainerSvg from '../Container-svg.vue'
 
   export default {
-    components: { HeaderSkills: HeaderSkills},
+    components: { HeaderSkills: HeaderSkills, ContainerSvg},
 
   }
 </script>
