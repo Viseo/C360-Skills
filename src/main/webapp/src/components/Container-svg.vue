@@ -39,6 +39,7 @@
   import axios from 'axios'
 
   export default {
+
 //    name: 'container-svg',
     data () {
       return {
@@ -53,8 +54,7 @@
         showCross : false,
         text: [],
         posX: 100,
-        posY: 100,
-        numberOfCircle: 0,
+        posY: 55,
         row: 0,
         links:[]
       }
@@ -148,7 +148,6 @@
           this.addSkill();
           this.text.push(this.text1);
           this.newSkillClicked = false;
-          this.numberOfCircle++;
           this.label = 'Nouvelle';
         }
       },
@@ -166,6 +165,9 @@
           this.skills.sort(function (a, b) {
             return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);
           });
+          console.log(this.positionY(this.skills.length));
+          document.getElementById("test").style.height = (this.positionY(this.skills.length) + 300 + (Math.floor(this.skills.length/8)*10)).toString()+"px";
+
         }, response => {
           console.log(response);
         });
@@ -191,11 +193,11 @@
 
 <style>
 
-  svg-content {
+  .svg-container {
     display: inline-block;
     position: relative;
     width: 100%;
-    padding-bottom: 100%;
+    /*padding-bottom: 100%;*/
     vertical-align: middle;
     overflow: hidden;
   }
