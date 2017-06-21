@@ -18,7 +18,7 @@
         <foreignObject v-show="newSkillClicked" :x="positionX(skills.length) - 44" :y="positionY(skills.length)-10">
           <div xmlns="http://www.w3.org/1999/xhtml">
             <form @submit.prevent="addCircle">
-            <input ref="inputCircle" id="inputCircle" @blur="hideInput"  style="width: 88px;text-align:center; border-color: rgba(0,0,0,0.52);" maxlength="10" type="text" v-model="label"/>
+            <input id="inputCircle" @blur="hideInput"  style="width: 88px;text-align:center; border-color: rgba(0,0,0,0.52);" maxlength="10" type="text" v-model="label"/>
             </form>
           </div>
         </foreignObject>
@@ -37,6 +37,7 @@
   import CloseCross from "./CloseCross.vue"
   import config from '../config/config'
   import axios from 'axios'
+  var $ = window.jQuery = require('jquery');
 
   export default {
 

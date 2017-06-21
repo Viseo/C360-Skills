@@ -35,7 +35,6 @@
                 <li class="dropdown">
                   <span id="navbar-app" class="col-lg-2 col-sm-2 col-md-2 glyphicon glyphicon-th dropdown-toggle"
                           data-toggle="dropdown" aria-hidden="true" href="#"></span>
-                    <span class="caret"></span>
 
                   <ul id="dropdown-app" class="dropdown-menu">
                     <li>
