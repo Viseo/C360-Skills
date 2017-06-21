@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="svg-content" id="test">
+    <div class="svg-container" id="svg-container">
       <b class="mybstyle">Administration des compétences</b>
       <hr class="myhrline">
       <svg version="1.1" viewBox="0 0 1250 1250" preserveAspectRatio="xMinYMin meet">
@@ -14,11 +14,11 @@
           <customCircle :id="skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="skill.label" stroke="red" fill="white"
                         @click="selectSkill(skill)"/>
         </g>
-        <customCircle @click="newSkillClicked = true;label=''":cx="positionX(skills.length)" :cy="positionY(skills.length)" :content="label" stroke="green" fill="white"/>
-        <foreignObject v-show="newSkillClicked" :x="positionX(skills.length) - 46" :y="positionY(skills.length)-7">
+        <customCircle @click="displayInput" :cx="positionX(skills.length)" :cy="positionY(skills.length)" :content="label" stroke="#09aa76" fill="white"/>
+        <foreignObject v-show="newSkillClicked" :x="positionX(skills.length) - 44" :y="positionY(skills.length)-10">
           <div xmlns="http://www.w3.org/1999/xhtml">
             <form @submit.prevent="addCircle">
-            <input @blur="newSkillClicked = false" style="width: 88px;text-align:center; border-color: rgba(0,0,0,0.52);" maxlength="10" type="text" v-model="label"/>
+            <input ref="inputCircle" id="inputCircle" @blur="hideInput"  style="width: 88px;text-align:center; border-color: rgba(0,0,0,0.52);" maxlength="10" type="text" v-model="label"/>
             </form>
           </div>
         </foreignObject>
@@ -64,6 +64,18 @@
       this.getAllLinks();
     },
     methods: {
+        displayInput() {
+          this.newSkillClicked = true;
+          this.label='';
+          setTimeout(function(){
+            $('#inputCircle').focus();
+          });
+        },
+        hideInput(){
+          this.newSkillClicked = false;
+          document.getElementById("inputCircle").removeAttribute("autofocus");
+
+        },
       removeLink(link){
         axios.post(config.server + '/api/removelink', link).then(
           response => {
@@ -166,7 +178,7 @@
             return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);
           });
           console.log(this.positionY(this.skills.length));
-          document.getElementById("test").style.height = (this.positionY(this.skills.length) + 300 + (Math.floor(this.skills.length/8)*10)).toString()+"px";
+          document.getElementById("svg-container").style.height = (this.positionY(this.skills.length) + 300 + (Math.floor(this.skills.length/8)*10)).toString()+"px";
 
         }, response => {
           console.log(response);
@@ -197,7 +209,6 @@
     display: inline-block;
     position: relative;
     width: 100%;
-    /*padding-bottom: 100%;*/
     vertical-align: middle;
     overflow: hidden;
   }
@@ -228,9 +239,7 @@
     margin: 0px 0px 25px 0px;
   }
 
-  .test {
-    animation: mymove 0.5s 1;
-  }
+
 
   hr.myhrline{
     border-top: 1px solid #8c8b8b;
@@ -241,6 +250,12 @@
   b.mybstyle {
     margin-left: 50px;
     margin-right: 50px;
+  }
+
+  input[type=text]:focus {
+    outline: none !important;
+    box-shadow: 0 0 5px #09aa76;
+    border: 1px solid #09aa76;
   }
 
   @keyframes mymove {
