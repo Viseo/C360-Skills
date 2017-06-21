@@ -4,6 +4,11 @@
       <b class="mybstyle">Administration des compétences</b>
       <hr class="myhrline">
       <svg version="1.1" viewBox="0 0 1250 1250"  class="svg-content">
+        <defs>
+          <filter id="blurMe">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="5"/>
+          </filter>
+        </defs>
         <g v-for="link in links">
           <line  @mouseover="selectedlink = link;showCross = true;" :x1="getPositionXById(link.skill1.id)"
                 :y1="getPositionYById(link.skill1.id)"
@@ -112,8 +117,10 @@
        return this.waitForElementToDisplay(id,0,"cy");
       },
       selectSkill(skill){
-        if (this.selectedSkill.skill1 == '')
+        if (this.selectedSkill.skill1 == '') {
           this.selectedSkill.skill1 = skill;
+          document.getElementById(skill.id).getElementsByTagName("circle")[0].setAttribute("filter", "url(#blurMe)");
+        }
         else {
           this.selectedSkill.skill2 = skill;
           this.$http.post('http://localhost:8083/api/addlink', this.selectedSkill).then(
@@ -123,6 +130,7 @@
             console.log(response);
           }).then(
             function () {
+              document.getElementById(this.selectedSkill.skill1.id).getElementsByTagName("circle")[0].removeAttribute("filter");
               this.selectedSkill = {
                 skill1:'',
                 skill2:''
