@@ -65,7 +65,7 @@
     },
     methods: {
       removeLink(link){
-        axios.post('http://localhost:8086/api/removelink', link).then(
+        axios.post(config.server + '/api/removelink', link).then(
           response => {
             console.log(response);
             this.getAllLinks();
@@ -119,7 +119,7 @@
           self.selectedSkill.skill1 = skill;
         else {
           self.selectedSkill.skill2 = skill;
-          axios.post('http://localhost:8086/api/addlink', self.selectedSkill).then(
+          axios.post(config.server + '/api/addlink', self.selectedSkill).then(
           response => {
                 console.log(response);
           }, response => {
@@ -154,14 +154,14 @@
       },
       addSkill(){
         var skill = {"label": this.label};
-        axios.post('http://localhost:8086/api/addskill/', skill).then(response => {
+        axios.post(config.server + '/api/addskill/', skill).then(response => {
           this.getAllSkills();
         }, response => {
           console.log(response);
         });
       },
       getAllSkills(){
-        axios.get("http://localhost:8086/api/skills/").then(response => {
+        axios.get(config.server + "/api/skills/").then(response => {
           this.skills = response.data;
           this.skills.sort(function (a, b) {
             return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);
@@ -172,7 +172,7 @@
       },
       getAllLinks(){
         this.showCross=false;
-        axios.get("http://localhost:8086/api/links/").then(response => {
+        axios.get(config.server + "/api/links/").then(response => {
           this.links = response.data;
           if(this.selectedlink=='')
               this.showCross =false;
