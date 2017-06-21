@@ -9,7 +9,11 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    collaborator: []
+    collaborator: [],
+    cx:"",
+    cy:"",
+    cx1:"",
+    cy1:""
   },
   actions: {
 
