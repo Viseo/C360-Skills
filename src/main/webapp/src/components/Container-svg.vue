@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="svg-content" id="test">
+    <div class="svg-container" id="test">
       <b class="mybstyle">Administration des compétences</b>
       <hr class="myhrline">
-      <svg version="1.1" viewBox="0 0 1250 1250" preserveAspectRatio="xMinYMin meet">
+      <svg version="1.1" viewBox="0 0 1250 1250"  class="svg-content">
         <g v-for="link in links">
           <line  @mouseover="selectedlink = link;showCross = true;" :x1="getPositionXById(link.skill1.id)"
                 :y1="getPositionYById(link.skill1.id)"
@@ -11,10 +11,10 @@
                 :y2="getPositionYById(link.skill2.id)" style="stroke:rgba(0,0,0,0.52);stroke-width:3"/>
         </g>
         <g v-for="(skill,i) in skills">
-          <customCircle :id="skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="skill.label" stroke="red" fill="white"
+          <customCircle :id="skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="skill.label" stroke="#E03559" fill="white"
                         @click="selectSkill(skill)"/>
         </g>
-        <customCircle @click="newSkillClicked = true;label=''":cx="positionX(skills.length)" :cy="positionY(skills.length)" :content="label" stroke="green" fill="white"/>
+        <customCircle @click="newSkillClicked = true;label=''":cx="positionX(skills.length)" :cy="positionY(skills.length)" :content="label" stroke="#09aa76" fill="white"/>
         <foreignObject v-show="newSkillClicked" :x="positionX(skills.length) - 46" :y="positionY(skills.length)-7">
           <div xmlns="http://www.w3.org/1999/xhtml">
             <form @submit.prevent="addCircle">
@@ -24,7 +24,7 @@
         </foreignObject>
         <circle style="cursor: pointer" r="10" :cx="positionX(skills.length) - 30" :cy="positionY(skills.length) + 65" fill="orange"></circle>
         <text @click="newSkillClicked = false; label = 'Nouvelle'" text-anchor="middle" :x="positionX(skills.length) - 30"  :y="positionY(skills.length) + 70" style="fill: white;cursor: pointer">X</text>
-        <circle style="cursor: pointer" r="10" :cx="positionX(skills.length) + 30" :cy="positionY(skills.length) + 65" fill="green"></circle>
+        <circle style="cursor: pointer" r="10" :cx="positionX(skills.length) + 30" :cy="positionY(skills.length) + 65" fill="#09aa76"></circle>
         <text @click="addCircle" text-anchor="middle" :x="positionX(skills.length) + 30"  :y="positionY(skills.length) + 70" style="fill: white;cursor: pointer">✔</text>
         <CloseCross v-show="showCross" style="cursor: pointer;"@click="removeLink(selectedlink)":x1="linkPositionX()" :y1="linkPositionY()"></CloseCross>
       </svg>
@@ -188,7 +188,7 @@
 
 <style>
 
-  svg-content {
+  svg-container {
     display: inline-block;
     position: relative;
     width: 100%;
