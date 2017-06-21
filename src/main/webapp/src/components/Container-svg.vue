@@ -1,14 +1,9 @@
 <template>
   <div>
-    <div class="svg-container" id="test">
+    <div class="svg-content" id="test">
       <b class="mybstyle">Administration des compétences</b>
       <hr class="myhrline">
-      <svg version="1.1" viewBox="0 0 1250 1250"  class="svg-content">
-        <defs>
-          <filter id="blurMe">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="5"/>
-          </filter>
-        </defs>
+      <svg version="1.1" viewBox="0 0 1250 1250" preserveAspectRatio="xMinYMin meet">
         <g v-for="link in links">
           <line  @mouseover="selectedlink = link;showCross = true;" :x1="getPositionXById(link.skill1.id)"
                 :y1="getPositionYById(link.skill1.id)"
@@ -16,10 +11,10 @@
                 :y2="getPositionYById(link.skill2.id)" style="stroke:rgba(0,0,0,0.52);stroke-width:3"/>
         </g>
         <g v-for="(skill,i) in skills">
-          <customCircle :id="skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="skill.label" stroke="#E03559" fill="white"
+          <customCircle :id="skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="skill.label" stroke="red" fill="white"
                         @click="selectSkill(skill)"/>
         </g>
-        <customCircle @click="newSkillClicked = true;label=''":cx="positionX(skills.length)" :cy="positionY(skills.length)" :content="label" stroke="#09aa76" fill="white"/>
+        <customCircle @click="newSkillClicked = true;label=''":cx="positionX(skills.length)" :cy="positionY(skills.length)" :content="label" stroke="green" fill="white"/>
         <foreignObject v-show="newSkillClicked" :x="positionX(skills.length) - 46" :y="positionY(skills.length)-7">
           <div xmlns="http://www.w3.org/1999/xhtml">
             <form @submit.prevent="addCircle">
@@ -29,7 +24,7 @@
         </foreignObject>
         <circle style="cursor: pointer" r="10" :cx="positionX(skills.length) - 30" :cy="positionY(skills.length) + 65" fill="orange"></circle>
         <text @click="newSkillClicked = false; label = 'Nouvelle'" text-anchor="middle" :x="positionX(skills.length) - 30"  :y="positionY(skills.length) + 70" style="fill: white;cursor: pointer">X</text>
-        <circle style="cursor: pointer" r="10" :cx="positionX(skills.length) + 30" :cy="positionY(skills.length) + 65" fill="#09aa76"></circle>
+        <circle style="cursor: pointer" r="10" :cx="positionX(skills.length) + 30" :cy="positionY(skills.length) + 65" fill="green"></circle>
         <text @click="addCircle" text-anchor="middle" :x="positionX(skills.length) + 30"  :y="positionY(skills.length) + 70" style="fill: white;cursor: pointer">✔</text>
         <CloseCross v-show="showCross" style="cursor: pointer;"@click="removeLink(selectedlink)":x1="linkPositionX()" :y1="linkPositionY()"></CloseCross>
       </svg>
@@ -70,21 +65,18 @@
     },
     methods: {
       removeLink(link){
-          let self = this;
-        axios.post(config.server + '/api/removelink', link)
-          .then(function (response){
-
+        axios.post('http://localhost:8086/api/removelink', link).then(
+          response => {
             console.log(response);
-            self.getAllLinks();
+            this.getAllLinks();
           }, response => {
             console.log(response);
           })
       },
       linkPositionX(){
-        let self = this;
-        if (self.selectedlink != '') {
-          var x1 = parseFloat(self.getPositionXById(self.selectedlink.skill1.id))-3;
-          var x2 = parseInt(self.getPositionXById(self.selectedlink.skill2.id))-3;
+        if (this.selectedlink != '') {
+          var x1 = parseFloat(this.getPositionXById(this.selectedlink.skill1.id))-3;
+          var x2 = parseInt(this.getPositionXById(this.selectedlink.skill2.id))-3;
           var total = (x1 + x2) / 2;
           return total
         }
@@ -92,10 +84,9 @@
           return 0
       },
       linkPositionY(){
-        let self = this;
         if (this.selectedlink != '') {
-          var y1 = parseInt(self.getPositionYById(self.selectedlink.skill1.id)) - 3;
-          var y2 = parseInt(self.getPositionYById(self.selectedlink.skill2.id)) - 3;
+          var y1 = parseInt(this.getPositionYById(this.selectedlink.skill1.id)) - 3;
+          var y2 = parseInt(this.getPositionYById(this.selectedlink.skill2.id)) - 3;
           var somme = y1+y2;
           return somme/2
         }
@@ -116,13 +107,11 @@
       },
 
       getPositionXById(id){
-        let self = this;
-        return self.waitForElementToDisplay(id,0,"cx");
+        return this.waitForElementToDisplay(id,0,"cx");
       },
 
       getPositionYById(id){
-        let self = this;
-        return self.waitForElementToDisplay(id,0,"cy");
+       return this.waitForElementToDisplay(id,0,"cy");
       },
       selectSkill(skill){
         let self = this;
@@ -130,8 +119,13 @@
           self.selectedSkill.skill1 = skill;
         else {
           self.selectedSkill.skill2 = skill;
-          axios.post(config.server + '/api/addlink', self.selectedSkill)
-           .then( function () {
+          axios.post('http://localhost:8086/api/addlink', self.selectedSkill).then(
+          response => {
+                console.log(response);
+          }, response => {
+            console.log(response);
+          }).then(
+            function () {
               self.selectedSkill = {
                 skill1:'',
                 skill2:''
@@ -143,38 +137,33 @@
         }
       },
       positionX(integ){
-        let self = this;
-        console.log()
-        return self.posX + ((integ) % 8) * 150;
+          console.log()
+        return this.posX + ((integ) % 8) * 150;
       },
       positionY(integ){
-        let self = this;
-        return self.posY + Math.floor((integ) / 8) * 150;
+        return this.posY + Math.floor((integ) / 8) * 150;
       },
       addCircle() {
-        let self = this;
-        if(this.label != '' && self.label != 'Nouvelle') {
-          self.addSkill();
-          self.text.push(self.text1);
-          self.newSkillClicked = false;
-          self.numberOfCircle++;
-          self.label = 'Nouvelle';
+        if(this.label != '' && this.label != 'Nouvelle') {
+          this.addSkill();
+          this.text.push(this.text1);
+          this.newSkillClicked = false;
+          this.numberOfCircle++;
+          this.label = 'Nouvelle';
         }
       },
       addSkill(){
-        let self = this;
-        var skill = {"label": self.label};
-        axios.post(config.server + '/api/addskill/', skill)
-          .then(function (response)
-          {
-          self.getAllSkills();
-        })
+        var skill = {"label": this.label};
+        axios.post('http://localhost:8086/api/addskill/', skill).then(response => {
+          this.getAllSkills();
+        }, response => {
+          console.log(response);
+        });
       },
       getAllSkills(){
-        let self = this;
-        axios.get(config.server + "/api/skills/").then(function (response){
-          self.skills = response.body;
-          self.skills.sort(function (a, b) {
+        axios.get("http://localhost:8086/api/skills/").then(response => {
+          this.skills = response.data;
+          this.skills.sort(function (a, b) {
             return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);
           });
         }, response => {
@@ -182,13 +171,12 @@
         });
       },
       getAllLinks(){
-        let self = this;
-        self.showCross=false;
-        axios.get(config.server + "/api/links/").then(function (response){
-          self.links = response.body;
-          if(self.selectedlink=='')
-            self.showCross =false;
-          self.links.sort(function (a, b) {
+        this.showCross=false;
+        axios.get("http://localhost:8086/api/links/").then(response => {
+          this.links = response.data;
+          if(this.selectedlink=='')
+              this.showCross =false;
+          this.links.sort(function (a, b) {
             return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);
           });
         }, response => {
@@ -203,7 +191,7 @@
 
 <style>
 
-  svg-container {
+  svg-content {
     display: inline-block;
     position: relative;
     width: 100%;
