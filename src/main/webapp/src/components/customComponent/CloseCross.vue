@@ -12,7 +12,7 @@
 </template>
 
 <script>
-  import store from "../vuex/store"
+  import store from "../../vuex/store"
 
   export default {
     props: ["x1", "y1"],
