@@ -108,8 +108,8 @@
 </template>
 
 <script>
-  import customInput from '../customInput/customInput.vue'
-  import passwordInput from '../customInput/passwordInput.vue'
+  import customInput from '../customComponent/customInput.vue'
+  import passwordInput from '../customComponent/passwordInput.vue'
   import config from '../../config/config'
   import axios from 'axios'
 

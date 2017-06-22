@@ -6,7 +6,7 @@
 </template>
 
 <script>
-  import store from "../vuex/store"
+  import store from "../../vuex/store"
 
   export default {
     props:["cx","cy", "content","fill","stroke","filter"],
