@@ -18,6 +18,19 @@
         <g v-for="(skill,i) in skills">
           <customCircle :id="skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="skill.label" stroke="#E03559" fill="white"
                         @click="selectSkill(skill)"/>
+          <foreignObject v-show="selectedSkill.skill1.id == skill.id" :x="positionX(i) - 44" :y="positionY(i)-10">
+            <div xmlns="http://www.w3.org/1999/xhtml">
+              <form @submit.prevent="modifyCircle">
+                <input id="inputCircle" maxlength="10" type="text" v-model="selectedSkill.skill1.label"/>
+              </form>
+            </div>
+          </foreignObject>
+          <circle v-show="showIcon(skill.id)" style="cursor: pointer" r="10" :cx="positionX(i)" :cy="positionY(i) + 65" fill="orange"></circle>
+          <text v-show="showIcon(skill.id)" text-anchor="middle" :x="positionX(i)"  :y="positionY(i) + 70" style="fill: white;cursor: pointer">X</text>
+          <circle v-show="showIcon(skill.id)" style="cursor: pointer" r="10" :cx="positionX(i) + 30" :cy="positionY(i) + 65" fill="#09aa76"></circle>
+          <text v-show="showIcon(skill.id)" text-anchor="middle" :x="positionX(i) + 30"  :y="positionY(i) + 70" style="fill: white;cursor: pointer">✔</text>
+          <circle v-show="showIcon(skill.id)" style="cursor: pointer" r="10" :cx="positionX(i) - 30" :cy="positionY(i) + 65" fill="#a90909"></circle>
+          <text v-show="showIcon(skill.id)" text-anchor="middle" :x="positionX(i) - 30"  :y="positionY(i) + 70" style="fill: white;cursor: pointer">&#128465</text>
         </g>
         <customCircle @click="displayInput" :cx="positionX(skills.length)" :cy="positionY(skills.length)" :content="label" stroke="#09aa76" fill="white"/>
         <foreignObject v-show="newSkillClicked" :x="positionX(skills.length) - 44" :y="positionY(skills.length)-10">
@@ -55,6 +68,7 @@
         },
         skills: [],
         selectedlink: '',
+        clickOnSkill: false,
         label: 'Nouvelle',
         newSkillClicked:false,
         showCross : false,
@@ -208,6 +222,15 @@
         }, response => {
           console.log(response);
         });
+      },
+
+      showIcon(skillId){
+          if(this.selectedSkill.skill1.id == skillId){
+              return true;
+          }
+          else{
+              return false;
+          }
       }
     },
     components: {customCircle: CustomCircle, CloseCross: CloseCross}
