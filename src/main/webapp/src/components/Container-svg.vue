@@ -2,6 +2,7 @@
   <div>
     <div class="svg-container" id="svg-container">
       <b class="mybstyle">Administration des compétences</b>
+      <span v-show="!hasNotAlreadyExisted" style="color: red;text-align: center">Cette compétence existe déjà.</span>
       <hr class="myhrline">
       <svg version="1.1" viewBox="0 0 1250 1250" preserveAspectRatio="xMinYMin meet">
         <g v-for="link in links">
@@ -57,7 +58,8 @@
         posX: 100,
         posY: 55,
         row: 0,
-        links:[]
+        links:[],
+        hasNotAlreadyExisted:true
       }
     },
     mounted(){
@@ -168,6 +170,8 @@
         var skill = {"label": this.label};
         axios.post(config.server + '/api/addskill/', skill).then(response => {
           this.getAllSkills();
+          this.hasNotAlreadyExisted = response.data;
+          setTimeout(function(){ this.hasNotAlreadyExisted = true; }.bind(this), 2000);
         }, response => {
           console.log(response);
         });

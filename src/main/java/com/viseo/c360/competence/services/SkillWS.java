@@ -33,9 +33,13 @@ public class SkillWS {
     @ResponseBody
     public Boolean addSkill(@RequestBody SkillDescription skillDescription){
         try {
-            skillDescription.setCollaborators(new ArrayList<>());
-            skillDAO.addSkill(new DescriptionToSkill().convert(skillDescription));
-            return true;
+            if(!skillDAO.getSkillByLabel(skillDescription.getLabel())){
+                skillDescription.setCollaborators(new ArrayList<>());
+                skillDAO.addSkill(new DescriptionToSkill().convert(skillDescription));
+                return true;
+            }else{
+                return false;
+            }
         } catch (PersistenceException pe) {
             UniqueFieldErrors uniqueFieldErrors = exceptionUtil.getUniqueFieldError(pe);
             if (uniqueFieldErrors == null) throw new C360Exception(pe);

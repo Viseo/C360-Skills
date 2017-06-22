@@ -4,7 +4,8 @@ public enum UniqueFieldErrors {
     COLLABORATOR_ID_NUMBER_PERSISTED("personnalIdNumber"),
     COLLABORATOR_EMAIL_PERSISTED("email"),
     TRAINING_TITLE("trainingTitle"),
-    TOPIC_NAME("name");
+    TOPIC_NAME("name"),
+    SKILL_LABEL("label");
 
     String field;
 
