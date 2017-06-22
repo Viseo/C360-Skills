@@ -16,20 +16,20 @@
                 :y2="getPositionYById(link.skill2.id)" style="stroke:rgba(0,0,0,0.52);stroke-width:3"/>
         </g>
         <g v-for="(skill,i) in skills">
-          <customCircle :id="skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="skill.label" stroke="red" fill="white"
+          <customCircle :id="skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="skill.label" stroke="#E03559" fill="white"
                         @click="selectSkill(skill)"/>
         </g>
         <customCircle @click="displayInput" :cx="positionX(skills.length)" :cy="positionY(skills.length)" :content="label" stroke="#09aa76" fill="white"/>
         <foreignObject v-show="newSkillClicked" :x="positionX(skills.length) - 44" :y="positionY(skills.length)-10">
           <div xmlns="http://www.w3.org/1999/xhtml">
             <form @submit.prevent="addCircle">
-            <input id="inputCircle" @blur="hideInput"  style="width: 88px;text-align:center; border-color: rgba(0,0,0,0.52);" maxlength="10" type="text" v-model="label"/>
+            <input id="inputCircle" @blur="hideInput" maxlength="10" type="text" v-model="label"/>
             </form>
           </div>
         </foreignObject>
         <circle style="cursor: pointer" r="10" :cx="positionX(skills.length) - 30" :cy="positionY(skills.length) + 65" fill="orange"></circle>
         <text @click="newSkillClicked = false; label = 'Nouvelle'" text-anchor="middle" :x="positionX(skills.length) - 30"  :y="positionY(skills.length) + 70" style="fill: white;cursor: pointer">X</text>
-        <circle style="cursor: pointer" r="10" :cx="positionX(skills.length) + 30" :cy="positionY(skills.length) + 65" fill="green"></circle>
+        <circle style="cursor: pointer" r="10" :cx="positionX(skills.length) + 30" :cy="positionY(skills.length) + 65" fill="#09aa76"></circle>
         <text @click="addCircle" text-anchor="middle" :x="positionX(skills.length) + 30"  :y="positionY(skills.length) + 70" style="fill: white;cursor: pointer">✔</text>
         <CloseCross v-show="showCross" style="cursor: pointer;"@click="removeLink(selectedlink)":x1="linkPositionX()" :y1="linkPositionY()"></CloseCross>
       </svg>
@@ -78,6 +78,9 @@
           });
         },
         hideInput(){
+          if(this.label == "") {
+              this.label = "Nouvelle";
+          }
           this.newSkillClicked = false;
           document.getElementById("inputCircle").removeAttribute("autofocus");
 
@@ -93,8 +96,8 @@
       },
       linkPositionX(){
         if (this.selectedlink != '') {
-          var x1 = parseFloat(this.getPositionXById(this.selectedlink.skill1.id))-3;
-          var x2 = parseInt(this.getPositionXById(this.selectedlink.skill2.id))-3;
+          var x1 = parseFloat(this.getPositionXById(this.selectedlink.skill1.id))-6;
+          var x2 = parseInt(this.getPositionXById(this.selectedlink.skill2.id))-6;
           var total = (x1 + x2) / 2;
           return total
         }
@@ -103,8 +106,8 @@
       },
       linkPositionY(){
         if (this.selectedlink != '') {
-          var y1 = parseInt(this.getPositionYById(this.selectedlink.skill1.id)) - 3;
-          var y2 = parseInt(this.getPositionYById(this.selectedlink.skill2.id)) - 3;
+          var y1 = parseInt(this.getPositionYById(this.selectedlink.skill1.id)) - 5;
+          var y2 = parseInt(this.getPositionYById(this.selectedlink.skill2.id)) - 5;
           var somme = y1+y2;
           return somme/2
         }
@@ -133,7 +136,7 @@
       },
       selectSkill(skill){
         let self = this;
-        if (self.selectedSkill.skill1 == '') {
+        if (self.selectedSkill.skill1 == ''){
           self.selectedSkill.skill1 = skill;
           document.getElementById(skill.id).getElementsByTagName("circle")[0].setAttribute("filter", "url(#blurMe)");
         }
@@ -261,18 +264,14 @@
     margin-right: 50px;
   }
 
-  input[type=text]:focus {
+  input[type=text]#inputCircle:focus {
     outline: none !important;
-    box-shadow: 0 0 5px #09aa76;
-    border: 1px solid #09aa76;
+    border:none;
   }
 
-  @keyframes mymove {
-    from {
-      opacity: 0
-    }
-    to {
-      opacity: 1
-    }
+  #inputCircle {
+    width: 88px;
+    text-align:center;
+    border:none;
   }
 </style>
