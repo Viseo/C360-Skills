@@ -89,8 +89,8 @@
       },
       linkPositionX(){
         if (this.selectedlink != '') {
-          var x1 = parseFloat(this.getPositionXById(this.selectedlink.skill1.id))-3;
-          var x2 = parseInt(this.getPositionXById(this.selectedlink.skill2.id))-3;
+          var x1 = parseFloat(this.getPositionXById(this.selectedlink.skill1.id))-6;
+          var x2 = parseInt(this.getPositionXById(this.selectedlink.skill2.id))-6;
           var total = (x1 + x2) / 2;
           return total
         }
@@ -99,8 +99,8 @@
       },
       linkPositionY(){
         if (this.selectedlink != '') {
-          var y1 = parseInt(this.getPositionYById(this.selectedlink.skill1.id)) - 3;
-          var y2 = parseInt(this.getPositionYById(this.selectedlink.skill2.id)) - 3;
+          var y1 = parseInt(this.getPositionYById(this.selectedlink.skill1.id)) - 5;
+          var y2 = parseInt(this.getPositionYById(this.selectedlink.skill2.id)) - 5;
           var somme = y1+y2;
           return somme/2
         }
