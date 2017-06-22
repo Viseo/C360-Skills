@@ -6,7 +6,7 @@
       <svg version="1.1" viewBox="0 0 1250 1250" preserveAspectRatio="xMinYMin meet">
         <defs>
           <filter id="blurMe">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="5"/>
+            <feGaussianBlur in="SourceGraphic" stdDeviation="2"/>
           </filter>
         </defs>
         <g v-for="link in links">
