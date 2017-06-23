@@ -66,6 +66,7 @@
 
 <script>
   import config from '../../config/config'
+  import router from '../../config/router'
   import axios from 'axios'
   import * as Vuex from "vuex";
 
@@ -101,17 +102,19 @@
 
     },
     methods: {
-        login(){
-          this.$store.dispatch("login", {
-                email: this.user.email,
-              password: this.user.password,
-            }).then(() =>{
-            this.$router.push("/addSkills")
-          }),
+
+      login(){
+        this.$store.dispatch("login", {
+          email: this.user.email,
+          password: this.user.password,
+        }).then(() => {
+          this.$router.push("/addSkills")
+        }),
 
           axios.post(config.server + "/api/user", this.userToRegister);
 
-        },
+      },
+    },
 
 
 //      handleCookie(token) {
@@ -204,32 +207,32 @@
         )
       },
 
-//      sendInformationToCookie(){
-//        let self = this;
-//        axios.get(config.server + "/api/collaborateurs").then(
-//          function (response) {
-//            self.allUsers = response.data;
-//          },
-//          function (response) {
-//            console.log("Error: ", response);
-//            console.error(response);
-//          }
-//        ).then(
-//          function () {
-//            for (let tmp in self.allUsers) {
-//              if (self.email == self.allUsers[tmp].email) {
-//                self.emailToSend = self.allUsers[tmp].email;
-//                self.passwordToSend = self.allUsers[tmp].password;
-//                self.idToSend = self.allUsers[tmp].id;
-//                self.lastNameToSend = self.allUsers[tmp].lastName;
-//                self.firstNameToSend = self.allUsers[tmp].firstName;
-//                self.isNotNewEmail = true;
-//                break;
-//              }
-//            }
-//          }
-//        )
-//     },
+      sendInformationToCookie(){
+        let self = this;
+        axios.get(config.server + "/api/collaborateurs").then(
+          function (response) {
+            self.allUsers = response.data;
+          },
+          function (response) {
+            console.log("Error: ", response);
+            console.error(response);
+          }
+        ).then(
+          function () {
+            for (let tmp in self.allUsers) {
+              if (self.email == self.allUsers[tmp].email) {
+                self.emailToSend = self.allUsers[tmp].email;
+                self.passwordToSend = self.allUsers[tmp].password;
+                self.idToSend = self.allUsers[tmp].id;
+                self.lastNameToSend = self.allUsers[tmp].lastName;
+                self.firstNameToSend = self.allUsers[tmp].firstName;
+                self.isNotNewEmail = true;
+                break;
+              }
+            }
+          }
+        )
+     },
 
       VerifyEmailFromDatabase(){
         let self = this;
@@ -246,7 +249,7 @@
           }
         }
       }
-    }
+
   }
 </script>
  <style>
