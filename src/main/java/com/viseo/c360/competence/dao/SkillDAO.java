@@ -41,7 +41,7 @@ public class SkillDAO {
 
     @Transactional
     public Skill removeSkill(Skill skill) throws PersistenceException{
-        daoFacade.executeRequest("Delete from Link l where l.skill1 =:skill or l.skill2 =:skill",param("skill",skill));
+        daoFacade.executeRequest("Delete from Link l where l.skill1.id =:skill or l.skill2.id =:skill",param("skill",skill.getId()));
         daoFacade.flush();
         daoFacade.remove(skill);
         daoFacade.flush();

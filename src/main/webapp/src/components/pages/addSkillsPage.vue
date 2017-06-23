@@ -20,15 +20,15 @@
                         @click="selectSkill(skill)"/>
           <foreignObject v-show="selectedSkill.skill1.id == skill.id" :x="positionX(i) - 44" :y="positionY(i)-10">
             <div xmlns="http://www.w3.org/1999/xhtml">
-              <form @submit.prevent="modifyCircle">
+              <form @submit.prevent="updateSkill">
                 <input id="inputCircle" maxlength="10" type="text" v-model="selectedSkill.skill1.label"/>
               </form>
             </div>
           </foreignObject>
-          <circle v-show="showIcon(skill.id)" style="cursor: pointer" r="10" :cx="positionX(i)" :cy="positionY(i) + 65" fill="orange"></circle>
-          <text v-show="showIcon(skill.id)" text-anchor="middle" :x="positionX(i)"  :y="positionY(i) + 70" style="fill: white;cursor: pointer">X</text>
-          <circle v-show="showIcon(skill.id)" style="cursor: pointer" r="10" :cx="positionX(i) + 30" :cy="positionY(i) + 65" fill="#09aa76"></circle>
-          <text v-show="showIcon(skill.id)" text-anchor="middle" :x="positionX(i) + 30"  :y="positionY(i) + 70" style="fill: white;cursor: pointer">✔</text>
+          <circle @click="cancelUpdate()" v-show="showIcon(skill.id)" style="cursor: pointer" r="10" :cx="positionX(i)" :cy="positionY(i) + 65" fill="orange"></circle>
+          <text @click="cancelUpdate()" v-show="showIcon(skill.id)" text-anchor="middle" :x="positionX(i)"  :y="positionY(i) + 70" style="fill: white;cursor: pointer">X</text>
+          <circle @click="updateSkill(selectedSkill.skill1)" v-show="showIcon(skill.id)" style="cursor: pointer" r="10" :cx="positionX(i) + 30" :cy="positionY(i) + 65" fill="#09aa76"></circle>
+          <text @click="updateSkill(selectedSkill.skill1)" v-show="showIcon(skill.id)" text-anchor="middle" :x="positionX(i) + 30"  :y="positionY(i) + 70" style="fill: white;cursor: pointer">✔</text>
           <circle @click="removeSkill(selectedSkill.skill1)" v-show="showIcon(skill.id)" style="cursor: pointer" r="10" :cx="positionX(i) - 30" :cy="positionY(i) + 65" fill="#a90909"></circle>
           <text @click="removeSkill(selectedSkill.skill1)" v-show="showIcon(skill.id)" text-anchor="middle" :x="positionX(i) - 30"  :y="positionY(i) + 70" style="fill: white;cursor: pointer">&#128465</text>
         </g>
@@ -68,6 +68,7 @@
         },
         skills: [],
         selectedlink: '',
+        skillOldValue:'',
         clickOnSkill: false,
         label: 'Nouvelle',
         newSkillClicked:false,
@@ -113,9 +114,16 @@
           response => {
             console.log(response);
             this.getAllSkills();
-          }, response => {
+            this.getAllLinks();
+            this.selectedSkill = {
+              skill1:'',
+              skill2:''
+            };          }, response => {
             console.log(response);
-          })
+            this.selectedSkill = {
+              skill1:'',
+              skill2:''
+            };          })
       },
       linkPositionX(){
         if (this.selectedlink != '') {
@@ -158,12 +166,13 @@
        return this.waitForElementToDisplay(id,0,"cy");
       },
       selectSkill(skill){
+          this.skillOldValue = skill.label;
         let self = this;
         if (self.selectedSkill.skill1 == ''){
           self.selectedSkill.skill1 = skill;
           document.getElementById(skill.id).getElementsByTagName("circle")[0].setAttribute("filter", "url(#blurMe)");
         }
-        else {
+        else if(skill != self.selectedSkill.skill1){
           self.selectedSkill.skill2 = skill;
           axios.post(config.server + '/api/addlink', self.selectedSkill).then(
           response => {
@@ -205,6 +214,34 @@
         }, response => {
           console.log(response);
         });
+      },
+      updateSkill(skill){
+        axios.put(config.server + '/api/updateskill', skill).then(
+          response => {
+            console.log(response);
+            this.selectedSkill = {
+              skill1:'',
+              skill2:''
+            };
+            this.getAllSkills();
+            this.getAllLinks();
+
+          }, response => {
+            console.log(response);
+          });
+
+      },
+      cancelUpdate(){
+          this.hideInput()
+          for(var i =0; i< this.skills.length;i++){
+              if(this.skills[i].id == this.selectedSkill.skill1.id){
+                this.selectedSkill.skill1.label = this.skillOldValue;
+
+              }
+
+          }
+        document.getElementById(this.selectedSkill.skill1.id).getElementsByTagName("circle")[0].removeAttribute("filter");
+
       },
       getAllSkills(){
         axios.get(config.server + "/api/skills/").then(response => {
