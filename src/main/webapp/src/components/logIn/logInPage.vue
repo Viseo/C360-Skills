@@ -53,8 +53,9 @@
       <div class="form-group">
         <div class="row">
           <div class="col-xs-12 col-xm-12 col-md-12 cold-lg-12 ">
+
             <button ref="submitConnexion" type="submit" name="register-submit" id="register-submit"
-                    tabindex="4" class="form-control btn btn-primary" @click="sendInformationToCookie()">Se connecter
+                    tabindex="4" class="form-control btn btn-primary" @click="login()">Se connecter
             </button>
           </div>
         </div>
@@ -65,7 +66,9 @@
 
 <script>
   import config from '../../config/config'
+  import router from '../../config/router'
   import axios from 'axios'
+  import * as Vuex from "vuex";
 
   export default {
       name: 'connexion-form',
@@ -94,20 +97,36 @@
           firstNameToSend: ''
         }
       },
-    mounted: function () {
+
+    computed:{
+
     },
     methods: {
 
-      handleCookie(token) {
-        if (this.stayConnected) {
-          document.cookie = "token=" + token + ";expires=Fri, 31 Dec 9999 23:59:59 GMT";
-          document.cookie = "stayconnected=" + this.stayConnected + ";expires=Fri, 31 Dec 9999 23:59:59 GMT";
-        }
-        else {
-          document.cookie = "token=" + token;
-          document.cookie = "stayconnected=" + this.stayConnected;
-        }
+      login(){
+        this.$store.dispatch("login", {
+          email: this.user.email,
+          password: this.user.password,
+        }).then(() => {
+          this.$router.push("/addSkills")
+        }),
+
+          axios.post(config.server + "/api/user", this.userToRegister);
+
       },
+    },
+
+
+//      handleCookie(token) {
+//        if (this.stayConnected) {
+//          document.cookie = "token=" + token + ";expires=Fri, 31 Dec 9999 23:59:59 GMT";
+//          document.cookie = "stayconnected=" + this.stayConnected + ";expires=Fri, 31 Dec 9999 23:59:59 GMT";
+//        }
+//        else {
+//          document.cookie = "token=" + token;
+//          document.cookie = "stayconnected=" + this.stayConnected;
+//        }
+//      },
 
       showPopupFn() {
         if (this.email == '') {
@@ -136,30 +155,30 @@
           this.user.email = this.email;
           this.user.password = this.password;
           this.userToRegister = JSON.parse(JSON.stringify(this.user));
-          this.verifyUserByDatabase();
+          this.login();
         }
       },
 
-      verifyUserByDatabase(){
-        let connectUserSuccess = (userPersistedToken) => {
-          this.handleCookie(userPersistedToken.data['userConnected']);
-          if (typeof userPersistedToken.data['userConnected'] != 'undefined') {
-            if (jwt_decode(userPersistedToken.data['userConnected']).roles) {
-              this.goTo('addTrainingTopic');
-            }
-            else
-              this.goTo('registerTrainingCollaborator');
-          }
-        };
-
-        let connectUserError = () => {
-          this.password = "";
-          this.user.password = "";
-          this.isErrorAuthentification = true;
-        };
-
-        axios.post(config.server + "/api/user", this.userToRegister, connectUserSuccess, connectUserError);
-      },
+//      verifyUserByDatabase(){
+//        let connectUserSuccess = (userPersistedToken) => {
+//          this.handleCookie(userPersistedToken.data['userConnected']);
+//          if (typeof userPersistedToken.data['userConnected'] != 'undefined') {
+//            if (jwt_decode(userPersistedToken.data['userConnected']).roles) {
+//              this.goTo('addTrainingTopic');
+//            }
+//            else
+//              this.goTo('registerTrainingCollaborator');
+//          }
+//        };
+//
+//        let connectUserError = () => {
+//          this.password = "";
+//          this.user.password = "";
+//          this.isErrorAuthentification = true;
+//        };
+//
+//        axios.post(config.server + "/api/user", this.userToRegister, connectUserSuccess, connectUserError);
+//     },
 
       gatherUsersFromDatabaseToVerify(){
           let self = this;
@@ -230,7 +249,7 @@
           }
         }
       }
-    }
+
   }
 </script>
  <style>

@@ -1,11 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import VueResource from 'vue-resource'
 import mainPage from '../components/customComponent/mainPage.vue'
 import containerSVG from '../components/pages/addSkillsPage.vue'
 import navigationMenu from '../components/layout/signInUpMenu.vue'
 
-Vue.use(VueResource);
 Vue.use(Router);
 
 export default new Router({
