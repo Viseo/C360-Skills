@@ -29,8 +29,8 @@
           <text v-show="showIcon(skill.id)" text-anchor="middle" :x="positionX(i)"  :y="positionY(i) + 70" style="fill: white;cursor: pointer">X</text>
           <circle v-show="showIcon(skill.id)" style="cursor: pointer" r="10" :cx="positionX(i) + 30" :cy="positionY(i) + 65" fill="#09aa76"></circle>
           <text v-show="showIcon(skill.id)" text-anchor="middle" :x="positionX(i) + 30"  :y="positionY(i) + 70" style="fill: white;cursor: pointer">✔</text>
-          <circle v-show="showIcon(skill.id)" style="cursor: pointer" r="10" :cx="positionX(i) - 30" :cy="positionY(i) + 65" fill="#a90909"></circle>
-          <text v-show="showIcon(skill.id)" text-anchor="middle" :x="positionX(i) - 30"  :y="positionY(i) + 70" style="fill: white;cursor: pointer">&#128465</text>
+          <circle @click="removeSkill(selectedSkill.skill1)" v-show="showIcon(skill.id)" style="cursor: pointer" r="10" :cx="positionX(i) - 30" :cy="positionY(i) + 65" fill="#a90909"></circle>
+          <text @click="removeSkill(selectedSkill.skill1)" v-show="showIcon(skill.id)" text-anchor="middle" :x="positionX(i) - 30"  :y="positionY(i) + 70" style="fill: white;cursor: pointer">&#128465</text>
         </g>
         <customCircle @click="displayInput" :cx="positionX(skills.length)" :cy="positionY(skills.length)" :content="label" stroke="#09aa76" fill="white"/>
         <foreignObject v-show="newSkillClicked" :x="positionX(skills.length) - 44" :y="positionY(skills.length)-10">
@@ -104,6 +104,15 @@
           response => {
             console.log(response);
             this.getAllLinks();
+          }, response => {
+            console.log(response);
+          })
+      },
+      removeSkill(skill){
+        axios.post(config.server + '/api/removeskill', skill).then(
+          response => {
+            console.log(response);
+            this.getAllSkills();
           }, response => {
             console.log(response);
           })
