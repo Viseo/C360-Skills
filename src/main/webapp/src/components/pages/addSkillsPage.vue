@@ -18,12 +18,25 @@
         <g v-for="(skill,i) in skills">
           <customCircle :id="skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="skill.label" stroke="#E03559" fill="white"
                         @click="selectSkill(skill)"/>
+          <foreignObject v-show="selectedSkill.skill1.id == skill.id" :x="positionX(i) - 44" :y="positionY(i)-10">
+            <div xmlns="http://www.w3.org/1999/xhtml">
+              <form @submit.prevent="updateSkill">
+                <input class="inputCircle" maxlength="10" type="text" v-model="selectedSkill.skill1.label"/>
+              </form>
+            </div>
+          </foreignObject>
+          <circle @click="cancelUpdate()" v-show="showIcon(skill.id)" style="cursor: pointer" r="10" :cx="positionX(i)" :cy="positionY(i) + 65" fill="orange"></circle>
+          <text @click="cancelUpdate()" v-show="showIcon(skill.id)" text-anchor="middle" :x="positionX(i)"  :y="positionY(i) + 70" style="fill: white;cursor: pointer">X</text>
+          <circle @click="updateSkill(selectedSkill.skill1)" v-show="showIcon(skill.id)" style="cursor: pointer" r="10" :cx="positionX(i) + 30" :cy="positionY(i) + 65" fill="#09aa76"></circle>
+          <text @click="updateSkill(selectedSkill.skill1)" v-show="showIcon(skill.id)" text-anchor="middle" :x="positionX(i) + 30"  :y="positionY(i) + 70" style="fill: white;cursor: pointer">✔</text>
+          <circle @click="removeSkill(selectedSkill.skill1)" v-show="showIcon(skill.id)" style="cursor: pointer" r="10" :cx="positionX(i) - 30" :cy="positionY(i) + 65" fill="#a90909"></circle>
+          <text @click="removeSkill(selectedSkill.skill1)" v-show="showIcon(skill.id)" text-anchor="middle" :x="positionX(i) - 30"  :y="positionY(i) + 70" style="fill: white;cursor: pointer">&#128465</text>
         </g>
         <customCircle @click="displayInput" :cx="positionX(skills.length)" :cy="positionY(skills.length)" :content="label" stroke="#09aa76" fill="white"/>
         <foreignObject v-show="newSkillClicked" :x="positionX(skills.length) - 44" :y="positionY(skills.length)-10">
           <div xmlns="http://www.w3.org/1999/xhtml">
             <form @submit.prevent="addCircle">
-            <input id="inputCircle" @blur="hideInput" autocomplete="off" maxlength="10" type="text" v-model="label"/>
+            <input class="inputCircle" @blur="hideInput" maxlength="10" type="text" v-model="label"/>
             </form>
           </div>
         </foreignObject>
@@ -55,6 +68,8 @@
         },
         skills: [],
         selectedlink: '',
+        skillOldValue:'',
+        clickOnSkill: false,
         label: 'Nouvelle',
         newSkillClicked:false,
         showCross : false,
@@ -74,7 +89,7 @@
           this.newSkillClicked = true;
           this.label='';
           setTimeout(function(){
-            $('#inputCircle').focus();
+            $('.inputCircle').focus();
           });
         },
         hideInput(){
@@ -82,8 +97,6 @@
               this.label = "Nouvelle";
           }
           this.newSkillClicked = false;
-          document.getElementById("inputCircle").removeAttribute("autofocus");
-
         },
       removeLink(link){
         axios.post(config.server + '/api/removelink', link).then(
@@ -93,6 +106,22 @@
           }, response => {
             console.log(response);
           })
+      },
+      removeSkill(skill){
+        axios.post(config.server + '/api/removeskill', skill).then(
+          response => {
+            console.log(response);
+            this.getAllSkills();
+            this.getAllLinks();
+            this.selectedSkill = {
+              skill1:'',
+              skill2:''
+            };          }, response => {
+            console.log(response);
+            this.selectedSkill = {
+              skill1:'',
+              skill2:''
+            };          })
       },
       linkPositionX(){
         if (this.selectedlink != '') {
@@ -135,12 +164,13 @@
        return this.waitForElementToDisplay(id,0,"cy");
       },
       selectSkill(skill){
+          this.skillOldValue = skill.label;
         let self = this;
         if (self.selectedSkill.skill1 == ''){
           self.selectedSkill.skill1 = skill;
           document.getElementById(skill.id).getElementsByTagName("circle")[0].setAttribute("filter", "url(#blurMe)");
         }
-        else {
+        else if(skill != self.selectedSkill.skill1){
           self.selectedSkill.skill2 = skill;
           axios.post(config.server + '/api/addlink', self.selectedSkill).then(
           response => {
@@ -183,6 +213,34 @@
           console.log(response);
         });
       },
+      updateSkill(skill){
+        axios.put(config.server + '/api/updateskill', skill).then(
+          response => {
+            console.log(response);
+            this.selectedSkill = {
+              skill1:'',
+              skill2:''
+            };
+            this.getAllSkills();
+            this.getAllLinks();
+
+          }, response => {
+            console.log(response);
+          });
+
+      },
+      cancelUpdate(){
+          this.hideInput()
+          for(var i =0; i< this.skills.length;i++){
+              if(this.skills[i].id == this.selectedSkill.skill1.id){
+                this.selectedSkill.skill1.label = this.skillOldValue;
+
+              }
+
+          }
+        document.getElementById(this.selectedSkill.skill1.id).getElementsByTagName("circle")[0].removeAttribute("filter");
+
+      },
       getAllSkills(){
         axios.get(config.server + "/api/skills/").then(response => {
           this.skills = response.data;
@@ -208,6 +266,15 @@
         }, response => {
           console.log(response);
         });
+      },
+
+      showIcon(skillId){
+          if(this.selectedSkill.skill1.id == skillId){
+              return true;
+          }
+          else{
+              return false;
+          }
       }
     },
     components: {customCircle: CustomCircle, CloseCross: CloseCross}
@@ -264,12 +331,12 @@
     margin-right: 50px;
   }
 
-  input[type=text]#inputCircle:focus {
+  input[type=text].inputCircle:focus {
     outline: none !important;
     border:none;
   }
 
-  #inputCircle {
+  .inputCircle {
     width: 88px;
     text-align:center;
     border:none;

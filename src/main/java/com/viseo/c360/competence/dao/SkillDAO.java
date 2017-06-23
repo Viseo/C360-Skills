@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 import java.util.List;
+import static com.viseo.c360.competence.dao.db.DAOFacade.Parameter.param;
 
 /**
  * Created by HBO3676 on 15/06/2017.
@@ -40,6 +41,8 @@ public class SkillDAO {
 
     @Transactional
     public Skill removeSkill(Skill skill) throws PersistenceException{
+        daoFacade.executeRequest("Delete from Link l where l.skill1.id =:skill or l.skill2.id =:skill",param("skill",skill.getId()));
+        daoFacade.flush();
         daoFacade.remove(skill);
         daoFacade.flush();
         return skill;
