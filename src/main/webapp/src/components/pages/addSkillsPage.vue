@@ -21,7 +21,7 @@
           <foreignObject v-show="selectedSkill.skill1.id == skill.id" :x="positionX(i) - 44" :y="positionY(i)-10">
             <div xmlns="http://www.w3.org/1999/xhtml">
               <form @submit.prevent="updateSkill">
-                <input id="inputCircle" maxlength="10" type="text" v-model="selectedSkill.skill1.label"/>
+                <input class="inputCircle" maxlength="10" type="text" v-model="selectedSkill.skill1.label"/>
               </form>
             </div>
           </foreignObject>
@@ -36,7 +36,7 @@
         <foreignObject v-show="newSkillClicked" :x="positionX(skills.length) - 44" :y="positionY(skills.length)-10">
           <div xmlns="http://www.w3.org/1999/xhtml">
             <form @submit.prevent="addCircle">
-            <input id="inputCircle" @blur="hideInput" maxlength="10" type="text" v-model="label"/>
+            <input class="inputCircle" @blur="hideInput" maxlength="10" type="text" v-model="label"/>
             </form>
           </div>
         </foreignObject>
@@ -89,7 +89,7 @@
           this.newSkillClicked = true;
           this.label='';
           setTimeout(function(){
-            $('#inputCircle').focus();
+            $('.inputCircle').focus();
           });
         },
         hideInput(){
@@ -97,8 +97,6 @@
               this.label = "Nouvelle";
           }
           this.newSkillClicked = false;
-          document.getElementById("inputCircle").removeAttribute("autofocus");
-
         },
       removeLink(link){
         axios.post(config.server + '/api/removelink', link).then(
@@ -333,12 +331,12 @@
     margin-right: 50px;
   }
 
-  input[type=text]#inputCircle:focus {
+  input[type=text].inputCircle:focus {
     outline: none !important;
     border:none;
   }
 
-  #inputCircle {
+  .inputCircle {
     width: 88px;
     text-align:center;
     border:none;
