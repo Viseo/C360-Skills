@@ -19,6 +19,11 @@
                 <img class="image-min"
                      src="../../assets/profile.jpg">
               </div>
+              <!--<section>-->
+                <!--<router-link to="/">Home</router-link>-->
+                <!--<router-link to="/login" v-if="!isLoggedIn">Login</router-link>-->
+                <!--<a href="#" v-if="isLoggedIn" @click="logout">Logout</a>-->
+              <!--</section>-->
               <span class="text-left col-lg-8 col-lg-offset-2 col-md-5 col-sm-5 col-xs-5" style="margin-top:10px" >{{ firstName }} {{ lastName }}</span>
               <!--<dropdown class="col-lg-8 col-lg-offset-2 col-md-5 col-sm-5 col-xs-5" type="default" v-if="showPicture()" v-show="showDisconnexion()" text="Choisissez une action" id="menu">-->
                 <!--<li><a @click="goTo('registerTrainingCollaborator');">Espace formations</a></li>-->
@@ -62,6 +67,8 @@
 
 <script>
   var $ = window.jQuery = require('jquery');
+  import router from '../../config/router'
+  import * as Vuex from "vuex";
 
   export default{
       props:["name"],
@@ -77,9 +84,15 @@
       }
     },
 
-    computed: function(){
+    computed:{
+//      isLoggedIn() {
+//        return this.$store.getters.isLoggedIn;
+//      },
 
-    },
+//      ...Vuex.mapGetters(["isLoggedIn"])
+
+
+  },
 
     mounted: function () {
       $('ul.nav li.dropdown').hover(function () {
@@ -90,6 +103,12 @@
 
     },
     method: {
+//      ...Vuex.mapActions(["logout"])},
+//
+//    logout() {
+//        this.$store.dispatch('logout');
+//      },
+
       setDisconnectedToTrue(){
         this.disconnect = true;
       },
