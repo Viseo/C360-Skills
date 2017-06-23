@@ -23,7 +23,7 @@
         <foreignObject v-show="newSkillClicked" :x="positionX(skills.length) - 44" :y="positionY(skills.length)-10">
           <div xmlns="http://www.w3.org/1999/xhtml">
             <form @submit.prevent="addCircle">
-            <input id="inputCircle" @blur="hideInput" maxlength="10" type="text" v-model="label"/>
+            <input id="inputCircle" @blur="hideInput" autocomplete="off" maxlength="10" type="text" v-model="label"/>
             </form>
           </div>
         </foreignObject>
