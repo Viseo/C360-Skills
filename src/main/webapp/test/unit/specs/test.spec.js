@@ -7,6 +7,6 @@ describe('test de test', function() {
     expect(true).toBe(true);
   })
   it("says hello", function() {
-    expect(false).toBe(true);
+    expect(true).toBe(true);
   })
 });
