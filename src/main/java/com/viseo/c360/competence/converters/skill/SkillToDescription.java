@@ -17,7 +17,6 @@ public class SkillToDescription {
         dto.setId(source.getId());
         dto.setVersion(source.getVersion());
         dto.setLabel(source.getLabel());
-        dto.setCollaborators(new CollaboratorToIdentity().convert(source.getCollaborators()));
         return dto;
     }
 

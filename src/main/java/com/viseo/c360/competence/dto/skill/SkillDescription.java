@@ -7,7 +7,6 @@ import java.util.List;
 public class SkillDescription extends BaseDTO {
 
     String label;
-    List<CollaboratorIdentity> collaborators;
 
     public SkillDescription() {
     }
@@ -20,11 +19,4 @@ public class SkillDescription extends BaseDTO {
         this.label = label;
     }
 
-    public List<CollaboratorIdentity> getCollaborators() {
-        return collaborators;
-    }
-
-    public void setCollaborators(List<CollaboratorIdentity> collaborators) {
-        this.collaborators = collaborators;
-    }
 }
