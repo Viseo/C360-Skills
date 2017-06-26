@@ -77,12 +77,14 @@
         posX: 100,
         posY: 55,
         row: 0,
-        links:[]
+        links:[],
+        wishes:[]
       }
     },
     mounted(){
       this.getAllSkills();
       this.getAllLinks();
+      this.getAllWishes();
     },
     methods: {
         displayInput() {
@@ -275,6 +277,24 @@
           else{
               return false;
           }
+      },
+      sendWish(wish){
+          var wish = {"label": wish};
+        axios.post(config.server + "/api/addwish", wish)
+          .then(response => {
+            console.log(response);
+          }, response => {
+            console.log(response);
+          })
+      },
+
+      getAllWishes(){
+        axios.get(config.server + "/api/wishes")
+          .then(response => {
+            this.wishes = response.data;
+            console.log(response.data);
+          })
+
       }
     },
     components: {customCircle: CustomCircle, CloseCross: CloseCross}
