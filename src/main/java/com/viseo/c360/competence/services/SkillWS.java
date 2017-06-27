@@ -34,7 +34,6 @@ public class SkillWS {
     public Boolean addSkill(@RequestBody SkillDescription skillDescription){
         try {
             if(!skillDAO.getSkillByLabel(skillDescription.getLabel())){
-                skillDescription.setCollaborators(new ArrayList<>());
                 skillDAO.addSkill(new DescriptionToSkill().convert(skillDescription));
                 return true;
             }else{

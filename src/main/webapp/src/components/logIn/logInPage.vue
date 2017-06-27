@@ -8,7 +8,7 @@
           <tr><td style="width: 500px;">
             <i class="glyphicon glyphicon-envelope"></i>
             <input ref="inputMail" type="email"  name="email" id="email" tabindex="2"  class="form-control"  placeholder="eric.dupont@viseo.com"
-                   v-model="email" @focus="emailEmpty = false; isNotNewEmail = true; showPopup = false;"  @blur="isEmailEmpty" onfocus="this.placeholder = ''"
+                   v-model="email" @focus="emailEmpty = false; isNotNewEmail = true; showPopup = false;"  @blur="isEmailEmpty()" onfocus="this.placeholder = ''"
                    onblur="this.placeholder = 'eric.dupont@viseo.com'">
           </td></tr>
           <tr><td style="height: 20px;">
@@ -27,9 +27,9 @@
             <span @click="showPass = false" v-show="showPass && password" class="glyphicon glyphicon-eye-close"> </span>
             <input ref="inputPassword" type="password" v-model="password" v-show="!showPass" name="mdp" id="mdp" tabindex="2" class="form-control"
                    placeholder="••••••" onfocus="this.placeholder = ''" onblur="this.placeholder = '••••••'" @focus="passwordEmpty = false; showPopup = false;"
-                   @blur="isPasswordEmpty">
+                   @blur="isPasswordEmpty()">
             <input ref="inputPasswordVisible" type="text" v-model="password" v-show="showPass"  name="mdp" id="mdp2" tabindex="2" class="form-control"
-                   @focus="passwordEmpty = false" @blur="isPasswordEmpty">
+                   @focus="passwordEmpty = false" @blur="isPasswordEmpty()">
           </td></tr>
           <tr><td style="height: 20px;">
             <span v-show="passwordEmpty"  class="color-red ">Mot de passe est obligatoire.</span>
@@ -42,7 +42,7 @@
             <label><input type="checkbox" value="" v-model="stayConnected">Rester Connecté</label>
           </div>
           <div class = "col-lg-6 col-md-6 col-sm-6 col-xs-6">
-            <a href="#" ref="forgotPassword" @click="showPopupFn" class="forgotPassword">Mot de passe oublié</a><br>
+            <a href="#" ref="forgotPassword" @click="showPopupFn()" class="forgotPassword">Mot de passe oublié</a><br>
           </div>
         </div>
         <span v-show="isErrorAuthentification" class="color-red text-justify">Connexion refusée: veuillez entrer une adresse e-mail et un mot de passe valide</span>
@@ -71,38 +71,34 @@
   import * as Vuex from "vuex";
 
   export default {
-      name: 'connexion-form',
+    name: 'connexion-form',
     data(){
-        return {
-          user: {
-            email: '',
-            password: '',
-          },
+      return {
+        user: {
           email: '',
           password: '',
-          userToRegister: {},
-          isErrorAuthentification: false,
-          emailEmpty: false,
-          passwordEmpty: false,
-          showPass: false,
-          stayConnected: true,
-          showPopup: false,
-          border: 'color-red',
-          allUsers: [],
-          isNotNewEmail: true,
-          emailToSend: '',
-          passwordToSend: '',
-          idToSend: '',
-          lastNameToSend: '',
-          firstNameToSend: ''
-        }
-      },
-
-    computed:{
-
+        },
+        email: '',
+        password: '',
+        userToRegister: {},
+        isErrorAuthentification: false,
+        emailEmpty: false,
+        passwordEmpty: false,
+        showPass: false,
+        stayConnected: true,
+        showPopup: false,
+        border: 'color-red',
+        allUsers: [],
+        isNotNewEmail: true,
+        emailToSend: '',
+        passwordToSend: '',
+        idToSend: '',
+        lastNameToSend: '',
+        firstNameToSend: ''
+      }
     },
-    methods: {
 
+    methods: {
       login(){
         this.$store.dispatch("login", {
           email: this.user.email,
@@ -113,8 +109,9 @@
 
           axios.post(config.server + "/api/user", this.userToRegister);
 
+
       },
-    },
+
 
 
 //      handleCookie(token) {
@@ -250,6 +247,7 @@
         }
       }
 
+    },
   }
 </script>
  <style>

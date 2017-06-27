@@ -20,11 +20,6 @@ public class Skill extends BaseEntity {
     @Size(max = 20)
     String label;
 
-    @Valid
-    @ManyToMany
-    @JoinTable(name = "skill_owners")
-    List<Collaborator> collaborators;
-
     public Skill() {
         super();
     }
@@ -37,21 +32,5 @@ public class Skill extends BaseEntity {
         this.label = label;
     }
 
-
-    public List<Collaborator> getCollaborators() {
-        return collaborators;
-    }
-
-    public void addCollaborator(Collaborator collaborator) {
-        this.collaborators.add(collaborator);
-    }
-
-    public void removeCollaborator(Collaborator collaborator) {
-        this.collaborators.remove(collaborator);
-    }
-
-    public void setCollaborators(List<Collaborator> collaborators) {
-        this.collaborators = collaborators;
-    }
 }
 

@@ -6,7 +6,7 @@
       <svg version="1.1" viewBox="0 0 1250 1250" preserveAspectRatio="xMinYMin meet">
         <defs>
           <filter id="blurMe">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="2"/>
+            <feGaussianBlur in="SourceGraphic" stdDeviation="4"/>
           </filter>
         </defs>
         <g v-for="link in links">
@@ -17,7 +17,7 @@
         </g>
         <g v-for="(skill,i) in skills">
           <customCircle :id="skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="skill.label" stroke="#E03559" fill="white"
-                        @click="selectSkill(skill)"/>
+                        @click="selectSkill(skill)" :showCircleBlur="showCircleBlurOrNot(skill.id)"/>
           <foreignObject v-show="selectedSkill.skill1.id == skill.id" :x="positionX(i) - 44" :y="positionY(i)-10">
             <div xmlns="http://www.w3.org/1999/xhtml">
               <form @submit.prevent="updateSkill">
@@ -75,7 +75,7 @@
         showCross : false,
         text: [],
         posX: 100,
-        posY: 55,
+        posY: 60,
         row: 0,
         links:[]
       }
@@ -85,6 +85,12 @@
       this.getAllLinks();
     },
     methods: {
+        showCircleBlurOrNot(id){
+            if(this.selectedSkill.skill1.id == id){
+                return true
+            }
+            return false;
+        },
         displayInput() {
           this.newSkillClicked = true;
           this.label='';
@@ -238,8 +244,7 @@
               }
 
           }
-        document.getElementById(this.selectedSkill.skill1.id).getElementsByTagName("circle")[0].removeAttribute("filter");
-
+          this.selectedSkill.skill1 = "";
       },
       getAllSkills(){
         axios.get(config.server + "/api/skills/").then(response => {

@@ -52,12 +52,12 @@ public class SkillDAO {
 
     @Transactional
     public List<Skill> getAllSkills() {
-        return daoFacade.getList("select s from Skill s left outer join fetch s.collaborators");
+        return daoFacade.getList("select s from Skill s");
     }
 
     @Transactional
     public boolean getSkillByLabel(String label) {
-        List<Skill> skill = daoFacade.getList("select s from Skill s left outer join fetch s.collaborators where s.label = :label",
+        List<Skill> skill = daoFacade.getList("select s from Skill s where s.label = :label",
                 param("label", label));
         if(skill.size() != 0){
             return true;
