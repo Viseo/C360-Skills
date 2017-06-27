@@ -16,7 +16,8 @@ module.exports = function (config) {
     reporters: ['spec', 'coverage'],
     files: ['./index.js'],
     preprocessors: {
-      './index.js': ['webpack', 'sourcemap']
+      './index.js': ['webpack', 'sourcemap'],
+      'scr/main/webapp/src/main.js': ['coverage']
     },
     webpack: webpackConfig,
     webpackMiddleware: {
