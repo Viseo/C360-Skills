@@ -17,12 +17,13 @@ module.exports = function (config) {
     files: ['./index.js'],
     preprocessors: {
       './index.js': ['webpack', 'sourcemap'],
-      'scr/main/webapp/src/main.js': ['coverage']
+      //'scr/main/webapp/src/main.js': ['coverage']
     },
     webpack: webpackConfig,
     webpackMiddleware: {
       noInfo: true
     },
+    colors: true,
     coverageReporter: {
       dir: './coverage',
       reporters: [
