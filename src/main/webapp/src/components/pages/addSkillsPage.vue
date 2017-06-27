@@ -1,5 +1,9 @@
 <template>
   <div>
+    <button @click="sendWish('pipopopopiiippo')">Ajouter</button>
+    <button @click="rejectWish(wishes[0])">Supprimer souhait</button>
+
+
     <div class="svg-container" id="svg-container">
       <b class="mybstyle">Administration des compétences</b>
       <hr class="myhrline">
@@ -283,6 +287,7 @@
         axios.post(config.server + "/api/addwish", wish)
           .then(response => {
             console.log(response);
+            this.getAllWishes();
           }, response => {
             console.log(response);
           })
@@ -295,7 +300,34 @@
             console.log(response.data);
           })
 
-      }
+      },
+
+      validWish(wish){
+        axios.post(config.server + "/api/removewish", wish)
+          .then(response => {
+            console.log(response);
+            this.label = wish.label;
+            this.addSkill();
+            this.label="Nouvelle";
+            this.getAllSkills();
+          }, response => {
+            console.log(response);
+          })
+
+      },
+
+      rejectWish(wish){
+        axios.post(config.server + "/api/removewish", wish)
+          .then(response => {
+            console.log(response);
+            this.getAllWishes();
+          }, response => {
+            console.log(response);
+          })
+
+      },
+
+
     },
     components: {customCircle: CustomCircle, CloseCross: CloseCross}
 

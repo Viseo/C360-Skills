@@ -32,6 +32,14 @@ public class WishDAO {
     }
 
     @Transactional
+    public Wish removeWish(Wish wish) throws PersistenceException{
+        daoFacade.flush();
+        daoFacade.remove(wish);
+        daoFacade.flush();
+        return wish;
+    }
+
+    @Transactional
     public boolean checkIfWishExistByLabel(String label) {
         List<Wish> wish = daoFacade.getList("select w from Wish w where w.label = :label",
                 param("label", label));

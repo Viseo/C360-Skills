@@ -16,6 +16,8 @@ public class WishToDescription {
     public WishDescription convert(Wish source){
         WishDescription dto = new WishDescription();
         dto.setLabel(source.getLabel());
+        dto.setId(source.getId());
+        dto.setVersion(source.getVersion());
         return dto;
     }
 

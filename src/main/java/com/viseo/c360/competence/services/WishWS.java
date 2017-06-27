@@ -29,18 +29,18 @@ public class WishWS {
     ExceptionUtil exceptionUtil;
 
     @CrossOrigin
-    @RequestMapping (value = "${endpoint.addwish}", method = RequestMethod.POST)
+    @RequestMapping(value = "${endpoint.addwish}", method = RequestMethod.POST)
     @ResponseBody
-    public Boolean addWishes(@RequestBody WishDescription wishDescription){
+    public Boolean addWishes(@RequestBody WishDescription wishDescription) {
         try {
-            if(!wishDAO.checkIfWishExistByLabel(wishDescription.getLabel())){
+            if (!wishDAO.checkIfWishExistByLabel(wishDescription.getLabel())) {
                 wishDAO.addWish(new DescriptionToWish().convert(wishDescription));
                 return true;
-            }else{
+            } else {
                 return false;
             }
 
-        }catch (PersistenceException pe) {
+        } catch (PersistenceException pe) {
             UniqueFieldErrors uniqueFieldErrors = exceptionUtil.getUniqueFieldError(pe);
             if (uniqueFieldErrors == null) throw new C360Exception(pe);
             else throw new UniqueFieldException(uniqueFieldErrors.getField());
@@ -54,9 +54,23 @@ public class WishWS {
         try {
             return new WishToDescription().convert(wishDAO.getAllWishes());
 
-        }catch(ConversionException e) {
+        } catch (ConversionException e) {
             e.printStackTrace();
             throw new C360Exception(e);
+        }
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "${endpoint.removewish}", method = RequestMethod.POST)
+    @ResponseBody
+    public boolean removeWish(@RequestBody WishDescription wishDescription) {
+        try {
+            wishDAO.removeWish(new DescriptionToWish().convert(wishDescription));
+            return true;
+        } catch (PersistenceException pe) {
+            UniqueFieldErrors uniqueFieldErrors = exceptionUtil.getUniqueFieldError(pe);
+            if (uniqueFieldErrors == null) throw new C360Exception(pe);
+            else throw new UniqueFieldException(uniqueFieldErrors.getField());
         }
     }
 

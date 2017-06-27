@@ -10,7 +10,6 @@ import javax.validation.constraints.Size;
  * Created by NBE3663 on 26/06/2017.
  */
 @Entity
-
 public class Wish extends BaseEntity{
 
     @NotNull
