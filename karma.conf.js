@@ -15,7 +15,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'src/main/webapp/test/unit/specs/test.spec.js',
+      'src/main/webapp/test/unit/specs/registrationPage.spec.js',
     ],
 
 
