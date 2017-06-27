@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import mainPage from '../components/customComponent/mainPage.vue'
 import containerSVG from '../components/pages/addSkillsPage.vue'
 import navigationMenu from '../components/layout/signInUpMenu.vue'
+import wishrequest from '../components/pages/wishRequest.vue'
 
 Vue.use(Router);
 
@@ -32,6 +33,17 @@ export default new Router({
          path: "/addSkills",
          component: containerSVG
        }]
-     }
+     },
+
+     // {
+     //   path: '/addSkills',
+     //   name: 'addSkills',
+     //   component: mainPage,
+     //   children: [{
+     //     name: 'mainPage',
+     //     path: "/addSkills",
+     //     component: wishRequest
+     //   }]
+     // }
    ]
  })

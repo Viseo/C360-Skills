@@ -1,9 +1,5 @@
 <template>
   <div>
-    <button @click="sendWish('pipopopopiiippo')">Ajouter</button>
-    <button @click="rejectWish(wishes[0])">Supprimer souhait</button>
-
-
     <div class="svg-container" id="svg-container">
       <b class="mybstyle">Administration des compétences</b>
       <hr class="myhrline">
@@ -51,12 +47,14 @@
         <CloseCross v-show="showCross" style="cursor: pointer;"@click="removeLink(selectedlink)":x1="linkPositionX()" :y1="linkPositionY()"></CloseCross>
       </svg>
     </div>
+    <wishRequest></wishRequest>
   </div>
 </template>
 
 <script>
   import CustomCircle from "../customComponent/customcircle.vue"
   import CloseCross from "../customComponent/CloseCross.vue"
+  import wishRequest from"./wishRequest.vue"
   import config from '../../config/config'
   import axios from 'axios'
   var $ = window.jQuery = require('jquery');
@@ -329,7 +327,7 @@
 
 
     },
-    components: {customCircle: CustomCircle, CloseCross: CloseCross}
+    components: {customCircle: CustomCircle, CloseCross: CloseCross, wishRequest: wishRequest}
 
   }
 </script>
