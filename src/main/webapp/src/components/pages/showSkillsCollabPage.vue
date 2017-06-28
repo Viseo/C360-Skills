@@ -18,7 +18,7 @@
         <g v-for="(skill,i) in skills">
           <customCircle :id="skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="skill.label" stroke="#E03559" fill="white"
                         @click="selectSkill(skill)"/>
-          <foreignObject  :x="positionX(i) - 40" :y="positionY(i)-11">
+          <foreignObject  v-show="selectedSkill.skill1.id == skill.id" :x="positionX(i) - 40" :y="positionY(i)-11">
             <div xmlns="http://www.w3.org/1999/xhtml">
               <form @submit.prevent="updateSkill">
                 <input class="inputCircle" maxlength="10" type="text" v-model="selectedSkill.skill1.label"/>
@@ -40,7 +40,6 @@
                 <svg height="21" width="18" class="star rating" data-rating="5">
                   <polygon points="9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78" style="fill-rule:nonzero;"/>
                 </svg>
-
               </div>
             </div>
           </foreignObject>
