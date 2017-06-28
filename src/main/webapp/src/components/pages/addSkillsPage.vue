@@ -3,7 +3,7 @@
     <div class="svg-container" id="svg-container">
       <b class="mybstyle">Administration des compétences</b>
       <hr class="myhrline">
-      <svg version="1.1" viewBox="0 0 1250 1250" preserveAspectRatio="xMinYMin meet">
+      <svg version="1.1" :viewBox="myViewBox"  preserveAspectRatio="xMinYMin meet">
         <defs>
           <filter id="blurMe">
             <feGaussianBlur in="SourceGraphic" stdDeviation="2"/>
@@ -68,6 +68,7 @@
             skill1:'',
             skill2:''
         },
+        myViewBox: "0 0 1250 1250",
         skills: [],
         selectedlink: '',
         skillOldValue:'',
@@ -257,8 +258,7 @@
             return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);
           });
           console.log(this.positionY(this.skills.length));
-          document.getElementById("svg-container").style.height = (this.positionY(this.skills.length) + 300 + (Math.floor(this.skills.length/8)*10)).toString()+"px";
-
+          this.myViewBox = "0 0 1250 "+ parseInt((Math.floor(this.skills.length/8)*150) + 200);
         }, response => {
           console.log(response);
         });
@@ -297,6 +297,7 @@
     display: inline-block;
     position: relative;
     width: 100%;
+    height:100%;
     vertical-align: middle;
     overflow: hidden;
   }

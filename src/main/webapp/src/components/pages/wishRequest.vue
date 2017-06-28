@@ -4,11 +4,11 @@
       <b class="mybstyle">Demande de création</b>
       <hr class="myhrline">
     </div>
-    <div class="wishContainer">
-      <div id="wishSVG">
-        <svg viewBox="0 0 2000 200" preserveAspectRatio="xMaxYin meet" height="300">
+    <div data-simplebar class="wishContainer">
+      <div>
+        <svg data-simplebar :viewBox="myViewBox"  height="300">
 
-        <g id="test2" v-for="(wish,i) in wishes">
+        <g id="wishSVG" v-for="(wish,i) in wishes">
         <customCircle :id="wish.id" :cx="positionX(i)" :cy="55" :content="wish.label" stroke="#E03559" fill="white"/>
           <circle @click="validWish(wish)" style="cursor: pointer" r="10" :cx="positionX(i) + 25" cy="120" fill="#09aa76"></circle>
           <text @click="validWish(wish)" text-anchor="middle" :x="positionX(i) + 25"  y="125" style="fill: white;cursor: pointer">✔</text>
@@ -22,7 +22,8 @@
 
 
 </template>
-
+<link rel="stylesheet" href="https://unpkg.com/simplebar@latest/dist/simplebar.css" />
+<script src="https://unpkg.com/simplebar@latest/dist/simplebar.js"></script>
 <script>
   import CustomCircle from "../customComponent/customcircle.vue"
   import config from '../../config/config'
@@ -31,7 +32,8 @@
       data() {
           return {
             posX: 100,
-            wishes: []
+            wishes: [],
+            myViewBox: '0 0 2000 200'
           }
       },
       mounted() {
@@ -57,8 +59,9 @@
             .then(response => {
               this.wishes = response.data;
               console.log(response.data);
-//              document.getElementById("newDiv").style.width = (this.positionX(this.wishes.length) + 300 + (Math.floor(this.wishes.length/8)*10)).toString()+"px";
-              document.getElementById("wish-request").setAttribute("viewBox", "0,0, "+ this.wishes.length *150+",200");
+              console.log(this.wishes.length*150);
+              this.myViewBox = "0 0 " + parseInt(this.wishes.length*155) +" 200";
+              //document.getElementById("wish-request").setAttribute("viewBox", "0,0, "+ 1000+this.wishes.length *150+",200");
             })
 
         },
@@ -71,7 +74,6 @@
             }, response => {
               console.log(response);
             })
-
         },
 
         rejectWish(wish){
@@ -79,7 +81,6 @@
             .then(response => {
               console.log(response);
               this.getAllWishes();
-              //document.getElementById("wish-request").setAttribute("viewBox", "0,0, "+ 2000 + this.wishes.length *150+",200");
             }, response => {
               console.log(response);
             })
@@ -94,17 +95,20 @@
 
 <style>
   .wishContainer {
+    overflow-x: scroll;
     position: relative;
-    height: 300px;
-    width:1900px;
+    /*height: 300px;*/
+    /*width:1900px;*/
+    width:100%;
+    height:100%;
   }
 
   #wishSVG {
-    overflow-x: scroll;
     overflow-y: hidden;
     width:100%;
     height:100%;
   }
+
 /*.wishContainer {*/
   /*display: inline-block;*/
   /*width: 100%;*/
