@@ -47,7 +47,7 @@
         <CloseCross v-show="showCross" style="cursor: pointer;"@click="removeLink(selectedlink)":x1="linkPositionX()" :y1="linkPositionY()"></CloseCross>
       </svg>
     </div>
-    <wishRequest></wishRequest>
+    <wishRequest @addWishToSkills="addWish"></wishRequest>
   </div>
 </template>
 
@@ -84,11 +84,17 @@
       }
     },
     mounted(){
-      this.getAllSkills();
-      this.getAllLinks();
-      this.getAllWishes();
+        this.getAllSkills();
+        this.getAllLinks();
     },
     methods: {
+        addWish(wish){
+            console.log("hello")
+          this.label = wish.label;
+          this.addSkill();
+          this.label="Nouvelle";
+          this.getAllSkills();
+        },
         displayInput() {
           this.newSkillClicked = true;
           this.label='';
@@ -195,7 +201,6 @@
         }
       },
       positionX(integ){
-          console.log()
         return this.posX + ((integ) % 8) * 150;
       },
       positionY(integ){
@@ -280,52 +285,6 @@
               return false;
           }
       },
-      sendWish(wish){
-          var wish = {"label": wish};
-        axios.post(config.server + "/api/addwish", wish)
-          .then(response => {
-            console.log(response);
-            this.getAllWishes();
-          }, response => {
-            console.log(response);
-          })
-      },
-
-      getAllWishes(){
-        axios.get(config.server + "/api/wishes")
-          .then(response => {
-            this.wishes = response.data;
-            console.log(response.data);
-          })
-
-      },
-
-      validWish(wish){
-        axios.post(config.server + "/api/removewish", wish)
-          .then(response => {
-            console.log(response);
-            this.label = wish.label;
-            this.addSkill();
-            this.label="Nouvelle";
-            this.getAllSkills();
-          }, response => {
-            console.log(response);
-          })
-
-      },
-
-      rejectWish(wish){
-        axios.post(config.server + "/api/removewish", wish)
-          .then(response => {
-            console.log(response);
-            this.getAllWishes();
-          }, response => {
-            console.log(response);
-          })
-
-      },
-
-
     },
     components: {customCircle: CustomCircle, CloseCross: CloseCross, wishRequest: wishRequest}
 
