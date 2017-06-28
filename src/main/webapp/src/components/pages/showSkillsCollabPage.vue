@@ -37,6 +37,8 @@
             <div xmlns="http://www.w3.org/1999/xhtml">
               <form @submit.prevent="addCircle">
                 <input class="inputCircle" @blur="hideInput" maxlength="10" type="text" v-model="label"/>
+
+
               </form>
             </div>
           </foreignObject>
