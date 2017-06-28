@@ -3,9 +3,11 @@ package com.viseo.c360.competence.domain.collaborator;
 import com.viseo.c360.competence.domain.BaseEntity;
 import com.viseo.c360.competence.domain.skill.Skill;
 
+import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
+@Entity
 public class Expertise extends BaseEntity {
 
     @NotNull

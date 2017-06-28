@@ -1,7 +1,13 @@
 package com.viseo.c360.competence.dao;
 
+import com.viseo.c360.competence.converters.collaborator.CollaboratorToIdentity;
+import com.viseo.c360.competence.converters.collaborator.DescriptionToCollaborator;
+import com.viseo.c360.competence.converters.collaborator.DescriptionToExpertise;
+import com.viseo.c360.competence.converters.skill.SkillToDescription;
 import com.viseo.c360.competence.dao.db.DAOFacade;
 import com.viseo.c360.competence.domain.collaborator.Collaborator;
+import com.viseo.c360.competence.domain.skill.Skill;
+import com.viseo.c360.competence.dto.collaborator.ExpertiseDescription;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,12 +25,27 @@ public class CollaboratorDAO {
     @Inject
     DAOFacade daoFacade;
 
+    @Inject
+    ExpertiseDAO expertiseDAO;
+
+    @Inject
+    SkillDAO skillDAO;
+
 
     //collaborateur
     @Transactional
     public Collaborator addCollaborator(Collaborator collaborator) throws PersistenceException {
         daoFacade.persist(collaborator);
         daoFacade.flush();
+        List<Skill> skills = skillDAO.getAllSkills();
+        for(int i = 0; i < skills.size(); i++){
+            ExpertiseDescription tmp = new ExpertiseDescription();
+            tmp.setCollaborator(new CollaboratorToIdentity().convert(collaborator));
+            tmp.setSkill(new SkillToDescription().convert(skills.get(i)));
+            tmp.setLevel(0);
+            tmp.setNoted(false);
+            expertiseDAO.addExpertise(new DescriptionToExpertise().convert(tmp));
+        }
         return collaborator;
     }
 

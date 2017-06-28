@@ -2,15 +2,19 @@ package com.viseo.c360.competence.services;
 
 import com.viseo.c360.competence.converters.collaborator.*;
 
+import com.viseo.c360.competence.converters.skill.SkillToDescription;
 import com.viseo.c360.competence.dao.CollaboratorDAO;
 import com.viseo.c360.competence.dao.ExpertiseDAO;
+import com.viseo.c360.competence.dao.SkillDAO;
 import com.viseo.c360.competence.domain.collaborator.Collaborator;
 
 import com.viseo.c360.competence.domain.collaborator.Expertise;
+import com.viseo.c360.competence.domain.skill.Skill;
 import com.viseo.c360.competence.dto.collaborator.CollaboratorDescription;
 import com.viseo.c360.competence.dto.collaborator.CollaboratorIdentity;
 
 import com.viseo.c360.competence.dto.collaborator.ExpertiseDescription;
+import com.viseo.c360.competence.dto.skill.SkillDescription;
 import com.viseo.c360.competence.email.sendMessage;
 import com.viseo.c360.competence.exceptions.C360Exception;
 import com.viseo.c360.competence.exceptions.dao.PersistentObjectNotFoundException;
