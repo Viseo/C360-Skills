@@ -30,20 +30,31 @@ public class ExpertiseDAO {
     @Transactional
     public Expertise updateExpertise(Expertise expertise) throws PersistenceException {
         expertise = daoFacade.merge(expertise);
+        int globalScore = expertise.getLevel();
+
         List<Link> links = this.getAllLinksBySkill(expertise.getSkill());
         List<Skill> skills = new ArrayList<>();
-        for(int i=0; i<links.size();i++){
-            if(links.get(i).getSkill1() == expertise.getSkill()){
+        for (int i = 0; i < links.size(); i++) {
+            if (links.get(i).getSkill1() == expertise.getSkill()) {
                 skills.add(links.get(i).getSkill2());
-            }else{
+            } else {
                 skills.add(links.get(i).getSkill1());
             }
         }
 
         Collaborator collaborator = expertise.getCollaborator();
-        List<Expertise> expertises =  this.getExpertiseByCollab(collaborator);
-        for(int j=0; j<skills.size();j++){
-
+        List<Expertise> expertises = this.getExpertiseByCollab(collaborator);
+        for (int j = 0; j < expertises.size(); j++) {
+            if (skills.contains(expertises.get(j).getSkill())) {
+                Expertise tmp = daoFacade.merge(expertises.get(j));
+                if ((globalScore >= 3) && (tmp.getLevel() < globalScore - 2)) {
+                    tmp.setLevel(globalScore - 2);
+                    daoFacade.flush();
+                    if (globalScore == 5) {
+                        this.updateExpertise(tmp);
+                    }
+                }
+            }
         }
         daoFacade.flush();
         return expertise;
@@ -57,9 +68,8 @@ public class ExpertiseDAO {
 
     @Transactional
     public List<Expertise> getExpertiseByCollab(Collaborator collaborator) {
-        daoFacade.getList("select e from Expertise e left outer join fetch e.skill where e.collaborator = :collaborator", param("collaborator", collaborator));
-        return daoFacade.getList("select e from Expertise e left outer join fetch e.collaborator where e.collaborator = :collaborator", param("collaborator", collaborator));
+        daoFacade.getList("select e from Expertise e left outer join fetch e.skill where e.collaborator = :collaborator AND e.isNoted = false", param("collaborator", collaborator));
+        return daoFacade.getList("select e from Expertise e left outer join fetch e.collaborator where e.collaborator = :collaborator AND e.isNoted = false", param("collaborator", collaborator));
     }
-
 
 }
