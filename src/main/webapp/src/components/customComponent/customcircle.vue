@@ -2,6 +2,23 @@
   <g>
     <circle @click="handleClick()" class="circleSkill" :id="cx+''+cy" :cx="cx" :cy="cy" r="53" :fill="fill" :stroke="stroke" :filter="filter" stroke-width="2"></circle>
     <text @click="handleClick()" class="textSkill" text-anchor="middle" :x="cx" :class="mySize" :y="cy+8" style="fill: rgba(0,0,0,0.52);">{{content}}</text>
+    <!--<div class="stars" data-stars="1">
+      <svg height="21" width="18" class="star rating" data-rating="1">
+        <polygon points="9.8, 1.0, 3.2 21.78, 19.7, 8.58, 0, 8.58, 16.4, 21.78" style="fill-rule:nonzero;"/>
+      </svg>
+      <svg height="21" width="18" class="star rating" data-rating="2">
+        <polygon points="9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78" style="fill-rule:nonzero;"/>
+      </svg>
+      <svg height="21" width="18" class="star rating" data-rating="3">
+        <polygon points="9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78" style="fill-rule:nonzero;"/>
+      </svg>
+      <svg height="21" width="18" class="star rating" data-rating="4">
+        <polygon points="9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78" style="fill-rule:nonzero;"/>
+      </svg>
+      <svg height="21" width="18" class="star rating" data-rating="5">
+        <polygon points="9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78" style="fill-rule:nonzero;"/>
+      </svg>
+    </div>-->
   </g>
 </template>
 
@@ -157,4 +174,52 @@
   .textSkill, .circleSkill {
     cursor: pointer;
   }
+
+  /* Star rating */
+  /*.stars {
+    cursor: pointer;
+    width: 90px;
+    margin-top: -3px;
+    margin-left: -5px
+  }
+
+  .stars:hover .star polygon {
+    fill: #ffd055 !important;
+  }
+
+  .stars .star {
+    float: left;
+  }
+
+  .stars .star polygon {
+    fill: #d8d8d8;
+  }
+
+  .stars .star:hover ~ .star polygon {
+    fill: #d8d8d8 !important;
+  }
+
+  .stars[data-stars] .star polygon {
+    fill: #ffd055;
+  }
+
+  .stars[data-stars="1"] .star:nth-child(1) ~ .star polygon {
+    fill: #d8d8d8;
+  }
+
+  .stars[data-stars="2"] .star:nth-child(2) ~ .star polygon {
+    fill: #d8d8d8;
+  }
+
+  .stars[data-stars="3"] .star:nth-child(3) ~ .star polygon {
+    fill: #d8d8d8;
+  }
+
+  .stars[data-stars="4"] .star:nth-child(4) ~ .star polygon {
+    fill: #d8d8d8;
+  }
+
+  .stars[data-stars="5"] .star:nth-child(5) ~ .star polygon {
+    fill: #d8d8d8;
+  }*/
 </style>
