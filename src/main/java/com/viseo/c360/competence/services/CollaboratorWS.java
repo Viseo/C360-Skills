@@ -219,12 +219,25 @@ public class CollaboratorWS {
     @ResponseBody
     public ExpertiseDescription updateExpertise(@RequestBody ExpertiseDescription expertiseDescription) {
         try {
+            expertiseDescription.setNoted(true);
             Expertise expertise = expertiseDAO.updateExpertise(new DescriptionToExpertise().convert(expertiseDescription));
             return new ExpertiseToDescription().convert(expertise);
         } catch (PersistenceException pe) {
             UniqueFieldErrors uniqueFieldErrors = exceptionUtil.getUniqueFieldError(pe);
             if (uniqueFieldErrors == null) throw new C360Exception(pe);
             else throw new UniqueFieldException(uniqueFieldErrors.getField());
+        }
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "${endpoint.expertise}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<ExpertiseDescription> getAllExpertise() {
+        try {
+            return new ExpertiseToDescription().convert(expertiseDAO.getAllExpertises());
+        } catch (ConversionException e) {
+            e.printStackTrace();
+            throw new C360Exception(e);
         }
     }
 }

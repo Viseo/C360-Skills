@@ -77,12 +77,16 @@
         posX: 100,
         posY: 60,
         row: 0,
-        links:[]
+        links:[],
+
+        //declaration
+        expertises:[]
       }
     },
     mounted(){
       this.getAllSkills();
       this.getAllLinks();
+      this.getAllExpertise();
     },
     methods: {
         showCircleBlurOrNot(id){
@@ -280,7 +284,31 @@
           else{
               return false;
           }
-      }
+      },
+
+      //declaration d'expertise
+      getAllExpertise(){
+        axios.get(config.server + '/api/expertise').then(
+          response => {
+            this.expertises = response.data;
+            this.expertises.sort(function (a, b) {
+              return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);
+            });
+            this.expertises[0].level = 5;
+            this.updateExpertise(this.expertises[0]);
+            console.log(response);
+          }, response => {
+            console.log(response);
+          });
+      },
+      updateExpertise(expertise){
+        axios.put(config.server + '/api/expertise', expertise).then(
+          response => {
+            console.log(response);
+          }, response => {
+            console.log(response);
+          });
+      },
     },
     components: {customCircle: CustomCircle, CloseCross: CloseCross}
 

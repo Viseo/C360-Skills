@@ -62,14 +62,19 @@ public class ExpertiseDAO {
 
     @Transactional
     public List<Link> getAllLinksBySkill(Skill skill) {
-        daoFacade.getList("select l from Link l left outer join fetch l.skill1 where l.skill1 = :skill OR l.skill2 = :skill", param("skill", skill));
-        return daoFacade.getList("select l from Link l left outer join fetch l.skill2 where l.skill2 = :skill OR l.skill2 = :skill", param("skill", skill));
+        daoFacade.getList("select l from Link l left outer join fetch l.skill1 where l.skill1.id = :skill OR l.skill2.id = :skill", param("skill", skill.getId()));
+        return daoFacade.getList("select l from Link l left outer join fetch l.skill2 where l.skill2.id = :skill OR l.skill2.id = :skill", param("skill", skill.getId()));
     }
 
     @Transactional
     public List<Expertise> getExpertiseByCollab(Collaborator collaborator) {
-        daoFacade.getList("select e from Expertise e left outer join fetch e.skill where e.collaborator = :collaborator AND e.isNoted = false", param("collaborator", collaborator));
-        return daoFacade.getList("select e from Expertise e left outer join fetch e.collaborator where e.collaborator = :collaborator AND e.isNoted = false", param("collaborator", collaborator));
+        daoFacade.getList("select e from Expertise e left outer join fetch e.skill where e.collaborator.id = :collaborator AND e.isNoted = false", param("collaborator", collaborator.getId()));
+        return daoFacade.getList("select e from Expertise e left outer join fetch e.collaborator where e.collaborator.id = :collaborator AND e.isNoted = false", param("collaborator", collaborator.getId()));
     }
 
+    @Transactional
+    public List<Expertise> getAllExpertises() {
+        daoFacade.getList("select e from Expertise e left outer join fetch e.skill");
+        return daoFacade.getList("select e from Expertise e left outer join fetch e.collaborator");
+    }
 }
