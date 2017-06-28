@@ -332,42 +332,4 @@
     text-align: center;
     border: none;
   }
-
-  /* Star rating */
-  .stars {
-    cursor: pointer;
-    width: 90px;
-    margin-top: -3px;
-    margin-left: -5px
-  }
-  .stars:hover .star polygon {
-    fill: #ffd055 !important;
-  }
-  .stars .star {
-    float: left;
-  }
-  .stars .star polygon {
-    fill: #d8d8d8;
-  }
-  .stars .star:hover ~ .star polygon {
-    fill: #d8d8d8 !important;
-  }
-  .stars[data-stars] .star polygon {
-    fill: #ffd055;
-  }
-  .stars[data-stars="1"] .star:nth-child(1) ~ .star polygon {
-    fill: #d8d8d8;
-  }
-  .stars[data-stars="2"] .star:nth-child(2) ~ .star polygon {
-    fill: #d8d8d8;
-  }
-  .stars[data-stars="3"] .star:nth-child(3) ~ .star polygon {
-    fill: #d8d8d8;
-  }
-  .stars[data-stars="4"] .star:nth-child(4) ~ .star polygon {
-    fill: #d8d8d8;
-  }
-  .stars[data-stars="5"] .star:nth-child(5) ~ .star polygon {
-    fill: #d8d8d8;
-  }
 </style>
