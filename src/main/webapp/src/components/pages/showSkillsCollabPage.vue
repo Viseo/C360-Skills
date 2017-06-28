@@ -6,7 +6,7 @@
       <svg version="1.1" viewBox="0 0 1250 1250" preserveAspectRatio="xMinYMin meet">
         <defs>
           <filter id="blurMe">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="2"/>
+            <feGaussianBlur in="SourceGraphic" stdDeviation="0"/>
           </filter>
         </defs>
         <g v-for="link in links">
@@ -18,35 +18,33 @@
         <g v-for="(skill,i) in skills">
           <customCircle :id="skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="skill.label" stroke="#E03559" fill="white"
                         @click="selectSkill(skill)"/>
-          <foreignObject v-show="selectedSkill.skill1.id == skill.id" :x="positionX(i) - 44" :y="positionY(i)-10">
+          <foreignObject  :x="positionX(i) - 40" :y="positionY(i)-11">
             <div xmlns="http://www.w3.org/1999/xhtml">
               <form @submit.prevent="updateSkill">
                 <input class="inputCircle" maxlength="10" type="text" v-model="selectedSkill.skill1.label"/>
               </form>
+              <div class="stars" data-stars="1">
+                <svg height="21" width="18" class="star rating" data-rating="1">
+                  <polygon points="9.8, 1.0, 3.2 21.78, 19.7, 8.58, 0, 8.58, 16.4, 21.78" style="fill-rule:nonzero;"/>
+                </svg>
+                <svg height="21" width="18" class="star rating" data-rating="2">
+                  <polygon points="9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78" style="fill-rule:nonzero;"/>
+                </svg>
+                <svg height="21" width="18" class="star rating" data-rating="3">
+                  <polygon points="9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78" style="fill-rule:nonzero;"/>
+                </svg>
+                <svg height="21" width="18" class="star rating" data-rating="4">
+                  <polygon points="9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78" style="fill-rule:nonzero;"/>
+                </svg>
+                <svg height="21" width="18" class="star rating" data-rating="5">
+                  <polygon points="9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78" style="fill-rule:nonzero;"/>
+                </svg>
+              </div>
             </div>
           </foreignObject>
-          <circle @click="cancelUpdate()" v-show="showIcon(skill.id)" style="cursor: pointer" r="10" :cx="positionX(i)" :cy="positionY(i) + 65" fill="orange"></circle>
-          <text @click="cancelUpdate()" v-show="showIcon(skill.id)" text-anchor="middle" :x="positionX(i)"  :y="positionY(i) + 70" style="fill: white;cursor: pointer">X</text>
-          <circle @click="updateSkill(selectedSkill.skill1)" v-show="showIcon(skill.id)" style="cursor: pointer" r="10" :cx="positionX(i) + 30" :cy="positionY(i) + 65" fill="#09aa76"></circle>
-          <text @click="updateSkill(selectedSkill.skill1)" v-show="showIcon(skill.id)" text-anchor="middle" :x="positionX(i) + 30"  :y="positionY(i) + 70" style="fill: white;cursor: pointer">✔</text>
-          <circle @click="removeSkill(selectedSkill.skill1)" v-show="showIcon(skill.id)" style="cursor: pointer" r="10" :cx="positionX(i) - 30" :cy="positionY(i) + 65" fill="#a90909"></circle>
-          <text @click="removeSkill(selectedSkill.skill1)" v-show="showIcon(skill.id)" text-anchor="middle" :x="positionX(i) - 30"  :y="positionY(i) + 70" style="fill: white;cursor: pointer">&#128465</text>
+          <foreignObject>
+          </foreignObject>
         </g>
-        <customCircle @click="displayInput" :cx="positionX(skills.length)" :cy="positionY(skills.length)" :content="label" stroke="#09aa76" fill="white"/>
-          <foreignObject v-show="newSkillClicked" :x="positionX(skills.length) - 44" :y="positionY(skills.length)-10">
-            <div xmlns="http://www.w3.org/1999/xhtml">
-              <form @submit.prevent="addCircle">
-                <input class="inputCircle" @blur="hideInput" maxlength="10" type="text" v-model="label"/>
-
-
-              </form>
-            </div>
-          </foreignObject>
-        <circle style="cursor: pointer" r="10" :cx="positionX(skills.length) - 30" :cy="positionY(skills.length) + 65" fill="orange"></circle>
-        <text @click="newSkillClicked = false; label = 'Nouvelle'" text-anchor="middle" :x="positionX(skills.length) - 30"  :y="positionY(skills.length) + 70" style="fill: white;cursor: pointer">X</text>
-        <circle style="cursor: pointer" r="10" :cx="positionX(skills.length) + 30" :cy="positionY(skills.length) + 65" fill="#09aa76"></circle>
-        <text @click="addCircle" text-anchor="middle" :x="positionX(skills.length) + 30"  :y="positionY(skills.length) + 70" style="fill: white;cursor: pointer">✔</text>
-        <CloseCross v-show="showCross" style="cursor: pointer;"@click="removeLink(selectedlink)":x1="linkPositionX()" :y1="linkPositionY()"></CloseCross>
       </svg>
     </div>
   </div>
@@ -71,7 +69,7 @@
         skillOldValue: '',
         clickOnSkill: false,
         label: 'Nouvelle',
-        newSkillClicked: false,
+        newSkillClicked: true,
         showCross: false,
         text: [],
         posX: 100,
@@ -352,5 +350,43 @@
     width: 88px;
     text-align: center;
     border: none;
+  }
+
+  /* Star rating */
+  .stars {
+    cursor: pointer;
+    width: 90px;
+    margin-top: -3px;
+    margin-left: -5px
+  }
+  .stars:hover .star polygon {
+    fill: #ffd055 !important;
+  }
+  .stars .star {
+    float: left;
+  }
+  .stars .star polygon {
+    fill: #d8d8d8;
+  }
+  .stars .star:hover ~ .star polygon {
+    fill: #d8d8d8 !important;
+  }
+  .stars[data-stars] .star polygon {
+    fill: #ffd055;
+  }
+  .stars[data-stars="1"] .star:nth-child(1) ~ .star polygon {
+    fill: #d8d8d8;
+  }
+  .stars[data-stars="2"] .star:nth-child(2) ~ .star polygon {
+    fill: #d8d8d8;
+  }
+  .stars[data-stars="3"] .star:nth-child(3) ~ .star polygon {
+    fill: #d8d8d8;
+  }
+  .stars[data-stars="4"] .star:nth-child(4) ~ .star polygon {
+    fill: #d8d8d8;
+  }
+  .stars[data-stars="5"] .star:nth-child(5) ~ .star polygon {
+    fill: #d8d8d8;
   }
 </style>
