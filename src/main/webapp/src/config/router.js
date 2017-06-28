@@ -35,12 +35,12 @@ export default new Router({
        }]
      },
      {
-       path: '/addSkillCollab',
-       name: 'addSkillCollab',
+       path: '/showSkillsCollab',
+       name: 'showSkillsCollab',
        component: mainPage,
        children: [{
          name: 'mainPage',
-         path: "/addSkillCollab",
+         path: "/showSkillsCollab",
          component: containerSvgCollab
        }]
 
