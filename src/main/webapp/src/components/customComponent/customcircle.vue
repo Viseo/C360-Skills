@@ -20,7 +20,7 @@
     props:["cx","cy", "content","fill","stroke","filter"],
     data () {
       return {
-          rating:3,
+        rating:0,
         cx1: "",
         cy1: "",
         cx2: "",

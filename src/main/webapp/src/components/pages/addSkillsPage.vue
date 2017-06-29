@@ -33,7 +33,7 @@
           <text @click="removeSkill(selectedSkill.skill1)" v-show="showIcon(skill.id)" text-anchor="middle" :x="positionX(i) - 30"  :y="positionY(i) + 70" style="fill: white;cursor: pointer">&#128465</text>
         </g>
         <customCircle @click="displayInput" :cx="positionX(skills.length)" :cy="positionY(skills.length)" :content="label" stroke="#09aa76" fill="white"/>
-        <foreignObject v-show="newSkillClicked" :x="positionX(skills.length) - 44" :y="positionY(skills.length)-10">
+        <foreignObject v-show="newSkillClicked" :x="positionX(skills.length) - 44" :y="positionY(skills.length)-16">
           <div xmlns="http://www.w3.org/1999/xhtml">
             <form @submit.prevent="addCircle">
             <input class="inputCircle" @blur="hideInput" maxlength="10" type="text" v-model="label"/>
