@@ -1,6 +1,7 @@
 <template>
   <g>
-    <circle @click="handleClick()" class="circleSkill" :id="cx+''+cy" :cx="cx" :cy="cy" r="50" :fill="fill" :stroke="stroke" :filter="filter" stroke-width="2"></circle>
+    <circle v-show="showCircleBlur" @click="handleClick()" class="circleSkill" :id="cx+''+cy" :cx="cx" :cy="cy" r="50" :fill="fill" :stroke="stroke" stroke-width="10"></circle>
+    <circle @click="handleClick()" class="circleSkill" :cx="cx" :cy="cy" r="50" :fill="fill" :stroke="stroke" stroke-width="2"></circle>
     <text @click="handleClick()" class="textSkill" text-anchor="middle" :x="cx" :class="mySize" :y="cy+8" style="fill: rgba(0,0,0,0.52);">{{content}}</text>
   </g>
 </template>
@@ -9,7 +10,7 @@
   import store from "../../vuex/store"
 
   export default {
-    props:["cx","cy", "content","fill","stroke","filter"],
+    props:["cx","cy", "content","fill","stroke","showCircleBlur"],
     data () {
       return {
         cx1: "",

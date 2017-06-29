@@ -30,7 +30,6 @@ public class LinkDAO {
 
     @Transactional
     public List<Link> getAllLinks() {
-        daoFacade.getList("select s from Skill s left outer join fetch s.collaborators");
         daoFacade.getList("select l from Link l left outer join fetch l.skill1");
         return daoFacade.getList("select l from Link l left outer join fetch l.skill2");
     }
