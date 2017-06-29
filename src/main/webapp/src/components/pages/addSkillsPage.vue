@@ -252,7 +252,6 @@
           this.skills.sort(function (a, b) {
             return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);
           });
-          console.log(this.positionY(this.skills.length));
           document.getElementById("svg-container").style.height = (this.positionY(this.skills.length) + 300 + (Math.floor(this.skills.length/8)*10)).toString()+"px";
 
         }, response => {

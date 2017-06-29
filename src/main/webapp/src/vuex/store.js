@@ -3,62 +3,68 @@
  */
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
 
-Vue.use(Vuex)
-
-const LOGIN = "LOGIN";
-const LOGIN_SUCCESS = "LOGIN_SUCCESS";
-const LOGOUT = "LOGOUT";
-
+Vue.use(Vuex);
+var jwtDecode = require('jwt-decode');
 
 const store = new Vuex.Store({
   state: {
-   isLoggedIn: localStorage.getItem("token"),
-    cx:"",
-    cy:"",
-    cx1:"",
-    cy1:"",
-
-  },
-  mutations: {
-    [LOGIN] (state){
-      state.pending = true;
-    },
-
-    [LOGIN_SUCCESS](state){
-      state.isLoggedIn = true;
-      state.pending = true;
-    },
-    [LOGOUT](state){
-      state.isLoggedIn = false;
+    stayConnected: null,
+    token: null,
+    collaboratorLoggedIn : {
+      id: null,
+      lastName: null,
+      roles: null,
+      firstName: null,
+      defaultPicture : null
     }
   },
+
   actions: {
-    login({ commit}, creds) {
-      console.log("login...", creds);
-      commit (LOGIN);
-      return new Promise (resolve =>{
-        setTimeout(() =>{
-          localStorage.setItem("token", "JWT");
-          commit(LOGIN_SUCCESS);
-          resolve();
-        },1000)
-      });
-    },
-
-    logout ({ commit}){
-      localStorage.removeItem("token");
-      commit(LOGOUT);
-    }
-
 
   },
-  getters: {
-  isLoggedIn: state => {
-    return state.isLoggedIn;
-  }
 
+  mutations: {
+    setToken(state, collaboratorToken) {
+      state.token = collaboratorToken;
+      localStorage.setItem("token", collaboratorToken);
+      state.collaboratorLoggedIn = jwtDecode(localStorage.getItem("token"));
+    },
+
+    setTokenFromLocalStorage(state) {
+      state.token = localStorage.getItem("token");
+      state.collaboratorLoggedIn = jwtDecode(state.token);
+    },
+
+    clearToken(state) {
+      state.token = null;
+      localStorage.removeItem("token")
+    },
+
+    setStayConnected(state, stayConnected){
+      state.stayConnected = stayConnected;
+      localStorage.setItem("stayConnected", stayConnected);
+    },
+
+    clearStayConnected(state){
+      state.stayConnected = null;
+      localStorage.removeItem("stayConnected");
+    }
+  },
+
+  getters: {
+
+    stayConnected: state => {
+      return state.stayConnected;
+    },
+
+    isAuthenticated: state => {
+      return state.token != null
+    },
+
+    collaboratorLoggedIn: state => {
+      return state.collaboratorLoggedIn;
+    }
   }
 });
 export default store
