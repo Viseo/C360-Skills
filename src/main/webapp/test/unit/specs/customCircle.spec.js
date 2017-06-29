@@ -22,8 +22,8 @@ describe('test customcircle.vue', function() {
   });
 
   it('should check the position top of circle',function () {
-   // vmCustomCircle.store.state.cy = 150;
-    vmCustomCircle.cy = 0;
+    //store.state.cy = 150;
+    vmCustomCircle.cy = -150;
     var cxLine;
     var cyLine;
     vmCustomCircle.calculatePosition(cxLine,cyLine);
