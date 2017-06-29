@@ -2,35 +2,25 @@
   <g>
     <circle @click="handleClick()" class="circleSkill" :id="cx+''+cy" :cx="cx" :cy="cy" r="53" :fill="fill" :stroke="stroke" :filter="filter" stroke-width="2"></circle>
     <text @click="handleClick()" class="textSkill" text-anchor="middle" :x="cx" :class="mySize" :y="cy" style="fill: rgba(0,0,0,0.52);">{{content}}</text>
-    <foreignObject>
-    <div :style="divPosition(cx-45,cy+2)" class="stars" data-stars="1">
-      <svg height="21" width="18" class="star rating" data-rating="1">
-        <polygon points="9.8, 1.0, 3.2 21.78, 19.7, 8.58, 0, 8.58, 16.4, 21.78" style="fill-rule:nonzero;"/>
-      </svg>
-      <svg height="21" width="18" class="star rating" data-rating="2">
-        <polygon points="9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78" style="fill-rule:nonzero;"/>
-      </svg>
-      <svg height="21" width="18" class="star rating" data-rating="3">
-        <polygon points="9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78" style="fill-rule:nonzero;"/>
-      </svg>
-      <svg height="21" width="18" class="star rating" data-rating="4">
-        <polygon points="9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78" style="fill-rule:nonzero;"/>
-      </svg>
-      <svg height="21" width="18" class="star rating" data-rating="5">
-        <polygon points="9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78" style="fill-rule:nonzero;"/>
-      </svg>
-    </div>
+    <foreignObject :x="cx-45" :y="cy+5">
+      <div>
+        <star-rating v-model="rating" :show-rating="false" :star-size="18"></star-rating>
+      </div>
     </foreignObject>
   </g>
 </template>
 
 <script>
   import store from "../../vuex/store"
-
+  import StarRating from 'vue-star-rating'
   export default {
+    components: {
+      StarRating
+    },
     props:["cx","cy", "content","fill","stroke","filter"],
     data () {
       return {
+          rating:3,
         cx1: "",
         cy1: "",
         cx2: "",
