@@ -1,5 +1,5 @@
 <template>
-  <form id="registr-form" @submit.prevent="VerifyForm">
+  <form id="registr-form" @submit.prevent="verifyFormBeforeLogIn">
     <table style="border-spacing: 0px">
       <!-- EMAIL-->
       <div class="form-group" :class="{'has-error':emailEmpty || !isNotNewEmail}">
@@ -55,7 +55,7 @@
           <div class="col-xs-12 col-xm-12 col-md-12 cold-lg-12 ">
 
             <button ref="submitConnexion" type="submit" name="register-submit" id="register-submit"
-                    tabindex="4" class="form-control btn btn-primary" @click="login()">Se connecter
+                    tabindex="4" class="form-control btn btn-primary">Se connecter
             </button>
           </div>
         </div>
@@ -80,7 +80,7 @@
         },
         email: '',
         password: '',
-        userToRegister: {},
+        collaboratorToLogIn: {},
         isErrorAuthentification: false,
         emailEmpty: false,
         passwordEmpty: false,
@@ -99,31 +99,16 @@
     },
 
     methods: {
-      login(){
-        this.$store.dispatch("login", {
-          email: this.user.email,
-          password: this.user.password,
-        }).then(() => {
-          this.$router.push("/addSkills")
-        }),
 
-          axios.post(config.server + "/api/user", this.userToRegister);
+      logIn(){
+          axios.post(config.server + "/api/user", this.collaboratorToLogIn).then(response => {
+            this.$store.commit('clearToken');
+            this.$store.commit('setToken', response.data['userConnected']);
+            this.$router.push("/addSkills");
+          }, response => {
 
-
+          });
       },
-
-
-
-//      handleCookie(token) {
-//        if (this.stayConnected) {
-//          document.cookie = "token=" + token + ";expires=Fri, 31 Dec 9999 23:59:59 GMT";
-//          document.cookie = "stayconnected=" + this.stayConnected + ";expires=Fri, 31 Dec 9999 23:59:59 GMT";
-//        }
-//        else {
-//          document.cookie = "token=" + token;
-//          document.cookie = "stayconnected=" + this.stayConnected;
-//        }
-//      },
 
       showPopupFn() {
         if (this.email == '') {
@@ -145,37 +130,17 @@
         }
       },
 
-      VerifyForm(){
+      verifyFormBeforeLogIn(){
         this.isEmailEmpty();
         this.isPasswordEmpty();
         if (!this.emailEmpty && !this.passwordEmpty) {
           this.user.email = this.email;
           this.user.password = this.password;
-          this.userToRegister = JSON.parse(JSON.stringify(this.user));
-          this.login();
+          this.collaboratorToLogIn = JSON.parse(JSON.stringify(this.user));
+          this.logIn();
         }
       },
 
-//      verifyUserByDatabase(){
-//        let connectUserSuccess = (userPersistedToken) => {
-//          this.handleCookie(userPersistedToken.data['userConnected']);
-//          if (typeof userPersistedToken.data['userConnected'] != 'undefined') {
-//            if (jwt_decode(userPersistedToken.data['userConnected']).roles) {
-//              this.goTo('addTrainingTopic');
-//            }
-//            else
-//              this.goTo('registerTrainingCollaborator');
-//          }
-//        };
-//
-//        let connectUserError = () => {
-//          this.password = "";
-//          this.user.password = "";
-//          this.isErrorAuthentification = true;
-//        };
-//
-//        axios.post(config.server + "/api/user", this.userToRegister, connectUserSuccess, connectUserError);
-//     },
 
       gatherUsersFromDatabaseToVerify(){
           let self = this;
@@ -204,32 +169,7 @@
         )
       },
 
-      sendInformationToCookie(){
-        let self = this;
-        axios.get(config.server + "/api/collaborateurs").then(
-          function (response) {
-            self.allUsers = response.data;
-          },
-          function (response) {
-            console.log("Error: ", response);
-            console.error(response);
-          }
-        ).then(
-          function () {
-            for (let tmp in self.allUsers) {
-              if (self.email == self.allUsers[tmp].email) {
-                self.emailToSend = self.allUsers[tmp].email;
-                self.passwordToSend = self.allUsers[tmp].password;
-                self.idToSend = self.allUsers[tmp].id;
-                self.lastNameToSend = self.allUsers[tmp].lastName;
-                self.firstNameToSend = self.allUsers[tmp].firstName;
-                self.isNotNewEmail = true;
-                break;
-              }
-            }
-          }
-        )
-     },
+
 
       VerifyEmailFromDatabase(){
         let self = this;

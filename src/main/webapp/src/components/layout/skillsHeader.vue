@@ -11,26 +11,24 @@
           </div>
           <div id="navbar-right-part"
                class="col-lg-4 col-lg-offset-4 col-md-5 col-sm-5 col-xs-5"
+               @mouseleave="setDisconnectedToFalse()"
               >
             <div id="navbar-user"
-                 class="col-lg-7 col-lg-offset-1 col-md-8 col-sm-8 col-xs-9 text-right"
+                 class="col-lg-7 col-lg-offset-1 col-md-8 col-sm-8 col-xs-9 text-right" @mouseover="setDisconnectedToTrue()"
                 >
-              <div class="col-lg-2 col-md-5 col-sm-5 col-xs-5">
-                <img class="image-min"
+              <div v-show="showPicture()" class="col-lg-2 col-md-5 col-sm-5 col-xs-5">
+                <img style="cursor:default;" class="image-min" v-if="$store.getters.collaboratorLoggedIn.defaultPicture"
                      src="../../assets/profile.jpg">
+                <img style="cursor:default;" class="image-min" v-else
+                     :src="'img/'+$store.getters.collaboratorLoggedIn.id+'.jpg'">
               </div>
-              <!--<section>-->
-                <!--<router-link to="/">Home</router-link>-->
-                <!--<router-link to="/login" v-if="!isLoggedIn">Login</router-link>-->
-                <!--<a href="#" v-if="isLoggedIn" @click="logout">Logout</a>-->
-              <!--</section>-->
-              <span class="text-left col-lg-8 col-lg-offset-2 col-md-5 col-sm-5 col-xs-5" style="margin-top:10px" >{{ firstName }} {{ lastName }}</span>
-              <!--<dropdown class="col-lg-8 col-lg-offset-2 col-md-5 col-sm-5 col-xs-5" type="default" v-if="showPicture()" v-show="showDisconnexion()" text="Choisissez une action" id="menu">-->
-                <!--<li><a @click="goTo('registerTrainingCollaborator');">Espace formations</a></li>-->
-                <!--<li><a @click="goTo('profiltoupdate');">Modifier mon profil</a></li>-->
-                <!--<li role="separator" class="divider"></li>-->
-                <!--<li><a @click="disconnectUser">Déconnexion</a></li>-->
-              <!--</dropdown>-->
+              <span class="text-left col-lg-8 col-lg-offset-2 col-md-5 col-sm-5 col-xs-5" style="margin-top:10px" @mouseover="setDisconnectedToTrue()" v-show="showName()">{{ $store.getters.collaboratorLoggedIn.lastName }} {{ $store.getters.collaboratorLoggedIn.firstName }}</span>
+              <dropdown class="col-lg-8 col-lg-offset-2 col-md-5 col-sm-5 col-xs-5" type="default" v-if="showPicture()" v-show="showDisconnexion()" text="Choisissez une action" id="menu">
+                <li><a @click="$router.push('/addSkills')">Espace formations</a></li>
+                <li><a @click="$router.push('/profiltoupdate')">Modifier mon profil</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a @click="disconnectUser">Déconnexion</a></li>
+              </dropdown>
 
 
             </div>
@@ -67,20 +65,19 @@
 
 <script>
   var $ = window.jQuery = require('jquery');
-  import router from '../../config/router'
+  import router from '../../config/router';
   import * as Vuex from "vuex";
+  import VueStrap from 'vue-strap';
 
   export default{
       props:["name"],
     data () {
       return {
-        lastName: 'Ben Gamra',
-        firstName: 'Nihel',
+        lastName: null,
+        firstName: null,
         title:'Gestion des compétences',
         disconnect: false,
         dialog: false
-
-
       }
     },
 
@@ -94,7 +91,9 @@
 
   },
 
-    mounted: function () {
+    mounted() {
+      this.$store.commit('setTokenFromLocalStorage');
+
       $('ul.nav li.dropdown').hover(function () {
         $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
       }, function () {
@@ -102,7 +101,17 @@
       });
 
     },
-    method: {
+    methods: {
+      getCollaboratorLastName(){
+          if(this.$store.getters.isLoggedIn && this.$store.getters.collaboratorLoggedIn.lastName) {
+            this.lastName = this.$store.getters.collaboratorLoggedIn.lastName;
+          }
+      },
+      getCollaboratorFirstName(){
+        if(this.$store.getters.isLoggedIn && this.$store.getters.collaboratorLoggedIn.sub) {
+          this.firstName = this.$store.getters.collaboratorLoggedIn.sub;
+        }
+      },
 //      ...Vuex.mapActions(["logout"])},
 //
 //    logout() {
@@ -120,6 +129,42 @@
       },
       showName(){
         return !this.disconnect && !this.dialog;
+      },
+
+      showPicture(){
+          if(this.$store.getters.isAuthenticated){
+              return true;
+          }
+          else {
+              return false;
+          }
+      },
+      disconnectUser(){
+        let disconnect = (response) => {
+          if (response) {
+            let getCookieToken = document.cookie.match('(^|;)\\s*' + "token" + '\\s*=\\s*([^;]+)');
+            let getCookieStayConnected = document.cookie.match('(^|;)\\s*' + "stayconnected" + '\\s*=\\s*([^;]+)');
+            let getCookieTimeConnected = document.cookie.match('(^|;)\\s*' + "timeConnected" + '\\s*=\\s*([^;]+)');
+            if (getCookieToken && getCookieStayConnected) {
+              document.cookie = "token=" + this.token + "; expires=Thu, 18 Dec 2013 12:00:00 UTC; path=/";
+              document.cookie = "stayconnected=" + this.stayConnected + "; expires=Thu, 18 Dec 2013 12:00:00 UTC; path=/";
+              document.cookie = "defaultPicture=; expires=Thu, 18 Dec 2013 12:00:00 UTC; path=/";
+              if (getCookieTimeConnected)
+                document.cookie = "timeConnected=" + "; expires=Thu, 18 Dec 2013 12:00:00 UTC; path=/";
+            }
+            if (!this.dialog)
+              this.goTo('login')
+          }
+          document.cookie = "alreadyShownPopUp=" + "; expires=Thu, 18 Dec 2013 12:00:00 UTC; path=/";
+        };
+
+        this.post("api/userdisconnect", this.token, disconnect);
+      },
+      setDisconnectedToTrue(){
+        this.disconnect = true;
+      },
+      setDisconnectedToFalse(){
+        this.disconnect = false;
       },
     }
   }

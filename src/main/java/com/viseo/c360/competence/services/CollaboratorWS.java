@@ -59,10 +59,13 @@ public class CollaboratorWS {
             CollaboratorDescription user = new CollaboratorToDescription().convert(c);
             Key key = MacProvider.generateKey();
             String compactJws = Jwts.builder()
-                    .setSubject(user.getFirstName())
+                    .claim("firstName", user.getFirstName())
                     .claim("lastName", user.getLastName())
-                    .claim("roles", user.getIsAdmin())
+                    .claim("isAdmin", user.getIsAdmin())
+                    .claim("email", user.getEmail())
+                    .claim("version", user.getVersion())
                     .claim("id", user.getId())
+                    .claim("defaultPicture", user.getDefaultPicture())
                     .signWith(SignatureAlgorithm.HS512, key)
                     .compact();
             Map currentUserMap = new HashMap<>();
