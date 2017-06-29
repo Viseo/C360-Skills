@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^6.7.2",
+    "axios-mock-adapter": "^1.9.0",
     "babel-core": "^6.25.0",
     "babel-loader": "^6.2.10",
     "babel-plugin-istanbul": "^4.1.4",
@@ -47,6 +48,7 @@
     "html-webpack-plugin": "^2.28.0",
     "http-proxy-middleware": "^0.17.3",
     "inject-loader": "^3.0.0",
+    "jasmine-ajax": "^3.3.1",
     "jasmine-core": "^2.6.4",
     "karma": "^1.4.1",
     "karma-chrome-launcher": "^2.2.0",
@@ -77,12 +79,12 @@
     "vue-loader": "^12.1.0",
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "^2.3.3",
+    "vue-validator": "^3.0.0-alpha.2",
     "webpack": "^2.6.1",
     "webpack-bundle-analyzer": "^2.2.1",
     "webpack-dev-middleware": "^1.10.0",
     "webpack-hot-middleware": "^2.18.0",
-    "webpack-merge": "^4.1.0",
-    "vue-validator": "^3.0.0-alpha.2"
+    "webpack-merge": "^4.1.0"
   },
   "engines": {
     "node": ">= 4.0.0",
