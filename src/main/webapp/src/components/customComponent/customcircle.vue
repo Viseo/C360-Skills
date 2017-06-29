@@ -3,7 +3,7 @@
     <circle @click="handleClick()" class="circleSkill" :id="cx+''+cy" :cx="cx" :cy="cy" r="53" :fill="fill" :stroke="stroke" :filter="filter" stroke-width="2"></circle>
     <text @click="handleClick()" class="textSkill" text-anchor="middle" :x="cx" :class="mySize" :y="cy" style="fill: rgba(0,0,0,0.52);">{{content}}</text>
     <foreignObject :x="cx-45" :y="cy+5">
-      <div>
+      <div v-show="!admin">
         <star-rating v-model="rating" :show-rating="false" :star-size="18"></star-rating>
       </div>
     </foreignObject>
@@ -17,7 +17,7 @@
     components: {
       StarRating
     },
-    props:["cx","cy", "content","fill","stroke","filter"],
+    props:["admin","cx","cy", "content","fill","stroke","filter"],
     data () {
       return {
         rating:0,
