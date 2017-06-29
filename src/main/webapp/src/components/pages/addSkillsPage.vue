@@ -90,7 +90,6 @@
     },
     methods: {
         addWish(wish){
-            console.log("hello")
           this.label = wish.label;
           this.addSkill();
           this.label="Nouvelle";

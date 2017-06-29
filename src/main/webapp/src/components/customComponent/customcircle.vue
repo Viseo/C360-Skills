@@ -1,7 +1,7 @@
 <template>
   <g>
     <circle @click="handleClick()" class="circleSkill" :id="cx+''+cy" :cx="cx" :cy="cy" r="50" :fill="fill" :stroke="stroke" :filter="filter" stroke-width="2"></circle>
-    <text @click="handleClick()" class="textSkill" text-anchor="middle" :x="cx" :class="mySize" :y="cy+8" style="fill: rgba(0,0,0,0.52);">{{content}}</text>
+    <text @click="handleClick()" class="textSkill" text-anchor="middle" :x="cx" :y="cy+8" style="fill: rgba(0,0,0,0.52);">{{content}}</text>
   </g>
 </template>
 
@@ -24,15 +24,6 @@
         cxLine2:"",
         cyLine3:"",
         cxLine3:"",
-      }
-    },
-    computed: {
-      mySize(){
-//        console.log(this.content.length);
-//        if(this.content.length>4) {
-//          return 'smallSize'
-//        }
-//        else return 'defaultSize';
       }
     },
     methods: {

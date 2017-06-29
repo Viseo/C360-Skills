@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-show="isWish">
     <div class="wish-request" id="wish-request">
       <h4 class="mystyle">Demande de création</h4>
       <hr class="myhrline">
@@ -8,7 +8,7 @@
       <div>
         <svg :viewBox="myViewBox"  height="300">
         <g id="wishSVG" v-for="(wish,i) in wishes">
-        <customCircle :id="wish.id" :cx="positionX(i)" :cy="55" :content="wish.label" stroke="#aeaeae" fill="rgba(213, 211, 211, 0.4)"/>
+        <customCircle :id="wish.id" :cx="positionX(i)" :cy="55" :content="wish.label" stroke="#ccc" fill="#eee"/>
           <circle @click="validWish(wish)" style="cursor: pointer" r="10" :cx="positionX(i) + 25" cy="120" fill="#09aa76"></circle>
           <text @click="validWish(wish)" text-anchor="middle" :x="positionX(i) + 25"  y="125" style="fill: white;cursor: pointer">✔</text>
           <circle @click="rejectWish(wish)" style="cursor: pointer" r="10" :cx="positionX(i) - 25" cy="120" fill="#a90909"></circle>
@@ -31,11 +31,16 @@
           return {
             posX: 80,
             wishes: [],
-            myViewBox: '0 0 2000 250'
+            myViewBox: '0 0 2000 250',
           }
       },
       mounted() {
         this.getAllWishes()
+      },
+      computed: {
+          isWish(){
+            return this.wishes.length !=0;
+          }
       },
       methods: {
         positionX(i) {
@@ -57,7 +62,7 @@
             .then(response => {
               this.wishes = response.data;
               console.log(response.data);
-              this.myViewBox = "0 0 " + parseInt(this.wishes.length*155 - 50) +" 250";
+              this.myViewBox = "0 0 " + parseInt(this.wishes.length*155 - 20) +" 250";
             })
 
         },
