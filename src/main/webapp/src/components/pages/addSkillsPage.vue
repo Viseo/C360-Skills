@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="svg-container" id="svg-container">
-      <b class="mybstyle">Administration des compétences</b>
+      <h4 class="mystyle">Administration des compétences</h4>
       <hr class="myhrline">
       <svg version="1.1" :viewBox="myViewBox"  preserveAspectRatio="xMinYMin meet">
         <defs>
@@ -302,43 +302,22 @@
     overflow: hidden;
   }
 
-  .defaultSize {
-    font-size: 24px;
-  }
-
-  .smallSize {
-    font-size: 17px;
-  }
-
   body {
     color: #075338;
     margin: 0;
-    font-family: 'Lato', sans-serif;
   }
 
-  h1 {
-    color: white;
+  hr {
+    height: 10px;
+    border: 0;
+    box-shadow: 0 10px 2px -10px #8c8c8c inset;
+    margin-right:50px;
+    margin-left:50px;
+  }
+
+  h4.mystyle {
     text-align: center;
-    margin: 0;
-  }
-
-  .header {
-    background-color: #09aa76;
-    height: 80px;
-    margin: 0px 0px 25px 0px;
-  }
-
-
-
-  hr.myhrline{
-    border-top: 1px solid #8c8b8b;
-    margin-left: 50px;
-    margin-right: 50px;
-  }
-
-  b.mybstyle {
-    margin-left: 50px;
-    margin-right: 50px;
+    font-size:1.75rem;
   }
 
   input[type=text].inputCircle:focus {

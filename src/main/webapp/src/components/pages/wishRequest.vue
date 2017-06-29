@@ -1,14 +1,14 @@
 <template>
   <div>
     <div class="wish-request" id="wish-request">
-      <b class="mybstyle">Demande de création</b>
+      <h4 class="mystyle">Demande de création</h4>
       <hr class="myhrline">
     </div>
     <div data-simplebar class="wishContainer">
       <div>
         <svg :viewBox="myViewBox"  height="300">
         <g id="wishSVG" v-for="(wish,i) in wishes">
-        <customCircle :id="wish.id" :cx="positionX(i)" :cy="55" :content="wish.label" stroke="#E03559" fill="white"/>
+        <customCircle :id="wish.id" :cx="positionX(i)" :cy="55" :content="wish.label" stroke="#aeaeae" fill="rgba(213, 211, 211, 0.4)"/>
           <circle @click="validWish(wish)" style="cursor: pointer" r="10" :cx="positionX(i) + 25" cy="120" fill="#09aa76"></circle>
           <text @click="validWish(wish)" text-anchor="middle" :x="positionX(i) + 25"  y="125" style="fill: white;cursor: pointer">✔</text>
           <circle @click="rejectWish(wish)" style="cursor: pointer" r="10" :cx="positionX(i) - 25" cy="120" fill="#a90909"></circle>
@@ -57,7 +57,7 @@
             .then(response => {
               this.wishes = response.data;
               console.log(response.data);
-              this.myViewBox = "0 0 " + parseInt(this.wishes.length*155) +" 250";
+              this.myViewBox = "0 0 " + parseInt(this.wishes.length*155 - 50) +" 250";
             })
 
         },
