@@ -24,7 +24,7 @@
               </div>
               <span class="text-left col-lg-8 col-lg-offset-2 col-md-5 col-sm-5 col-xs-5" style="margin-top:10px" @mouseover="setDisconnectedToTrue()" v-show="showName()">{{ $store.getters.collaboratorLoggedIn.lastName }} {{ $store.getters.collaboratorLoggedIn.firstName }}</span>
               <dropdown class="col-lg-8 col-lg-offset-2 col-md-5 col-sm-5 col-xs-5" type="default" v-if="showPicture()" v-show="showDisconnexion()" text="Choisissez une action" id="menu">
-                <li><a @click="$router.push('/addSkills')">Espace formations</a></li>
+                <li><a @click="$router.push('/addSkills')">Espace compétences</a></li>
                 <li><a @click="$router.push('/profiltoupdate')">Modifier mon profil</a></li>
                 <li role="separator" class="divider"></li>
                 <li><a @click="disconnectUser">Déconnexion</a></li>
@@ -41,13 +41,13 @@
 
                   <ul id="dropdown-app" class="dropdown-menu">
                     <li>
-                      <span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img src="../../assets/icon_cv.png"
+                      <span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img src="../../assets/microservices_icon/icon_cv.png"
                                                                              class="text-center  icon-app"><p>GCv</p></a></span>
-                      <span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img src="../../assets/icon_conge.png"
+                      <span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img src="../../assets/microservices_icon/icon_competence.png"
                                                                              class="text-center icon-app"><p>GCon</p></span>
-                      <span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img src="../../assets/icon_formation.png"
+                      <span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img src="../../assets/microservices_icon/icon_formation.png"
                                                                              class="text-center icon-app"><p>GF</p></a></span>
-                      <span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img src="../../assets/icon_mission.png"
+                      <span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img src="../../assets/microservices_icon/icon_mission.png"
                                                                              class="text-center icon-app"><p>GM</p></span>
                     </li>
                   </ul>
@@ -67,7 +67,8 @@
   var $ = window.jQuery = require('jquery');
   import router from '../../config/router';
   import * as Vuex from "vuex";
-  import VueStrap from 'vue-strap';
+  import config from '../../config/config'
+  import axios from 'axios'
 
   export default{
       props:["name"],
@@ -140,25 +141,13 @@
           }
       },
       disconnectUser(){
-        let disconnect = (response) => {
-          if (response) {
-            let getCookieToken = document.cookie.match('(^|;)\\s*' + "token" + '\\s*=\\s*([^;]+)');
-            let getCookieStayConnected = document.cookie.match('(^|;)\\s*' + "stayconnected" + '\\s*=\\s*([^;]+)');
-            let getCookieTimeConnected = document.cookie.match('(^|;)\\s*' + "timeConnected" + '\\s*=\\s*([^;]+)');
-            if (getCookieToken && getCookieStayConnected) {
-              document.cookie = "token=" + this.token + "; expires=Thu, 18 Dec 2013 12:00:00 UTC; path=/";
-              document.cookie = "stayconnected=" + this.stayConnected + "; expires=Thu, 18 Dec 2013 12:00:00 UTC; path=/";
-              document.cookie = "defaultPicture=; expires=Thu, 18 Dec 2013 12:00:00 UTC; path=/";
-              if (getCookieTimeConnected)
-                document.cookie = "timeConnected=" + "; expires=Thu, 18 Dec 2013 12:00:00 UTC; path=/";
-            }
-            if (!this.dialog)
-              this.goTo('login')
-          }
-          document.cookie = "alreadyShownPopUp=" + "; expires=Thu, 18 Dec 2013 12:00:00 UTC; path=/";
-        };
-
-        this.post("api/userdisconnect", this.token, disconnect);
+        axios.post(config.server + '/api/userdisconnect', this.$store.getters.token).then(
+          response => {
+              this.$store.commit('clearToken');
+              this.$router.push('/login');
+          }, response => {
+            console.log(response);
+          });
       },
       setDisconnectedToTrue(){
         this.disconnect = true;

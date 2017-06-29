@@ -4,6 +4,7 @@ import mainPage from '../components/mainPage.vue'
 import containerSVG from '../components/pages/addSkillsPage.vue'
 import navigationMenu from '../components/layout/signInUpMenu.vue'
 import error404Page from '../components/pages/error404Page.vue'
+
 var jwtDecode = require('jwt-decode');
 Vue.use(Router);
 
@@ -89,4 +90,30 @@ const router = new Router({
   ]
 });
 
+const PAGE_TITLE = {
+  "/login": "Accueil C360",
+  "/resetPassword": "Mise à jour mot de passe",
+  "/addSkills": "Gestion des compétences",
+  "/profiltoupdate": "Modifier mon profil"
+};
+
+const PAGE_FAVICON = {
+  "/login": "../assets/microservices_icon/icon_accueil.png",
+  "/resetPassword": "../assets/microservices_icon/icon_accueil.png",
+  "/profiltoupdate": "../assets/microservices_icon/icon_competence.png",
+  "/addSkills": "../assets/microservices_icon/icon_competence.png"
+};
+
+router.afterEach((toRoute, fromRoute) => {
+  window.document.title = PAGE_TITLE[toRoute.path];
+  let pageOldIconTab = window.document.getElementById('dynamic-favicon');
+  let pageNewIconTab = window.document.createElement('link');
+  pageNewIconTab.id = 'dynamic-favicon';
+  pageNewIconTab.rel = 'icon';
+  pageNewIconTab.href = PAGE_FAVICON[toRoute.path];
+  if (pageOldIconTab) {
+    window.document.head.removeChild(pageOldIconTab);
+  }
+  window.document.head.appendChild(pageNewIconTab);
+});
 export default router;

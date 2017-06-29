@@ -66,6 +66,10 @@ const store = new Vuex.Store({
 
     collaboratorLoggedIn: state => {
       return state.collaboratorLoggedIn;
+    },
+
+    token: state => {
+      return state.token;
     }
   }
 });
