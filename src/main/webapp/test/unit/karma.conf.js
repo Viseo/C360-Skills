@@ -14,7 +14,9 @@ module.exports = function (config) {
     browsers: ['Chrome'],
     frameworks: ['jasmine'],
     reporters: ['spec', 'coverage'],
-    files: ['./index.js'],
+    files: [
+      './index.js'
+    ],
     preprocessors: {
       './index.js': ['webpack', 'sourcemap'],
       //'scr/main/webapp/src/main.js': ['coverage']

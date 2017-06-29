@@ -3,17 +3,32 @@
  */
 import Vue from 'vue'
 import RegistrationPage from '@/components/registration/registrationPage'
+import config from '@/config/config'
+//import prepareRequest from '@/unit/test-util'
+//var InterceptorRequst = require('./test-util')
+//import 'jasmine-ajax'
+require('jasmine-ajax');
+import Service from './service';
+var MockAdapter = require('axios-mock-adapter');
 
-const Constructor = Vue.extend(RegistrationPage);
+import axios from 'axios'
+var Constructor = Vue.extend(RegistrationPage);
 var vmRegistrationPage;
-describe('test registrationPage.vue', function() {
 
+describe('test registrationPage.vue', function() {
+ // let resource = { id: 5, name: 'foo' };
+
+
+  let dispatch = jasmine.createSpy('dispatch');
   beforeEach(function () {
+
+    //jasmine.Ajax.install();
 
     vmRegistrationPage = new Constructor().$mount();
   });
 
   afterEach(function () {
+    //jasmine.Ajax.uninstall();
     Object.assign(vmRegistrationPage.$data, vmRegistrationPage.$options.data());
     //clearRequests();
   });
@@ -165,17 +180,66 @@ describe('test registrationPage.vue', function() {
     vmRegistrationPage.email = '';
     vmRegistrationPage.password = '';
     vmRegistrationPage.confirmPassword = '';
+    vmRegistrationPage.setLoginEmptyToFalse();
+    vmRegistrationPage.setLastNameEmptyToFalse();
+    vmRegistrationPage.setFirstNameEmptyToFalse();
+    vmRegistrationPage.setEmailAlreadyExistToFalse();
+    vmRegistrationPage.setPasswordEmptyToFalse();
+    vmRegistrationPage.setConfirmPasswordEmptyToFalse();
     vmRegistrationPage.verifyForm();
     setTimeout(function () {
       expect(vmRegistrationPage.personalIdNumberAlreadyExist).toBe(false);
       expect(vmRegistrationPage.emailAlreadyExist).toBe(false);
-
-      /*expect(vmRegistrationPage.personalIdNumberAlreadyExist).toBe(false);
-       expect(vmRegistrationPage.loginEmpty).toBe(false);
-       expect(vmRegistrationPage.errorMessageLogin).toBe('Veuillez entrer un code de login valide');
-       expect(vmRegistrationPage.isLoginValid).toBe(false);*/
       done();
     },0);
+  });
+
+  it('it should verify form is empty', function (done) {
+    vmRegistrationPage.toggleShowPassword();
+    vmRegistrationPage.toggleShowPasswordConfirmation();
+    setTimeout(function () {
+      expect(vmRegistrationPage.showPass).toBe(true);
+      expect(vmRegistrationPage.showPassConf).toBe(true);
+      done();
+    },0);
+  });
+
+  /* A revoir pour les requets */
+  it('it should add the collaborator', function (done) {
+    jasmine.Ajax.install();
+    let resource = {
+      id: 1,
+      version: 0,
+      personnalIdNumber: "AAA1234",
+      lastName: "DUPONT",
+      firstName: "ERIC",
+      email: "eric.dupont@viseo.com",
+      password: "123456"
+    };
+
+    let request, promise;
+    //let instance = Service;
+    let payload = resource;
+    let path = config.server + '/api/collaborateurs';
+    let callback = jasmine.createSpy('callback');
+
+    vmRegistrationPage.collaboratorToRegister = JSON.parse(JSON.stringify(resource));
+    vmRegistrationPage.addCollaborator();
+    setTimeout(function () {
+      request = jasmine.Ajax.requests.mostRecent();
+      expect(request.url).toBe(path);
+      expect(request.method).toBe('POST');
+      //expect(request.responseType).toBe('json');
+      //expect(request.data()).toEqual(payload);
+      request.respondWith({
+        "status": 200,
+        "contentType": 'text/plain',
+        "responseText": JSON.stringify(payload)
+      });
+      jasmine.Ajax.uninstall();
+
+      done();
+    }, 200);
   });
 
 });

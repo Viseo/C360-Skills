@@ -10,7 +10,7 @@
           </filter>
         </defs>
         <g v-for="link in links">
-          <line  @mouseover="selectedlink = link;showCross = true;" :x1="getPositionXById(link.skill1.id)"
+          <line @mouseover="selectedlink = link;showCross = true;" :x1="getPositionXById(link.skill1.id)"
                 :y1="getPositionYById(link.skill1.id)"
                 :x2="getPositionXById(link.skill2.id)"
                 :y2="getPositionYById(link.skill2.id)" style="stroke:rgba(0,0,0,0.52);stroke-width:3"/>
@@ -25,26 +25,43 @@
               </form>
             </div>
           </foreignObject>
-          <circle @click="cancelUpdate()" v-show="showIcon(skill.id)" style="cursor: pointer" r="10" :cx="positionX(i)" :cy="positionY(i) + 65" fill="orange"></circle>
-          <text @click="cancelUpdate()" v-show="showIcon(skill.id)" text-anchor="middle" :x="positionX(i)"  :y="positionY(i) + 70" style="fill: white;cursor: pointer">X</text>
-          <circle @click="updateSkill(selectedSkill.skill1)" v-show="showIcon(skill.id)" style="cursor: pointer" r="10" :cx="positionX(i) + 30" :cy="positionY(i) + 65" fill="#09aa76"></circle>
-          <text @click="updateSkill(selectedSkill.skill1)" v-show="showIcon(skill.id)" text-anchor="middle" :x="positionX(i) + 30"  :y="positionY(i) + 70" style="fill: white;cursor: pointer">✔</text>
-          <circle @click="removeSkill(selectedSkill.skill1)" v-show="showIcon(skill.id)" style="cursor: pointer" r="10" :cx="positionX(i) - 30" :cy="positionY(i) + 65" fill="#a90909"></circle>
-          <text @click="removeSkill(selectedSkill.skill1)" v-show="showIcon(skill.id)" text-anchor="middle" :x="positionX(i) - 30"  :y="positionY(i) + 70" style="fill: white;cursor: pointer">&#128465</text>
+          <circle @click="cancelUpdate()" v-show="showIcon(skill.id)" style="cursor: pointer" r="10" :cx="positionX(i)"
+                  :cy="positionY(i) + 65" fill="orange"></circle>
+          <text @click="cancelUpdate()" v-show="showIcon(skill.id)" text-anchor="middle" :x="positionX(i)"
+                :y="positionY(i) + 70" style="fill: white;cursor: pointer">X
+          </text>
+          <circle @click="updateSkill(selectedSkill.skill1)" v-show="showIcon(skill.id)" style="cursor: pointer" r="10"
+                  :cx="positionX(i) + 30" :cy="positionY(i) + 65" fill="#09aa76"></circle>
+          <text @click="updateSkill(selectedSkill.skill1)" v-show="showIcon(skill.id)" text-anchor="middle"
+                :x="positionX(i) + 30" :y="positionY(i) + 70" style="fill: white;cursor: pointer">✔
+          </text>
+          <circle @click="removeSkill(selectedSkill.skill1)" v-show="showIcon(skill.id)" style="cursor: pointer" r="10"
+                  :cx="positionX(i) - 30" :cy="positionY(i) + 65" fill="#a90909"></circle>
+          <text @click="removeSkill(selectedSkill.skill1)" v-show="showIcon(skill.id)" text-anchor="middle"
+                :x="positionX(i) - 30" :y="positionY(i) + 70" style="fill: white;cursor: pointer">&#128465
+          </text>
         </g>
         <customCircle :admin="true" @click="displayInput" :cx="positionX(skills.length)" :cy="positionY(skills.length)" :content="label" stroke="#09aa76" fill="white"/>
         <foreignObject v-show="newSkillClicked" :x="positionX(skills.length) - 44" :y="positionY(skills.length)-16">
           <div xmlns="http://www.w3.org/1999/xhtml">
             <form @submit.prevent="addCircle">
-            <input class="inputCircle" @blur="hideInput" maxlength="10" type="text" v-model="label"/>
+              <input class="inputCircle" @blur="hideInput" maxlength="10" type="text" v-model="label"/>
             </form>
           </div>
         </foreignObject>
-        <circle style="cursor: pointer" r="10" :cx="positionX(skills.length) - 30" :cy="positionY(skills.length) + 65" fill="orange"></circle>
-        <text @click="newSkillClicked = false; label = 'Nouvelle'" text-anchor="middle" :x="positionX(skills.length) - 30"  :y="positionY(skills.length) + 70" style="fill: white;cursor: pointer">X</text>
-        <circle style="cursor: pointer" r="10" :cx="positionX(skills.length) + 30" :cy="positionY(skills.length) + 65" fill="#09aa76"></circle>
-        <text @click="addCircle" text-anchor="middle" :x="positionX(skills.length) + 30"  :y="positionY(skills.length) + 70" style="fill: white;cursor: pointer">✔</text>
-        <CloseCross v-show="showCross" style="cursor: pointer;"@click="removeLink(selectedlink)":x1="linkPositionX()" :y1="linkPositionY()"></CloseCross>
+        <circle style="cursor: pointer" r="10" :cx="positionX(skills.length) - 30" :cy="positionY(skills.length) + 65"
+                fill="orange"></circle>
+        <text @click="newSkillClicked = false; label = 'Nouvelle'" text-anchor="middle"
+              :x="positionX(skills.length) - 30" :y="positionY(skills.length) + 70" style="fill: white;cursor: pointer">
+          X
+        </text>
+        <circle style="cursor: pointer" r="10" :cx="positionX(skills.length) + 30" :cy="positionY(skills.length) + 65"
+                fill="#09aa76"></circle>
+        <text @click="addCircle" text-anchor="middle" :x="positionX(skills.length) + 30"
+              :y="positionY(skills.length) + 70" style="fill: white;cursor: pointer">✔
+        </text>
+        <CloseCross v-show="showCross" style="cursor: pointer;" @click="removeLink(selectedlink)" :x1="linkPositionX()"
+                    :y1="linkPositionY()"></CloseCross>
       </svg>
     </div>
   </div>
@@ -63,16 +80,16 @@
     data () {
       return {
         selectedSkill: {
-            skill1:'',
-            skill2:''
+          skill1: '',
+          skill2: ''
         },
         skills: [],
         selectedlink: '',
-        skillOldValue:'',
+        skillOldValue: '',
         clickOnSkill: false,
         label: 'Nouvelle',
-        newSkillClicked:false,
-        showCross : false,
+        newSkillClicked: false,
+        showCross: false,
         text: [],
         posX: 100,
         posY: 60,
@@ -123,19 +140,21 @@
             this.getAllSkills();
             this.getAllLinks();
             this.selectedSkill = {
-              skill1:'',
-              skill2:''
-            };          }, response => {
+              skill1: '',
+              skill2: ''
+            };
+          }, response => {
             console.log(response);
             this.selectedSkill = {
-              skill1:'',
-              skill2:''
-            };          })
+              skill1: '',
+              skill2: ''
+            };
+          })
       },
       linkPositionX(){
         if (this.selectedlink != '') {
-          var x1 = parseFloat(this.getPositionXById(this.selectedlink.skill1.id))-6;
-          var x2 = parseInt(this.getPositionXById(this.selectedlink.skill2.id))-6;
+          var x1 = parseFloat(this.getPositionXById(this.selectedlink.skill1.id)) - 6;
+          var x2 = parseInt(this.getPositionXById(this.selectedlink.skill2.id)) - 6;
           var total = (x1 + x2) / 2;
           return total
         }
@@ -146,8 +165,8 @@
         if (this.selectedlink != '') {
           var y1 = parseInt(this.getPositionYById(this.selectedlink.skill1.id)) - 5;
           var y2 = parseInt(this.getPositionYById(this.selectedlink.skill2.id)) - 5;
-          var somme = y1+y2;
-          return somme/2
+          var somme = y1 + y2;
+          return somme / 2
         }
         else
           return 0;
@@ -155,43 +174,43 @@
 
       waitForElementToDisplay(selector, time, position){
         let self = this;
-        if(document.getElementById(selector)!=null) {
+        if (document.getElementById(selector) != null) {
           return document.getElementById(selector).getElementsByTagName("circle")[0].getAttribute(position);
         }
         else {
-          setTimeout(function() {
+          setTimeout(function () {
             self.waitForElementToDisplay(selector, time);
           }, time);
         }
       },
 
       getPositionXById(id){
-        return this.waitForElementToDisplay(id,0,"cx");
+        return this.waitForElementToDisplay(id, 0, "cx");
       },
 
       getPositionYById(id){
-       return this.waitForElementToDisplay(id,0,"cy");
+        return this.waitForElementToDisplay(id, 0, "cy");
       },
       selectSkill(skill){
-          this.skillOldValue = skill.label;
+        this.skillOldValue = skill.label;
         let self = this;
-        if (self.selectedSkill.skill1 == ''){
+        if (self.selectedSkill.skill1 == '') {
           self.selectedSkill.skill1 = skill;
           document.getElementById(skill.id).getElementsByTagName("circle")[0].setAttribute("filter", "url(#blurMe)");
         }
-        else if(skill != self.selectedSkill.skill1){
+        else if (skill != self.selectedSkill.skill1) {
           self.selectedSkill.skill2 = skill;
           axios.post(config.server + '/api/addlink', self.selectedSkill).then(
-          response => {
-                console.log(response);
-          }, response => {
-            console.log(response);
-          }).then(
+            response => {
+              console.log(response);
+            }, response => {
+              console.log(response);
+            }).then(
             function () {
               document.getElementById(self.selectedSkill.skill1.id).getElementsByTagName("circle")[0].removeAttribute("filter");
               self.selectedSkill = {
-                skill1:'',
-                skill2:''
+                skill1: '',
+                skill2: ''
               };
               self.getAllSkills();
               self.getAllLinks();
@@ -200,14 +219,14 @@
         }
       },
       positionX(integ){
-          console.log()
+        console.log()
         return this.posX + ((integ) % 8) * 150;
       },
       positionY(integ){
         return this.posY + Math.floor((integ) / 8) * 150;
       },
       addCircle() {
-        if(this.label != '' && this.label != 'Nouvelle') {
+        if (this.label != '' && this.label != 'Nouvelle') {
           this.addSkill();
           this.text.push(this.text1);
           this.newSkillClicked = false;
@@ -227,8 +246,8 @@
           response => {
             console.log(response);
             this.selectedSkill = {
-              skill1:'',
-              skill2:''
+              skill1: '',
+              skill2: ''
             };
             this.getAllSkills();
             this.getAllLinks();
@@ -239,12 +258,12 @@
 
       },
       cancelUpdate(){
-          this.hideInput()
-          for(var i =0; i< this.skills.length;i++){
-              if(this.skills[i].id == this.selectedSkill.skill1.id){
-                this.selectedSkill.skill1.label = this.skillOldValue;
+        this.hideInput()
+        for (var i = 0; i < this.skills.length; i++) {
+          if (this.skills[i].id == this.selectedSkill.skill1.id) {
+            this.selectedSkill.skill1.label = this.skillOldValue;
 
-              }
+          }
 
           }
           this.selectedSkill.skill1 = "";
@@ -262,11 +281,11 @@
         });
       },
       getAllLinks(){
-        this.showCross=false;
+        this.showCross = false;
         axios.get(config.server + "/api/links/").then(response => {
           this.links = response.data;
-          if(this.selectedlink=='')
-              this.showCross =false;
+          if (this.selectedlink == '')
+            this.showCross = false;
           this.links.sort(function (a, b) {
             return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);
           });
@@ -326,9 +345,7 @@
     margin: 0px 0px 25px 0px;
   }
 
-
-
-  hr.myhrline{
+  hr.myhrline {
     border-top: 1px solid #8c8b8b;
     margin-left: 50px;
     margin-right: 50px;
@@ -341,12 +358,12 @@
 
   input[type=text].inputCircle:focus {
     outline: none !important;
-    border:none;
+    border: none;
   }
 
   .inputCircle {
     width: 88px;
-    text-align:center;
-    border:none;
+    text-align: center;
+    border: none;
   }
 </style>
