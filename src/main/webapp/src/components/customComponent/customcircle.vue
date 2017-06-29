@@ -28,7 +28,7 @@
   import store from "../../vuex/store"
 
   export default {
-    props:["cx","cy", "content","fill","stroke","showCircleBlur"],
+    props:["cx","cy", "content","fill","stroke","filter"],
     data () {
       return {
         cx1: "",
