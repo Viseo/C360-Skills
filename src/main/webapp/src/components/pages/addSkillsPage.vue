@@ -3,7 +3,7 @@
     <div class="svg-container" id="svg-container">
       <b class="mybstyle">Administration des compétences</b>
       <hr class="myhrline">
-      <svg version="1.1" viewBox="0 0 1250 1250" preserveAspectRatio="xMinYMin meet">
+      <svg version="1.1" width="1200px" height="1250px" preserveAspectRatio="xMinYMin meet">
         <defs>
           <filter id="blurMe">
             <feGaussianBlur in="SourceGraphic" stdDeviation="2"/>

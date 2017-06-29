@@ -1,8 +1,9 @@
 <template>
   <g>
     <circle @click="handleClick()" class="circleSkill" :id="cx+''+cy" :cx="cx" :cy="cy" r="53" :fill="fill" :stroke="stroke" :filter="filter" stroke-width="2"></circle>
-    <text @click="handleClick()" class="textSkill" text-anchor="middle" :x="cx" :class="mySize" :y="cy+8" style="fill: rgba(0,0,0,0.52);">{{content}}</text>
-    <!--<div class="stars" data-stars="1">
+    <text @click="handleClick()" class="textSkill" text-anchor="middle" :x="cx" :class="mySize" :y="cy" style="fill: rgba(0,0,0,0.52);">{{content}}</text>
+    <foreignObject>
+    <div :style="divPosition(cx-45,cy+2)" class="stars" data-stars="1">
       <svg height="21" width="18" class="star rating" data-rating="1">
         <polygon points="9.8, 1.0, 3.2 21.78, 19.7, 8.58, 0, 8.58, 16.4, 21.78" style="fill-rule:nonzero;"/>
       </svg>
@@ -18,7 +19,8 @@
       <svg height="21" width="18" class="star rating" data-rating="5">
         <polygon points="9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78" style="fill-rule:nonzero;"/>
       </svg>
-    </div>-->
+    </div>
+    </foreignObject>
   </g>
 </template>
 
@@ -55,6 +57,9 @@
     methods: {
       handleClick(){
         this.$emit('click');
+      },
+      divPosition(cx,cy){
+          return 'z-index:1;position:relative;left:'+cx+'px;top:'+cy+'px;'
       },
       calculatePosition(cxLine,cyLine){
         if(store.state.cx == this.cx && store.state.cy == this.cy + 150){ //haut
@@ -176,11 +181,9 @@
   }
 
   /* Star rating */
-  /*.stars {
+  .stars {
     cursor: pointer;
     width: 90px;
-    margin-top: -3px;
-    margin-left: -5px
   }
 
   .stars:hover .star polygon {
@@ -221,5 +224,5 @@
 
   .stars[data-stars="5"] .star:nth-child(5) ~ .star polygon {
     fill: #d8d8d8;
-  }*/
+  }
 </style>
