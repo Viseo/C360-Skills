@@ -6,8 +6,7 @@
     </div>
     <div data-simplebar class="wishContainer">
       <div>
-        <svg data-simplebar :viewBox="myViewBox"  height="300">
-
+        <svg :viewBox="myViewBox"  height="300">
         <g id="wishSVG" v-for="(wish,i) in wishes">
         <customCircle :id="wish.id" :cx="positionX(i)" :cy="55" :content="wish.label" stroke="#E03559" fill="white"/>
           <circle @click="validWish(wish)" style="cursor: pointer" r="10" :cx="positionX(i) + 25" cy="120" fill="#09aa76"></circle>
@@ -22,8 +21,7 @@
 
 
 </template>
-<link rel="stylesheet" href="https://unpkg.com/simplebar@latest/dist/simplebar.css" />
-<script src="https://unpkg.com/simplebar@latest/dist/simplebar.js"></script>
+
 <script>
   import CustomCircle from "../customComponent/customcircle.vue"
   import config from '../../config/config'
@@ -31,9 +29,9 @@
   export default{
       data() {
           return {
-            posX: 100,
+            posX: 80,
             wishes: [],
-            myViewBox: '0 0 2000 200'
+            myViewBox: '0 0 2000 250'
           }
       },
       mounted() {
@@ -59,9 +57,7 @@
             .then(response => {
               this.wishes = response.data;
               console.log(response.data);
-              console.log(this.wishes.length*150);
-              this.myViewBox = "0 0 " + parseInt(this.wishes.length*155) +" 200";
-              //document.getElementById("wish-request").setAttribute("viewBox", "0,0, "+ 1000+this.wishes.length *150+",200");
+              this.myViewBox = "0 0 " + parseInt(this.wishes.length*155) +" 250";
             })
 
         },
@@ -95,27 +91,26 @@
 
 <style>
   .wishContainer {
-    overflow-x: scroll;
+    overflow: hidden;
     position: relative;
-    /*height: 300px;*/
-    /*width:1900px;*/
     width:100%;
-    height:100%;
+    height:200px;
+    padding-left:30px;
+    padding-right:30px;
+  }
+
+  .wishContainer .simplebar-track.vertical {
+    display: none;
+  }
+
+  .wishContainer .simplebar-scroll-content {
+    overflow: hidden;
+    min-width:90%;
   }
 
   #wishSVG {
-    overflow-y: hidden;
     width:100%;
     height:100%;
   }
-
-/*.wishContainer {*/
-  /*display: inline-block;*/
-  /*width: 100%;*/
-  /*vertical-align: middle;*/
-  /*overflow-x: scroll;*/
-/*}*/
-  /*.newDiv {*/
-    /*overflow:auto;*/
-  /*}*/
 </style>
+

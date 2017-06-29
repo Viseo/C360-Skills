@@ -8,6 +8,8 @@ import Dropdown from 'vue-js-dropdown'
 import config from './config/config.js'
 //require('jwt-decode');
 require('../node_modules/bootstrap/dist/css/bootstrap.css');
+require('../node_modules/simplebar/dist/simplebar.css');
+require('../node_modules/simplebar/dist/simplebar.js');
 
 Vue.use(Vuex);
 Vue.use(Dropdown);
