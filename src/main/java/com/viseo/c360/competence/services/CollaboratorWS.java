@@ -54,6 +54,8 @@ public class CollaboratorWS {
                     .claim("firstName", user.getFirstName())
                     .claim("lastName", user.getLastName())
                     .claim("isAdmin", user.getIsAdmin())
+                    .claim("email", user.getEmail())
+                    .claim("version", user.getVersion())
                     .claim("id", user.getId())
                     .claim("defaultPicture", user.getDefaultPicture())
                     .signWith(SignatureAlgorithm.HS512, key)

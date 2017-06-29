@@ -65,8 +65,9 @@
 
 <script>
   var $ = window.jQuery = require('jquery');
-  import router from '../../config/router'
+  import router from '../../config/router';
   import * as Vuex from "vuex";
+  import VueStrap from 'vue-strap';
 
   export default{
       props:["name"],

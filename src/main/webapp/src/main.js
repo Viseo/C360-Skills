@@ -4,17 +4,19 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import store from './vuex/store'
 import router from './config/router'
-//import VueStrap from 'vue-strap'
+var dropdown = require('vue-strap').dropdown;
 
 require('../node_modules/bootstrap/dist/css/bootstrap.css');
 
 Vue.use(Vuex);
 Vue.config.productionTip = false;
-//Vue.component('dropdown', VueStrap.dropdown);
 
 new Vue({
   el: '#app',
   store,
   router,
-  template: `<div><router-view></router-view></div>`
+  template: `<div><router-view></router-view></div>`,
+  components: {
+    dropdown
+  }
 });

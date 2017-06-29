@@ -16,7 +16,9 @@ const store = new Vuex.Store({
       lastName: null,
       roles: null,
       firstName: null,
-      defaultPicture : null
+      defaultPicture : null,
+      email : null,
+      version : null
     }
   },
 
