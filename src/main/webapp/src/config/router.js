@@ -4,39 +4,13 @@ import mainPage from '../components/mainPage.vue'
 import containerSVG from '../components/pages/addSkillsPage.vue'
 import navigationMenu from '../components/layout/signInUpMenu.vue'
 import error404Page from '../components/pages/error404Page.vue'
-import axios from 'axios'
-import config from '../config/config'
-import store from '../vuex/store'
 
 var jwtDecode = require('jwt-decode');
 Vue.use(Router);
 
-function isTokenValid(){
-  var isValid = false;
-  axios.post(config.server + '/api/sendtoken', localStorage.getItem("token")).then(
-    response => {
-      isValid = response.data;
-    }, response => {
-      isValid = false;
-    });
-  return isValid;
-}
-
 function isAlreadyAuthenticated() {
   var userToken = localStorage.getItem('token');
-  if(userToken != null){
-    if(isTokenValid()){
-      return true;
-    }
-    else{
-      store.commit('clearToken');
-      store.commit('resetStore');
-      return false;
-    }
-  }
-  else {
-    return false;
-  }
+  return userToken != null;
 }
 
 function isAdministratorAuthenticated() {

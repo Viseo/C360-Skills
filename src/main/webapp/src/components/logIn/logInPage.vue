@@ -102,10 +102,8 @@
 
       logIn(){
           axios.post(config.server + "/api/user", this.collaboratorToLogIn).then(response => {
-
             this.$store.commit('clearToken');
             this.$store.commit('setToken', response.data['userConnected']);
-            this.$store.getters.collaboratorLoggedIn.isAdmin
             this.$router.push("/addSkills");
           }, response => {
 

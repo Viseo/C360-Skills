@@ -27,7 +27,25 @@ const store = new Vuex.Store({
   state: storeInit,
 
   actions: {
+    isTokenValid(context, router){
+      axios.post(config.server + '/api/sendtoken', localStorage.getItem("token")).then(
+        response => {
+          if(response.data)
+          console.log("Token valide");
 
+          else{
+            console.log("Token non valide");
+            context.commit('clearToken');
+            context.commit('resetStore');
+            router.push('/login');
+          }
+        }, response => {
+          console.log("Token non valide");
+          context.commit('clearToken');
+          context.commit('resetStore');
+          router.push('/login');
+        })
+    }
   },
 
   mutations: {

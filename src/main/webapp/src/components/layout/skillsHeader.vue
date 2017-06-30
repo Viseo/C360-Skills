@@ -91,7 +91,10 @@
   },
 
     mounted() {
-      this.$store.commit('setTokenFromLocalStorage');
+          if(this.$route.path != "/login" && localStorage.getItem("token")) {
+            this.$store.commit('setTokenFromLocalStorage');
+            this.$store.dispatch('isTokenValid', this.$router);
+          }
       $('ul.nav li.dropdown').hover(function () {
         $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
       }, function () {
