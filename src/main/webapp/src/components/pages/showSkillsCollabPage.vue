@@ -5,13 +5,14 @@
       <hr class="myhrline">
       <svg version="1.1" viewBox="0 0 1250 1250" preserveAspectRatio="xMinYMin meet">
         <g v-for="link in links">
-          <line  :x1="getPositionXById(link.skill1.id)"
-                 :y1="getPositionYById(link.skill1.id)"
-                 :x2="getPositionXById(link.skill2.id)"
-                 :y2="getPositionYById(link.skill2.id)" style="stroke:rgba(0,0,0,0.52);stroke-width:3"/>
+          <line :x1="getPositionXById(link.skill1.id)"
+                :y1="getPositionYById(link.skill1.id)"
+                :x2="getPositionXById(link.skill2.id)"
+                :y2="getPositionYById(link.skill2.id)" style="stroke:rgba(0,0,0,0.52);stroke-width:3"/>
         </g>
-        <g v-for="(skill,i) in skills">
-          <customCircle :id="skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="skill.label" stroke="#E03559" fill="white"/>
+        <g v-for="(expertise,i) in expertises">
+          <customCircle @refresh="updateAll" :id="expertise.skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="expertise.skill.label"
+                        stroke="#E03559" fill="white" :score="expertise.level" :expertise="expertise"/>
         </g>
       </svg>
     </div>
@@ -29,47 +30,50 @@
     data () {
       return {
         skills: [],
-        selectedlink: '',
-        skillOldValue: '',
-        clickOnSkill: false,
-        label: 'Nouvelle',
-        newSkillClicked: true,
-        showCross: false,
         text: [],
         posX: 100,
         posY: 55,
         row: 0,
-        links: []
+        expertises: [],
+        links: [],
+        collabLogged: {}
       }
     },
 
     mounted(){
-      this.getAllSkills();
+      this.getCollabLogged();
+      this.getAllExpertise();
       this.getAllLinks();
+      this.getAllSkills();
     },
+    components: {customCircle: CustomCircle},
 
     methods: {
-
-      linkPositionX(){
-        if (this.selectedlink != '') {
-          var x1 = parseFloat(this.getPositionXById(this.selectedlink.skill1.id)) - 6;
-          var x2 = parseInt(this.getPositionXById(this.selectedlink.skill2.id)) - 6;
-          var total = (x1 + x2) / 2;
-          return total
-        }
-        else
-          return 0
+        updateAll(){
+          this.getAllExpertise();
+          this.getAllLinks();
+          this.getAllSkills();
+        },
+      getCollabLogged(){
+        this.collabLogged.id = this.$store.getters.collaboratorLoggedIn.id;
+        this.collabLogged.version = this.$store.getters.collaboratorLoggedIn.version;
+        this.collabLogged.lastName = this.$store.getters.collaboratorLoggedIn.lastName;
+        this.collabLogged.firstName = this.$store.getters.collaboratorLoggedIn.firstName;
+        this.collabLogged.email = this.$store.getters.collaboratorLoggedIn.email;
+        this.collabLogged.defaultPicture = this.$store.getters.collaboratorLoggedIn.defaultPicture;
       },
-
-      linkPositionY(){
-        if (this.selectedlink != '') {
-          var y1 = parseInt(this.getPositionYById(this.selectedlink.skill1.id)) - 5;
-          var y2 = parseInt(this.getPositionYById(this.selectedlink.skill2.id)) - 5;
-          var somme = y1 + y2;
-          return somme / 2
-        }
-        else
-          return 0;
+      getAllLinks(){
+        this.showCross=false;
+        axios.get(config.server + "/api/links/").then(response => {
+          this.links = response.data;
+          if(this.selectedlink=='')
+            this.showCross =false;
+          this.links.sort(function (a, b) {
+            return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);
+          });
+        }, response => {
+          console.log(response);
+        });
       },
 
       waitForElementToDisplay(selector, time, position){
@@ -115,6 +119,21 @@
           console.log(response);
         });
       },
+      getAllExpertise(){
+        console.log("FUCK YOU");
+        console.log(this.collabLogged);
+        axios.get(config.server + '/api/getcollabexpertises/'+this.collabLogged.id).then(
+          response => {
+            this.expertises = response.data;
+            this.getAllLinks();
+            this.expertises.sort(function (a, b) {
+              return (a.skill.id > b.skill.id) ? 1 : ((b.skill.id > a.skill.id) ? -1 : 0);
+            });
+            console.log(response);
+          }, response => {
+            console.log(response);
+          });
+      },
 
       getAllLinks(){
         this.showCross = false;
@@ -138,8 +157,7 @@
           return false;
         }
       }
-    },
-    components: {customCircle: CustomCircle}
+    }
   }
 
 </script>

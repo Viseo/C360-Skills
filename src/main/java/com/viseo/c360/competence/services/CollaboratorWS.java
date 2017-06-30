@@ -172,9 +172,9 @@ public class CollaboratorWS {
     @CrossOrigin
     @RequestMapping(value = "${endpoint.collaboratorbyid}", method = RequestMethod.GET)
     @ResponseBody
-    public CollaboratorDescription getCollaboratorById(@PathVariable Long collab_id) {
+    public CollaboratorIdentity getCollaboratorById(@PathVariable Long collab_id) {
         try {
-            return new CollaboratorToDescription().convert(collaboratorDAO.getCollaboratorById(collab_id));
+            return new CollaboratorToIdentity().convert(collaboratorDAO.getCollaboratorById(collab_id));
         } catch (ConversionException e) {
             e.printStackTrace();
             throw new C360Exception(e);
@@ -233,11 +233,11 @@ public class CollaboratorWS {
     }
 
     @CrossOrigin
-    @RequestMapping(value = "${endpoint.expertise}", method = RequestMethod.GET)
+    @RequestMapping(value = "${endpoint.getcollabexpertises}", method = RequestMethod.GET)
     @ResponseBody
-    public List<ExpertiseDescription> getAllExpertise() {
+    public List<ExpertiseDescription> getAllExpertise(@PathVariable Long collaboratorId) {
         try {
-            return new ExpertiseToDescription().convert(expertiseDAO.getAllExpertises());
+            return new ExpertiseToDescription().convert(expertiseDAO.getAllExpertises(new IdentityToCollaborator().convert(this.getCollaboratorById(collaboratorId))));
         } catch (ConversionException e) {
             e.printStackTrace();
             throw new C360Exception(e);

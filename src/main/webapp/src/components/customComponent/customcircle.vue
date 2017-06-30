@@ -1,10 +1,10 @@
 <template>
   <g>
     <circle @click="handleClick()" class="circleSkill" :id="cx+''+cy" :cx="cx" :cy="cy" r="53" :fill="fill" :stroke="stroke" :filter="filter" stroke-width="2"></circle>
-    <text @click="handleClick()" class="textSkill" text-anchor="middle" :x="cx" :class="mySize" :y="cy" style="fill: rgba(0,0,0,0.52);">{{content}}</text>
+    <text @click="handleClick()" class="textSkill" text-anchor="middle" :x="cx" :y="cy" style="fill: rgba(0,0,0,0.52);">{{content}}</text>
     <foreignObject :x="cx-45" :y="cy+5">
       <div v-show="!admin">
-        <star-rating v-model="rating" :show-rating="false" :star-size="18"></star-rating>
+        <star-rating @rating-selected ="setRating" v-model="rating" :show-rating="false" :star-size="18"></star-rating>
       </div>
     </foreignObject>
   </g>
@@ -12,15 +12,20 @@
 
 <script>
   import store from "../../vuex/store"
+  import axios from 'axios'
+  import config from '../../config/config'
   import StarRating from 'vue-star-rating'
   export default {
+
+
     components: {
       StarRating
     },
-    props:["admin","cx","cy", "content","fill","stroke","filter"],
+    props:["admin","cx","cy", "content","fill","stroke","filter","score","expertise"],
     data () {
       return {
-        rating:0,
+        selectedExpertise:this.expertise,
+        rating: this.score,
         cx1: "",
         cy1: "",
         cx2: "",
@@ -35,16 +40,29 @@
         cxLine3:"",
       }
     },
-    computed: {
-      mySize(){
-//        console.log(this.content.length);
-//        if(this.content.length>4) {
-//          return 'smallSize'
-//        }
-//        else return 'defaultSize';
+    watch:{
+        score: function(newValue){
+          this.rating = newValue;
+        },
+      expertise:function(newValue){
+        this.selectedExpertise = newValue;
       }
     },
     methods: {
+      setRating: function(raiting){
+        this.updateExpertise(this.selectedExpertise,raiting);
+      },
+      updateExpertise(expertise,value){
+        this.selectedExpertise.level = value;
+        axios.put(config.server + '/api/expertise', expertise).then(
+
+          response => {
+              this.$emit('refresh');
+            console.log(response);
+          }, response => {
+            console.log(response);
+          });
+      },
       handleClick(){
         this.$emit('click');
       },

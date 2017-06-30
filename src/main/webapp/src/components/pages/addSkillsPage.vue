@@ -293,8 +293,6 @@
             this.expertises.sort(function (a, b) {
               return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);
             });
-            this.expertises[0].level = 5;
-            this.updateExpertise(this.expertises[0]);
             console.log(response);
           }, response => {
             console.log(response);

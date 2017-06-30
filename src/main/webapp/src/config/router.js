@@ -40,7 +40,7 @@ function redirectIfAlreadyAuthenticated(to, from, next) {
     next('/addSkills')
   }
   else if (isAlreadyAuthenticated() && !isAdministratorAuthenticated()) {
-    next('/showCollabSkills')
+    next('/showSkillsCollab')
   }
   else {
     next()
