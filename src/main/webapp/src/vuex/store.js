@@ -14,11 +14,11 @@ const LOGOUT = "LOGOUT";
 
 const store = new Vuex.Store({
   state: {
-   isLoggedIn: localStorage.getItem("token"),
-    cx:"",
-    cy:"",
-    cx1:"",
-    cy1:"",
+    isLoggedIn: localStorage.getItem("token"),
+    cx: "",
+    cy: "",
+    cx1: "",
+    cy1: "",
 
   },
   mutations: {
@@ -35,19 +35,19 @@ const store = new Vuex.Store({
     }
   },
   actions: {
-    login({ commit}, creds) {
+    login({commit}, creds) {
       console.log("login...", creds);
-      commit (LOGIN);
-      return new Promise (resolve =>{
-        setTimeout(() =>{
+      commit(LOGIN);
+      return new Promise(resolve => {
+        setTimeout(() => {
           localStorage.setItem("token", "JWT");
           commit(LOGIN_SUCCESS);
           resolve();
-        },1000)
+        }, 1000)
       });
     },
 
-    logout ({ commit}){
+    logout ({commit}){
       localStorage.removeItem("token");
       commit(LOGOUT);
     }
@@ -55,9 +55,9 @@ const store = new Vuex.Store({
 
   },
   getters: {
-  isLoggedIn: state => {
-    return state.isLoggedIn;
-  }
+    isLoggedIn: state => {
+      return state.isLoggedIn;
+    }
 
   }
 });

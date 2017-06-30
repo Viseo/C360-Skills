@@ -13,11 +13,13 @@ describe('test CloseCross.vue', function() {
   });
 
   afterEach(function () {
-    Object.assign(vmCloseCross.$data, vmCloseCross.$options.data());
+   // Object.assign(vmCloseCross.$data, vmCloseCross.$options.data());
   });
 
   it('should if click close cross',function () {
+   // spyOn(this, "$emit");
     vmCloseCross.handleClick();
+   // expect(this.$emit).toHaveBeenCalledWith(jasmine.Arg().contains("click"));
   });
 
 

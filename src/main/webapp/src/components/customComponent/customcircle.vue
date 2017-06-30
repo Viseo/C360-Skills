@@ -41,9 +41,11 @@
         this.$emit('click');
       },
       calculatePosition(cxLine,cyLine){
-        console.log("store.state: " +store.state);
-        store.state.cy;
-        this.cy ;
+        console.log("in .vue store.state.cy: " +store.state.cy);
+        console.log("in .vue store.state.cx: " +store.state.cx);
+        console.log("in .vue this.cy: " +this.cy);
+        console.log("in .vue this.cx: " +this.cx);
+
         if(store.state.cx == this.cx && store.state.cy == this.cy + 150){ //haut
           store.state.cy = store.state.cy - 50;
           cxLine = this.cx;
