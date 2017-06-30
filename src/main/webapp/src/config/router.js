@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import mainPage from '../components/mainPage.vue'
+import collabSVG from '../components/pages/showSkillsCollabPage.vue'
 import containerSVG from '../components/pages/addSkillsPage.vue'
 import navigationMenu from '../components/layout/signInUpMenu.vue'
 import error404Page from '../components/pages/error404Page.vue'
@@ -39,7 +40,7 @@ function redirectIfAlreadyAuthenticated(to, from, next) {
     next('/addSkills')
   }
   else if (isAlreadyAuthenticated() && !isAdministratorAuthenticated()) {
-    next('/bidule')
+    next('/showCollabSkills')
   }
   else {
     next()
@@ -74,18 +75,17 @@ const router = new Router({
         path: "/addSkills",
         component: containerSVG
       }]
-    },
-    {
-      path: "*",
+    },    {
+      path: '/showSkillsCollab',
+      name: 'showSkillsCollab',
       component: mainPage,
-      children: [
-        {
-          name: 'mainPage',
-          path: "*",
-          component: error404Page
-        }
-      ]
-    }
+      beforeEnter: requireCollaboratorAuthentification,
+      children: [{
+        name: 'mainPage',
+        path: "/showSkillsCollab",
+        component: collabSVG
+      }]
+    },
   ]
 });
 

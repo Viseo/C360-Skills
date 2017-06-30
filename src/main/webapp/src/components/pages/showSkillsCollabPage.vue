@@ -1,30 +1,17 @@
 <template>
   <div>
     <div class="svg-container" id="svg-container">
-      <b class="mybstyle">Ajouter une compétence</b>
+      <b class="mybstyle">Liste de vos compétences</b>
       <hr class="myhrline">
       <svg version="1.1" viewBox="0 0 1250 1250" preserveAspectRatio="xMinYMin meet">
-        <defs>
-          <filter id="blurMe">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="0"/>
-          </filter>
-        </defs>
         <g v-for="link in links">
-          <line  @mouseover="selectedlink = link;showCross = true;" :x1="getPositionXById(link.skill1.id)"
+          <line  :x1="getPositionXById(link.skill1.id)"
                  :y1="getPositionYById(link.skill1.id)"
                  :x2="getPositionXById(link.skill2.id)"
                  :y2="getPositionYById(link.skill2.id)" style="stroke:rgba(0,0,0,0.52);stroke-width:3"/>
         </g>
         <g v-for="(skill,i) in skills">
-          <customCircle :admin="false" :id="skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="skill.label" stroke="#E03559" fill="white"
-                        @click="selectSkill(skill)"/>
-          <foreignObject  v-show="selectedSkill.skill1.id == skill.id" :x="positionX(i) - 40" :y="positionY(i)-11">
-            <div xmlns="http://www.w3.org/1999/xhtml">
-              <form @submit.prevent="updateSkill">
-                <input class="inputCircle" maxlength="10" type="text" v-model="selectedSkill.skill1.label"/>
-              </form>
-            </div>
-          </foreignObject>
+          <customCircle :id="skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="skill.label" stroke="#E03559" fill="white"/>
         </g>
       </svg>
     </div>
@@ -41,10 +28,6 @@
   export default {
     data () {
       return {
-        selectedSkill: {
-          skill1: '',
-          skill2: ''
-        },
         skills: [],
         selectedlink: '',
         skillOldValue: '',
@@ -66,49 +49,6 @@
     },
 
     methods: {
-      displayInput() {
-        this.newSkillClicked = true;
-        this.label = '';
-        setTimeout(function () {
-          $('.inputCircle').focus();
-        });
-      },
-
-      hideInput(){
-        if (this.label == "") {
-          this.label = "Nouvelle";
-        }
-        this.newSkillClicked = false;
-      },
-
-      removeLink(link){
-        axios.post(config.server + '/api/removelink', link).then(
-          response => {
-            console.log(response);
-            this.getAllLinks();
-          }, response => {
-            console.log(response);
-          })
-      },
-
-      removeSkill(skill){
-        axios.post(config.server + '/api/removeskill', skill).then(
-          response => {
-            console.log(response);
-            this.getAllSkills();
-            this.getAllLinks();
-            this.selectedSkill = {
-              skill1: '',
-              skill2: ''
-            };
-          }, response => {
-            console.log(response);
-            this.selectedSkill = {
-              skill1: '',
-              skill2: ''
-            };
-          })
-      },
 
       linkPositionX(){
         if (this.selectedlink != '') {
@@ -152,34 +92,6 @@
         return this.waitForElementToDisplay(id, 0, "cy");
       },
 
-      selectSkill(skill){
-        this.skillOldValue = skill.label;
-        let self = this;
-        if (self.selectedSkill.skill1 == '') {
-          self.selectedSkill.skill1 = skill;
-          document.getElementById(skill.id).getElementsByTagName("circle")[0].setAttribute("filter", "url(#blurMe)");
-        }
-        else if (skill != self.selectedSkill.skill1) {
-          self.selectedSkill.skill2 = skill;
-          axios.post(config.server + '/api/addlink', self.selectedSkill).then(
-            response => {
-              console.log(response);
-            }, response => {
-              console.log(response);
-            }).then(
-            function () {
-              document.getElementById(self.selectedSkill.skill1.id).getElementsByTagName("circle")[0].removeAttribute("filter");
-              self.selectedSkill = {
-                skill1: '',
-                skill2: ''
-              };
-              self.getAllSkills();
-              self.getAllLinks();
-            }
-          );
-        }
-      },
-
       positionX(integ){
         console.log()
         return this.posX + ((integ) % 8) * 150;
@@ -189,49 +101,6 @@
         return this.posY + Math.floor((integ) / 8) * 150;
       },
 
-      addCircle() {
-        if (this.label != '' && this.label != 'Nouvelle') {
-          this.addSkill();
-          this.text.push(this.text1);
-          this.newSkillClicked = false;
-          this.label = 'Nouvelle';
-        }
-      },
-
-      addSkill(){
-        var skill = {"label": this.label};
-        axios.post(config.server + '/api/addskill/', skill).then(response => {
-          this.getAllSkills();
-        }, response => {
-          console.log(response);
-        });
-      },
-
-      updateSkill(skill){
-        axios.put(config.server + '/api/updateskill', skill).then(
-          response => {
-            console.log(response);
-            this.selectedSkill = {
-              skill1: '',
-              skill2: ''
-            };
-            this.getAllSkills();
-            this.getAllLinks();
-
-          }, response => {
-            console.log(response);
-          });
-      },
-
-      cancelUpdate(){
-        this.hideInput()
-        for (var i = 0; i < this.skills.length; i++) {
-          if (this.skills[i].id == this.selectedSkill.skill1.id) {
-            this.selectedSkill.skill1.label = this.skillOldValue;
-          }
-        }
-        document.getElementById(this.selectedSkill.skill1.id).getElementsByTagName("circle")[0].removeAttribute("filter");
-      },
 
       getAllSkills(){
         axios.get(config.server + "/api/skills/").then(response => {
@@ -270,7 +139,7 @@
         }
       }
     },
-    components: {customCircle: CustomCircle, CloseCross: CloseCross}
+    components: {customCircle: CustomCircle}
   }
 
 </script>
