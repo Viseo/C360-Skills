@@ -339,7 +339,7 @@
 
       addCollaborator(){
         delete this.collaboratorToRegister['confirmPassword'];
-                let sendUserToRegisterSuccess = (response) => {
+        let sendUserToRegisterSuccess = (response) => {
           this.emailAlreadyExist = false;
           this.personalIdNumberAlreadyExist = false;
           this.user.email = this.collaborator.email;

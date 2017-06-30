@@ -271,11 +271,12 @@
       getAllSkills(){
         axios.get(config.server + "/api/skills/").then(response => {
           this.skills = response.data;
+          console.log(JSON.stringify(this.skills));
           this.skills.sort(function (a, b) {
             return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);
           });
+          console.log(this.positionY(5) + 300 + Math.floor(5/8)*10 +"px");
           document.getElementById("svg-container").style.height = (this.positionY(this.skills.length) + 300 + (Math.floor(this.skills.length/8)*10)).toString()+"px";
-
         }, response => {
           console.log(response);
         });
