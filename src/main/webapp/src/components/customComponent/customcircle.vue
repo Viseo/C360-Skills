@@ -41,6 +41,7 @@
         this.$emit('click');
       },
       calculatePosition(cxLine,cyLine){
+        console.log("store.state: " +store.state);
         store.state.cy;
         this.cy ;
         if(store.state.cx == this.cx && store.state.cy == this.cy + 150){ //haut

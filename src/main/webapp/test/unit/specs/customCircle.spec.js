@@ -4,31 +4,45 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import CustomCircle from '@/components/customComponent/customcircle'
-//import store from "@/vuex/store"
+import storeVuex from '@/vuex/store'
 var Constructor = Vue.extend(CustomCircle);
 var vmCustomCircle;
 Vue.use(Vuex)
+const store = new Vuex.Store(storeVuex);
+//import { MUT_PROFILE_HTML, initialState } from '@/vuex/store'
+
+
 describe('test customcircle.vue', function() {
   beforeEach(function () {
     vmCustomCircle = new Constructor().$mount();
   });
 
   afterEach(function () {
-    Object.assign(vmCustomCircle.$data, vmCustomCircle.$options.data());
+    //Object.assign(vmCustomCircle.$data, vmCustomCircle.$options.data());
   });
 
   it('should if click on a circle',function () {
     vmCustomCircle.handleClick();
   });
 
-  it('should check the position top of circle',function () {
-    //store.state.cy = 150;
-    vmCustomCircle.cy = -150;
-    var cxLine;
-    var cyLine;
-    vmCustomCircle.calculatePosition(cxLine,cyLine);
+ /* it('should check the position top of circle',function () {
 
-  });
+    spyOn(vmCustomCircle, 'cx');
+
+    Vue.nextTick(() => {
+      expect(vmCustomCircle.store).toHaveBeenCalled()
+      done()
+    });
+
+    //vmCustomCircle.store.state.cy = 150;
+    vmCustomCircle.cy = 0;
+    var cxLine = 0;
+    var cyLine = 0;
+    vmCustomCircle.calculatePosition(cxLine,cyLine);
+    var cxLine = 10;
+    var cyLine = 10;
+    vmCustomCircle.calculatePosition(cxLine,cyLine);
+  });*/
 
 
 });
