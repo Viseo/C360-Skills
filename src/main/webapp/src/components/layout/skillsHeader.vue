@@ -22,7 +22,7 @@
                 <img style="cursor:default;" class="image-min" v-else
                      :src="'img/'+$store.getters.collaboratorLoggedIn.id+'.jpg'">
               </div>
-              <span class="text-left col-lg-8 col-lg-offset-2 col-md-5 col-sm-5 col-xs-5" style="margin-top:10px" @mouseover="setDisconnectedToTrue()" v-show="showName()">{{ $store.getters.collaboratorLoggedIn.lastName }} {{ $store.getters.collaboratorLoggedIn.firstName }}</span>
+              <span class="text-left col-lg-8 col-lg-offset-2 col-md-5 col-sm-5 col-xs-5" style="margin-top:10px" @mouseover="setDisconnectedToTrue()" v-show="showName()">{{ lastName }} {{ firstName }}</span>
               <dropdown class="col-lg-8 col-lg-offset-2 col-md-5 col-sm-5 col-xs-5" type="default" v-if="showPicture()" v-show="showDisconnexion()" text="Choisissez une action" id="menu">
                 <li><a @click="$router.push('/addSkills')">Espace compétences</a></li>
                 <li><a @click="$router.push('/profiltoupdate')">Modifier mon profil</a></li>
@@ -74,8 +74,6 @@
       props:["name"],
     data () {
       return {
-        lastName: null,
-        firstName: null,
         title:'Gestion des compétences',
         disconnect: false,
         dialog: false
@@ -94,7 +92,6 @@
 
     mounted() {
       this.$store.commit('setTokenFromLocalStorage');
-
       $('ul.nav li.dropdown').hover(function () {
         $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
       }, function () {
@@ -102,22 +99,28 @@
       });
 
     },
-    methods: {
-      getCollaboratorLastName(){
-          if(this.$store.getters.isLoggedIn && this.$store.getters.collaboratorLoggedIn.lastName) {
-            this.lastName = this.$store.getters.collaboratorLoggedIn.lastName;
-          }
-      },
-      getCollaboratorFirstName(){
-        if(this.$store.getters.isLoggedIn && this.$store.getters.collaboratorLoggedIn.sub) {
-          this.firstName = this.$store.getters.collaboratorLoggedIn.sub;
+    computed:{
+
+      lastName: function (){
+        if(this.$store.getters.isAuthenticated && this.$store.getters.collaboratorLoggedIn.lastName) {
+          return this.$store.getters.collaboratorLoggedIn.lastName;
+        }
+        else {
+          return null;
         }
       },
-//      ...Vuex.mapActions(["logout"])},
-//
-//    logout() {
-//        this.$store.dispatch('logout');
-//      },
+
+      firstName: function (){
+        if(this.$store.getters.isAuthenticated && this.$store.getters.collaboratorLoggedIn.firstName) {
+          return this.$store.getters.collaboratorLoggedIn.firstName;
+        }
+        else {
+          return null;
+        }
+      }
+
+    },
+    methods: {
 
       setDisconnectedToTrue(){
         this.disconnect = true;
@@ -143,6 +146,7 @@
       disconnectUser(){
         axios.post(config.server + '/api/userdisconnect', this.$store.getters.token).then(
           response => {
+              this.$store.commit('resetStore');
               this.$store.commit('clearToken');
               this.$router.push('/login');
           }, response => {

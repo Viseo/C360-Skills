@@ -97,6 +97,7 @@ public class CollaboratorWS {
     @ResponseBody
     public boolean checkIsAlreadyConnected(@RequestBody String thisToken) {
         try {
+            thisToken = thisToken.replace("=","");
             return mapUserCache.get(thisToken) != null;
         } catch (Exception e) {
             e.printStackTrace();

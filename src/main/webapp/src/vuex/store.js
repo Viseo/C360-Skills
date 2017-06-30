@@ -3,24 +3,28 @@
  */
 import Vue from 'vue'
 import Vuex from 'vuex'
+import axios from 'axios'
+import config from '../config/config'
 
 Vue.use(Vuex);
 var jwtDecode = require('jwt-decode');
 
+var storeInit = {
+  stayConnected: null,
+  token: null,
+  collaboratorLoggedIn : {
+    id: null,
+    lastName: null,
+    isAdmin: null,
+    firstName: null,
+    defaultPicture: null,
+    email: null,
+    version: null
+  }
+};
+
 const store = new Vuex.Store({
-  state: {
-    stayConnected: null,
-    token: null,
-    collaboratorLoggedIn : {
-      id: null,
-      lastName: null,
-      roles: null,
-      firstName: null,
-      defaultPicture : null,
-      email : null,
-      version : null
-    }
-  },
+  state: storeInit,
 
   actions: {
 
@@ -28,14 +32,22 @@ const store = new Vuex.Store({
 
   mutations: {
     setToken(state, collaboratorToken) {
-      state.token = collaboratorToken;
-      localStorage.setItem("token", collaboratorToken);
-      state.collaboratorLoggedIn = jwtDecode(localStorage.getItem("token"));
+      if(collaboratorToken!=null) {
+        state.token = collaboratorToken;
+        localStorage.setItem("token", collaboratorToken);
+        state.collaboratorLoggedIn = jwtDecode(state.token);
+      }
     },
 
     setTokenFromLocalStorage(state) {
       state.token = localStorage.getItem("token");
-      state.collaboratorLoggedIn = jwtDecode(state.token);
+      if(state.token != null) {
+        state.collaboratorLoggedIn = jwtDecode(state.token);
+      }
+    },
+
+    resetStore(state) {
+      Object.assign(state, storeInit);
     },
 
     clearToken(state) {
