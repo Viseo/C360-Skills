@@ -105,25 +105,28 @@
       this.getAllLinks();
     },
     methods: {
-        showCircleBlurOrNot(id){
-            if(this.selectedSkill.skill1.id == id){
-                return true
-            }
-            return false;
-        },
-        displayInput() {
-          this.newSkillClicked = true;
-          this.label='';
-          setTimeout(function(){
-            $('.inputCircle').focus();
-          });
-        },
-        hideInput(){
-          if(this.label == "") {
-              this.label = "Nouvelle";
-          }
-          this.newSkillClicked = false;
-        },
+      showCircleBlurOrNot(id){
+        if (this.selectedSkill.skill1.id == id) {
+          return true
+        }
+        return false;
+      },
+
+      displayInput() {
+        this.newSkillClicked = true;
+        this.label = '';
+        setTimeout(function () {
+          $('.inputCircle').focus();
+        });
+      },
+
+      hideInput(){
+        if (this.label == "") {
+          this.label = "Nouvelle";
+        }
+        this.newSkillClicked = false;
+      },
+
       removeLink(link){
         axios.post(config.server + '/api/removelink', link).then(
           response => {
@@ -133,6 +136,7 @@
             console.log(response);
           })
       },
+
       removeSkill(skill){
         axios.post(config.server + '/api/removeskill', skill).then(
           response => {
@@ -151,6 +155,7 @@
             };
           })
       },
+
       linkPositionX(){
         if (this.selectedlink != '') {
           var x1 = parseFloat(this.getPositionXById(this.selectedlink.skill1.id)) - 6;
@@ -161,6 +166,7 @@
         else
           return 0
       },
+
       linkPositionY(){
         if (this.selectedlink != '') {
           var y1 = parseInt(this.getPositionYById(this.selectedlink.skill1.id)) - 5;
@@ -191,6 +197,7 @@
       getPositionYById(id){
         return this.waitForElementToDisplay(id, 0, "cy");
       },
+
       selectSkill(skill){
         this.skillOldValue = skill.label;
         let self = this;
@@ -218,13 +225,16 @@
           );
         }
       },
+
       positionX(integ){
         console.log()
         return this.posX + ((integ) % 8) * 150;
       },
+
       positionY(integ){
         return this.posY + Math.floor((integ) / 8) * 150;
       },
+
       addCircle() {
         if (this.label != '' && this.label != 'Nouvelle') {
           this.addSkill();
@@ -233,6 +243,7 @@
           this.label = 'Nouvelle';
         }
       },
+
       addSkill(){
         var skill = {"label": this.label};
         axios.post(config.server + '/api/addskill/', skill).then(response => {
@@ -241,6 +252,7 @@
           console.log(response);
         });
       },
+
       updateSkill(skill){
         axios.put(config.server + '/api/updateskill', skill).then(
           response => {
@@ -255,8 +267,8 @@
           }, response => {
             console.log(response);
           });
-
       },
+
       cancelUpdate(){
         this.hideInput()
         for (var i = 0; i < this.skills.length; i++) {
@@ -268,6 +280,7 @@
           }
           this.selectedSkill.skill1 = "";
       },
+
       getAllSkills(){
         axios.get(config.server + "/api/skills/").then(response => {
           this.skills = response.data;
@@ -281,12 +294,11 @@
           console.log(response);
         });
       },
+
       getAllLinks(){
         this.showCross = false;
         axios.get(config.server + "/api/links/").then(response => {
           this.links = response.data;
-          if (this.selectedlink == '')
-            this.showCross = false;
           this.links.sort(function (a, b) {
             return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);
           });
@@ -296,17 +308,15 @@
       },
 
       showIcon(skillId){
-          if(this.selectedSkill.skill1.id == skillId){
-              return true;
-          }
-          else{
-              return false;
-          }
-      },
-
+        if (this.selectedSkill.skill1.id == skillId) {
+          return true;
+        }
+        else {
+          return false;
+        }
+      }
     },
     components: {customCircle: CustomCircle, CloseCross: CloseCross}
-
   }
 </script>
 
