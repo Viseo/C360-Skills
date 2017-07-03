@@ -156,7 +156,7 @@ describe('test addSkillsPage.vue', function() {
     let allSkills =  [
       {"id":4,"version":0,"label":"C++"},
       {"id":5,"version":0,"label":"CSS"},
-      {"id":14,"version":0,"label":"HTML"},
+      {"id":18,"version":0,"label":"HTML"},
       {"id":15,"version":0,"label":"Java"},
       {"id":2,"version":0,"label":"Android"}
     ];
@@ -238,30 +238,97 @@ describe('test addSkillsPage.vue', function() {
     mock.onPost(config.server + '/api/removelink').reply(400);
     vmAddSkillsPage.removeLink();
 
-  })
+  });
 
-
-  /*it('should check if one skill is selected',function () {
-    /!*vmAddSkillsPage.skill = [
-      {id:1,label:'JAVA',version:0},
-      {id:2,label:'J2EE',version:0},
-    ];*!/
+  it('should check if one skill is not selected',function () {
     vmAddSkillsPage.selectedSkill = {
       skill1: '',
       skill2: ''
     };
     var skill = {id:1,label:'JAVA',version:0};
 
-    // var dummyElement = document.createElement('g');
-    // dummyElement.setAttribute("id",skill.id);
-    // //dummyElement.setAttribute("filter","url(#blurMe)");
-    // document.getElementById = jasmine.createSpy('HTML Element').and.returnValue(dummyElement);
-
+    let containerSVG = vmAddSkillsPage.$el.querySelector('g');
+    document.getElementById = jasmine.createSpy('HTML Element').and.returnValue(containerSVG);
 
     vmAddSkillsPage.selectSkill(skill);
+    expect(vmAddSkillsPage.selectedSkill.skill1).toEqual(skill);
+  });
 
-    //expect(vmAddSkillsPage.linkPositionY()).not.toEqual(0);
-  });*/
+  it('should check if one skill is selected and add in database with response success',function () {
+    vmAddSkillsPage.selectedSkill = {
+      skill1: {id:1,label:'J2EE',version:0},
+      skill2: ''
+    };
+    var skill = {id:2,label:'JAVA',version:0};
 
+    let containerSVG = vmAddSkillsPage.$el.querySelector('g');
+    document.getElementById = jasmine.createSpy('HTML Element').and.returnValue(containerSVG);
+
+    mock.onPost(config.server + '/api/addlink').reply(200);
+    vmAddSkillsPage.selectSkill(skill);
+    expect(vmAddSkillsPage.selectedSkill.skill2).toEqual(skill);
+  });
+
+  it('should check if one skill is selected and add in database with response error',function (done) {
+    vmAddSkillsPage.selectedSkill = {
+      skill1: {id:1,label:'J2EE',version:0},
+      skill2: ''
+    };
+    var skill = {id:2,label:'JAVA',version:0};
+
+    let containerSVG = vmAddSkillsPage.$el.querySelector('g');
+    document.getElementById = jasmine.createSpy('HTML Element').and.returnValue(containerSVG);
+
+    mock.onPost(config.server + '/api/addlink').reply(500);
+    vmAddSkillsPage.selectSkill(skill);
+    setTimeout(function() {
+      expect(vmAddSkillsPage.selectedSkill.skill1).toEqual('');
+      expect(vmAddSkillsPage.selectedSkill.skill2).toEqual('');
+      done();
+    },0);
+  });
+
+  it('should check if one skill is not selected',function (done) {
+    vmAddSkillsPage.selectedSkill = {
+      skill1: {id:2,label:'JAVA',version:0},
+      skill2: ''
+    };
+    var skill = {id:2,label:'JAVA',version:0};
+
+    vmAddSkillsPage.selectSkill(skill);
+    setTimeout(function() {
+      expect(vmAddSkillsPage.skillOldValue).toEqual(skill.label);
+      done();
+    },0);
+
+  });
+
+  it('should check add skill in database with response success',function (done) {
+    mock.onPost(config.server + '/api/addskill/').reply(200);
+    vmAddSkillsPage.addSkill();
+    setTimeout(function() {
+      done();
+    },0);
+  });
+
+  it('should update skill with response success',function (done) {
+    var skill = {id:2,label:'JAVA',version:0};
+    mock.onPut(config.server + '/api/updateskill').reply(200);
+    vmAddSkillsPage.updateSkill(skill);
+    setTimeout(function() {
+      expect(vmAddSkillsPage.selectedSkill.skill1).toEqual('');
+      expect(vmAddSkillsPage.selectedSkill.skill2).toEqual('');
+      done();
+    },0);
+  });
+
+  it('should update skill with response error',function (done) {
+    var skill = {id:2,label:'JAVA',version:0};
+    mock.onPut(config.server + '/api/updateskill').reply(500);
+    vmAddSkillsPage.updateSkill(skill);
+    setTimeout(function() {
+      done();
+    },0);
+  });
 
 });
