@@ -2,6 +2,8 @@ package com.viseo.c360.competence.services;
 
 import com.viseo.c360.competence.converters.skill.DescriptionToSkill;
 import com.viseo.c360.competence.converters.skill.SkillToDescription;
+import com.viseo.c360.competence.dao.CollaboratorDAO;
+import com.viseo.c360.competence.dao.ExpertiseDAO;
 import com.viseo.c360.competence.dao.SkillDAO;
 import com.viseo.c360.competence.domain.skill.Skill;
 import com.viseo.c360.competence.dto.skill.SkillDescription;

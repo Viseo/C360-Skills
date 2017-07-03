@@ -16,9 +16,9 @@
                 :y2="getPositionYById(link.skill2.id)" style="stroke:rgba(0,0,0,0.52);stroke-width:3"/>
         </g>
         <g v-for="(skill,i) in skills">
-          <customCircle :id="skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="skill.label" stroke="#E03559" fill="white"
-                        @click="selectSkill(skill)" :showCircleBlur="showCircleBlurOrNot(skill.id)"/>
-          <foreignObject v-show="selectedSkill.skill1.id == skill.id" :x="positionX(i) - 44" :y="positionY(i)-10">
+          <customCircle :admin="true" :id="skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="skill.label" stroke="#E03559" fill="white"
+                        @click="selectSkill(skill)"/>
+          <foreignObject v-show="selectedSkill.skill1.id == skill.id" :x="positionX(i) - 44" :y="positionY(i)-16">
             <div xmlns="http://www.w3.org/1999/xhtml">
               <form @submit.prevent="updateSkill">
                 <input class="inputCircle" maxlength="10" type="text" v-model="selectedSkill.skill1.label"/>
@@ -32,8 +32,8 @@
           <circle @click="removeSkill(selectedSkill.skill1)" v-show="showIcon(skill.id)" style="cursor: pointer" r="10" :cx="positionX(i) - 30" :cy="positionY(i) + 65" fill="#a90909"></circle>
           <text @click="removeSkill(selectedSkill.skill1)" v-show="showIcon(skill.id)" text-anchor="middle" :x="positionX(i) - 30"  :y="positionY(i) + 70" style="fill: white;cursor: pointer">&#128465</text>
         </g>
-        <customCircle @click="displayInput" :cx="positionX(skills.length)" :cy="positionY(skills.length)" :content="label" stroke="#09aa76" fill="white"/>
-        <foreignObject v-show="newSkillClicked" :x="positionX(skills.length) - 44" :y="positionY(skills.length)-10">
+        <customCircle :admin="true" @click="displayInput" :cx="positionX(skills.length)" :cy="positionY(skills.length)" :content="label" stroke="#09aa76" fill="white"/>
+        <foreignObject v-show="newSkillClicked" :x="positionX(skills.length) - 44" :y="positionY(skills.length)-16">
           <div xmlns="http://www.w3.org/1999/xhtml">
             <form @submit.prevent="addCircle">
             <input class="inputCircle" @blur="hideInput" maxlength="10" type="text" v-model="label"/>
@@ -77,12 +77,16 @@
         posX: 100,
         posY: 60,
         row: 0,
-        links:[]
+        links:[],
+
+        //declaration
+        expertises:[]
       }
     },
     mounted(){
       this.getAllSkills();
       this.getAllLinks();
+      this.getAllExpertise();
     },
     methods: {
         showCircleBlurOrNot(id){
@@ -279,7 +283,29 @@
           else{
               return false;
           }
-      }
+      },
+
+      //declaration d'expertise
+      getAllExpertise(){
+        axios.get(config.server + '/api/expertise').then(
+          response => {
+            this.expertises = response.data;
+            this.expertises.sort(function (a, b) {
+              return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);
+            });
+            console.log(response);
+          }, response => {
+            console.log(response);
+          });
+      },
+      updateExpertise(expertise){
+        axios.put(config.server + '/api/expertise', expertise).then(
+          response => {
+            console.log(response);
+          }, response => {
+            console.log(response);
+          });
+      },
     },
     components: {customCircle: CustomCircle, CloseCross: CloseCross}
 
