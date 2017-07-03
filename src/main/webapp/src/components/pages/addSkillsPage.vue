@@ -17,7 +17,7 @@
         </g>
         <g v-for="(skill,i) in skills">
           <customCircle :admin="true" :id="skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="skill.label" stroke="#E03559" fill="white"
-                        @click="selectSkill(skill)"/>
+                        @click="selectSkill(skill)" :showCircleBlur="showCircleBlurOrNot(skill.id)"/> />
           <foreignObject v-show="selectedSkill.skill1.id == skill.id" :x="positionX(i) - 44" :y="positionY(i)-16">
             <div xmlns="http://www.w3.org/1999/xhtml">
               <form @submit.prevent="updateSkill">
