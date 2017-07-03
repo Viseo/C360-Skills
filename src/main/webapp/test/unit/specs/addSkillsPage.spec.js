@@ -83,6 +83,7 @@ describe('test addSkillsPage.vue', function() {
 
   it('should link PositionY when selected link is empty',function () {
     vmAddSkillsPage.selectedlink = '';
+    console.log(vmAddSkillsPage.linkPositionY());
     expect(vmAddSkillsPage.linkPositionY()).toEqual(0);
   });
 
@@ -149,27 +150,6 @@ describe('test addSkillsPage.vue', function() {
     expect(vmAddSkillsPage.selectedSkill.skill1).toEqual('');
   });
 
-  /*it('should check if one skill is selected',function () {
-    /!*vmAddSkillsPage.skill = [
-      {id:1,label:'JAVA',version:0},
-      {id:2,label:'J2EE',version:0},
-    ];*!/
-    vmAddSkillsPage.selectedSkill = {
-      skill1: '',
-      skill2: ''
-    };
-    var skill = {id:1,label:'JAVA',version:0};
-
-    // var dummyElement = document.createElement('g');
-    // dummyElement.setAttribute("id",skill.id);
-    // //dummyElement.setAttribute("filter","url(#blurMe)");
-    // document.getElementById = jasmine.createSpy('HTML Element').and.returnValue(dummyElement);
-
-
-    vmAddSkillsPage.selectSkill(skill);
-
-    //expect(vmAddSkillsPage.linkPositionY()).not.toEqual(0);
-  });*/
 
   it('should get all skills', function(done){
     let allSkills =  [
@@ -180,16 +160,15 @@ describe('test addSkillsPage.vue', function() {
       {"id":2,"version":0,"label":"Android"}
     ];
     mock.onGet(config.server + "/api/skills/").reply(200, allSkills);
-    var containerSVG = document.createElement('div');
-    containerSVG.setAttribute("id",'svg-container');
+    let containerSVG = vmAddSkillsPage.$el.querySelector('.svg-container');
     document.getElementById = jasmine.createSpy('HTML Element').and.returnValue(containerSVG);
-     vmAddSkillsPage.getAllSkills();
-     setTimeout(function() {
-       expect(vmAddSkillsPage.skills.length).toBe(5);
-       expect(vmAddSkillsPage.skills[0].label).toBe("Android");
-       expect(containerSVG.style.height).toBe("360px");
-       done();
-     },0)
+    vmAddSkillsPage.getAllSkills();
+    setTimeout(function() {
+      expect(vmAddSkillsPage.skills.length).toBe(5);
+      expect(vmAddSkillsPage.skills[0].label).toBe("Android");
+      expect(containerSVG.style.height).toBe("360px");
+      done();
+    },0)
   });
 
   it('should fail to get all skills and links', function() {
@@ -259,4 +238,29 @@ describe('test addSkillsPage.vue', function() {
     vmAddSkillsPage.removeLink();
 
   })
+
+
+  /*it('should check if one skill is selected',function () {
+    /!*vmAddSkillsPage.skill = [
+      {id:1,label:'JAVA',version:0},
+      {id:2,label:'J2EE',version:0},
+    ];*!/
+    vmAddSkillsPage.selectedSkill = {
+      skill1: '',
+      skill2: ''
+    };
+    var skill = {id:1,label:'JAVA',version:0};
+
+    // var dummyElement = document.createElement('g');
+    // dummyElement.setAttribute("id",skill.id);
+    // //dummyElement.setAttribute("filter","url(#blurMe)");
+    // document.getElementById = jasmine.createSpy('HTML Element').and.returnValue(dummyElement);
+
+
+    vmAddSkillsPage.selectSkill(skill);
+
+    //expect(vmAddSkillsPage.linkPositionY()).not.toEqual(0);
+  });*/
+
+
 });
