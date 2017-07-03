@@ -38,10 +38,12 @@ function requireAdministratorAuthentification(to, from, next) {
 
 function redirectIfAlreadyAuthenticated(to, from, next) {
   if (isAlreadyAuthenticated() && isAdministratorAuthenticated()) {
-    next('/addSkills')
+    console.log("admin");
+    next('/addSkills');
   }
   else if (isAlreadyAuthenticated() && !isAdministratorAuthenticated()) {
-    next('/showSkillsCollab')
+    console.log("collab");
+    next('/showSkillsCollab');
   }
   else {
     next()

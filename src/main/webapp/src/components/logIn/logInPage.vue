@@ -7,29 +7,33 @@
         <label for="email">Email</label>
         <div class="inner-addon left-addon"
              :class="{ 'control': true }">
-          <tr><td style="width: 500px;">
-            <i class="glyphicon glyphicon-envelope"></i>
-            <input ref="inputMail"
-                   type="email"
-                   name="email"
-                   id="email"
-                   tabindex="2"
-                   class="form-control"
-                   placeholder="eric.dupont@viseo.com"
-                   v-model="email"
-                   @focus="emailEmpty = false;
+          <tr>
+            <td style="width: 500px;">
+              <i class="glyphicon glyphicon-envelope"></i>
+              <input ref="inputMail"
+                     type="email"
+                     name="email"
+                     id="email"
+                     tabindex="2"
+                     class="form-control"
+                     placeholder="eric.dupont@viseo.com"
+                     v-model="email"
+                     @focus="emailEmpty = false;
                            isNotNewEmail = true;
                            showPopup = false;"
-                   @blur="isEmailEmpty()"
-                   onfocus="this.placeholder = ''"
-                   onblur="this.placeholder = 'eric.dupont@viseo.com'">
-          </td></tr>
-          <tr><td style="height: 20px;">
+                     @blur="isEmailEmpty()"
+                     onfocus="this.placeholder = ''"
+                     onblur="this.placeholder = 'eric.dupont@viseo.com'">
+            </td>
+          </tr>
+          <tr>
+            <td style="height: 20px;">
             <span v-show="emailEmpty"
                   class="color-red ">Email est obligatoire.</span>
-            <span v-show="!isNotNewEmail && !emailEmpty"
-                  class="color-red ">Cet email n'est associé à aucun compte</span>
-          </td></tr>
+              <span v-show="!isNotNewEmail && !emailEmpty"
+                    class="color-red ">Cet email n'est associé à aucun compte</span>
+            </td>
+          </tr>
         </div>
       </div>
       <!-- MOT DE PASSE -->
@@ -38,52 +42,56 @@
         <label for="mdp">Mot de passe</label>
         <div class="password"
              :class="{ 'control': true }">
-          <tr><td style="width: 500px;">
-            <i class="glyphicon glyphicon-lock"></i>
-            <span @click="showPass = !showPass"
-                  v-show="!showPass && password"
-                  class="glyphicon glyphicon-eye-open"> </span>
-            <span @click="showPass = false"
-                  v-show="showPass && password"
-                  class="glyphicon glyphicon-eye-close"> </span>
-            <input ref="inputPassword"
-                   type="password"
-                   v-model="password"
-                   v-show="!showPass"
-                   name="mdp" id="mdp"
-                   tabindex="2"
-                   class="form-control"
-                   placeholder="••••••"
-                   onfocus="this.placeholder = ''"
-                   onblur="this.placeholder = '••••••'"
-                   @focus="passwordEmpty = false;
+          <tr>
+            <td style="width: 500px;">
+              <i class="glyphicon glyphicon-lock"></i>
+              <span @click="showPass = !showPass"
+                    v-show="!showPass && password"
+                    class="glyphicon glyphicon-eye-open"> </span>
+              <span @click="showPass = false"
+                    v-show="showPass && password"
+                    class="glyphicon glyphicon-eye-close"> </span>
+              <input ref="inputPassword"
+                     type="password"
+                     v-model="password"
+                     v-show="!showPass"
+                     name="mdp" id="mdp"
+                     tabindex="2"
+                     class="form-control"
+                     placeholder="••••••"
+                     onfocus="this.placeholder = ''"
+                     onblur="this.placeholder = '••••••'"
+                     @focus="passwordEmpty = false;
                            showPopup = false;"
-                   @blur="isPasswordEmpty()">
-            <input ref="inputPasswordVisible"
-                   type="text"
-                   v-model="password"
-                   v-show="showPass"
-                   name="mdp"
-                   id="mdp2"
-                   tabindex="2"
-                   class="form-control"
-                   @focus="passwordEmpty = false"
-                   @blur="isPasswordEmpty()">
-          </td></tr>
-          <tr><td style="height: 20px;">
+                     @blur="isPasswordEmpty()">
+              <input ref="inputPasswordVisible"
+                     type="text"
+                     v-model="password"
+                     v-show="showPass"
+                     name="mdp"
+                     id="mdp2"
+                     tabindex="2"
+                     class="form-control"
+                     @focus="passwordEmpty = false"
+                     @blur="isPasswordEmpty()">
+            </td>
+          </tr>
+          <tr>
+            <td style="height: 20px;">
             <span v-show="passwordEmpty"
                   class="color-red ">Mot de passe est obligatoire.</span>
-          </td></tr>
+            </td>
+          </tr>
         </div>
       </div>
       <div class="checkbox">
-        <div class = "row">
-          <div class = "col-lg-6 col-md-6 col-sm-6 col-xs-6">
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
             <label><input type="checkbox"
                           value=""
                           v-model="stayConnected">Rester Connecté</label>
           </div>
-          <div class = "col-lg-6 col-md-6 col-sm-6 col-xs-6">
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
             <a href="#"
                ref="forgotPassword"
                @click="showPopupFn()"
@@ -121,6 +129,8 @@
   import router from '../../config/router'
   import axios from 'axios'
   import * as Vuex from "vuex";
+  var jwtDecode = require('jwt-decode');
+
 
   export default {
     name: 'connexion-form',
@@ -151,15 +161,55 @@
     },
 
     methods: {
+      isAlreadyAuthenticated() {
+        var userToken = localStorage.getItem('token');
+        return userToken != null;
+      },
+
+      isAdministratorAuthenticated() {
+        var userToken = localStorage.getItem('token');
+        var isAdministrator = jwtDecode(userToken).isAdmin;
+        return isAdministrator;
+      },
+
+      requireCollaboratorAuthentification(to, from, next) {
+        if (this.isAlreadyAuthenticated() && !this.isAdministratorAuthenticated()) {
+          router.push()
+        } else {
+          router.push('/login')
+        }
+      },
+
+      requireAdministratorAuthentification(to, from, next) {
+        if (this.isAlreadyAuthenticated() && this.isAdministratorAuthenticated()) {
+          next()
+        } else {
+          next('/login')
+        }
+      },
+
+      redirectIfAlreadyAuthenticated(to, from, next) {
+        if (this.isAlreadyAuthenticated() && this.isAdministratorAuthenticated()) {
+          console.log("admin");
+          router.push('/addSkills');
+        }
+        else if (this.isAlreadyAuthenticated() && !this.isAdministratorAuthenticated()) {
+          console.log("collab");
+          router.push('/showSkillsCollab');
+        }
+        else {
+          router.push()
+        }
+      },
 
       logIn(){
-          axios.post(config.server + "/api/user", this.collaboratorToLogIn).then(response => {
-            this.$store.commit('clearToken');
-            this.$store.commit('setToken', response.data['userConnected']);
-            this.$router.push("/addSkills");
-          }, response => {
-              console.log(response);
-          });
+        axios.post(config.server + "/api/user", this.collaboratorToLogIn).then(response => {
+          this.$store.commit('clearToken');
+          this.$store.commit('setToken', response.data['userConnected']);
+          this.redirectIfAlreadyAuthenticated();
+        }, response => {
+          console.log(response);
+        });
       },
 
 
@@ -185,8 +235,6 @@
           this.logIn();
         }
       },
-
-
 
 
 //
