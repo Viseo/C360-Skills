@@ -1,15 +1,20 @@
 package com.viseo.c360.competence.services;
 
-import com.viseo.c360.competence.converters.collaborator.CollaboratorToDescription;
-import com.viseo.c360.competence.converters.collaborator.CollaboratorToIdentity;
-import com.viseo.c360.competence.converters.collaborator.DescriptionToCollaborator;
+import com.viseo.c360.competence.converters.collaborator.*;
 
+import com.viseo.c360.competence.converters.skill.SkillToDescription;
 import com.viseo.c360.competence.dao.CollaboratorDAO;
+import com.viseo.c360.competence.dao.ExpertiseDAO;
+import com.viseo.c360.competence.dao.SkillDAO;
 import com.viseo.c360.competence.domain.collaborator.Collaborator;
 
+import com.viseo.c360.competence.domain.collaborator.Expertise;
+import com.viseo.c360.competence.domain.skill.Skill;
 import com.viseo.c360.competence.dto.collaborator.CollaboratorDescription;
 import com.viseo.c360.competence.dto.collaborator.CollaboratorIdentity;
 
+import com.viseo.c360.competence.dto.collaborator.ExpertiseDescription;
+import com.viseo.c360.competence.dto.skill.SkillDescription;
 import com.viseo.c360.competence.email.sendMessage;
 import com.viseo.c360.competence.exceptions.C360Exception;
 import com.viseo.c360.competence.exceptions.dao.PersistentObjectNotFoundException;
@@ -40,6 +45,9 @@ public class CollaboratorWS {
 
     @Inject
     ExceptionUtil exceptionUtil;
+
+    @Inject
+    ExpertiseDAO expertiseDAO;
 
     @CrossOrigin
     @RequestMapping(value = "${endpoint.user}", method = RequestMethod.POST)
@@ -97,6 +105,7 @@ public class CollaboratorWS {
     @ResponseBody
     public boolean checkIsAlreadyConnected(@RequestBody String thisToken) {
         try {
+            thisToken = thisToken.replace("=","");
             return mapUserCache.get(thisToken) != null;
         } catch (Exception e) {
             e.printStackTrace();
@@ -164,9 +173,9 @@ public class CollaboratorWS {
     @CrossOrigin
     @RequestMapping(value = "${endpoint.collaboratorbyid}", method = RequestMethod.GET)
     @ResponseBody
-    public CollaboratorDescription getCollaboratorById(@PathVariable Long collab_id) {
+    public CollaboratorIdentity getCollaboratorById(@PathVariable Long collab_id) {
         try {
-            return new CollaboratorToDescription().convert(collaboratorDAO.getCollaboratorById(collab_id));
+            return new CollaboratorToIdentity().convert(collaboratorDAO.getCollaboratorById(collab_id));
         } catch (ConversionException e) {
             e.printStackTrace();
             throw new C360Exception(e);
@@ -209,4 +218,30 @@ public class CollaboratorWS {
         }
     }
 
+    @CrossOrigin
+    @RequestMapping(value = "${endpoint.expertise}", method = RequestMethod.PUT)
+    @ResponseBody
+    public ExpertiseDescription updateExpertise(@RequestBody ExpertiseDescription expertiseDescription) {
+        try {
+            expertiseDescription.setNoted(true);
+            Expertise expertise = expertiseDAO.updateExpertise(new DescriptionToExpertise().convert(expertiseDescription));
+            return new ExpertiseToDescription().convert(expertise);
+        } catch (PersistenceException pe) {
+            UniqueFieldErrors uniqueFieldErrors = exceptionUtil.getUniqueFieldError(pe);
+            if (uniqueFieldErrors == null) throw new C360Exception(pe);
+            else throw new UniqueFieldException(uniqueFieldErrors.getField());
+        }
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "${endpoint.getcollabexpertises}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<ExpertiseDescription> getAllExpertise(@PathVariable Long collaboratorId) {
+        try {
+            return new ExpertiseToDescription().convert(expertiseDAO.getAllExpertises(new IdentityToCollaborator().convert(this.getCollaboratorById(collaboratorId))));
+        } catch (ConversionException e) {
+            e.printStackTrace();
+            throw new C360Exception(e);
+        }
+    }
 }
