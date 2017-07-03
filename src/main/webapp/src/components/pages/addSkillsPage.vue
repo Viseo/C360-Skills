@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="svg-container" id="svg-container">
-      <b class="mybstyle">Administration des compétences</b>
+      <h4 class="mystyle">Administration des compétences</h4>
       <hr class="myhrline">
-      <svg version="1.1" viewBox="0 0 1250 1250" preserveAspectRatio="xMinYMin meet">
+      <svg version="1.1" :viewBox="myViewBox"  preserveAspectRatio="xMinYMin meet">
         <defs>
           <filter id="blurMe">
             <feGaussianBlur in="SourceGraphic" stdDeviation="4"/>
@@ -64,12 +64,14 @@
                     :y1="linkPositionY()"></CloseCross>
       </svg>
     </div>
+    <wishRequest @addWishToSkills="addWish"></wishRequest>
   </div>
 </template>
 
 <script>
   import CustomCircle from "../customComponent/customcircle.vue"
   import CloseCross from "../customComponent/CloseCross.vue"
+  import wishRequest from"./wishRequest.vue"
   import config from '../../config/config'
   import axios from 'axios'
   var $ = window.jQuery = require('jquery');
@@ -83,6 +85,7 @@
           skill1: '',
           skill2: ''
         },
+        myViewBox: "0 0 1250 1250",
         skills: [],
         selectedlink: '',
         skillOldValue: '',
@@ -95,38 +98,33 @@
         posY: 60,
         row: 0,
         links:[],
-
-        //declaration
-        expertises:[]
+        wishes:[]
       }
     },
     mounted(){
-      this.getAllSkills();
-      this.getAllLinks();
+        this.getAllSkills();
+        this.getAllLinks();
     },
     methods: {
-      showCircleBlurOrNot(id){
-        if (this.selectedSkill.skill1.id == id) {
-          return true
-        }
-        return false;
-      },
-
-      displayInput() {
-        this.newSkillClicked = true;
-        this.label = '';
-        setTimeout(function () {
-          $('.inputCircle').focus();
-        });
-      },
-
-      hideInput(){
-        if (this.label == "") {
-          this.label = "Nouvelle";
-        }
-        this.newSkillClicked = false;
-      },
-
+        addWish(wish){
+          this.label = wish.label;
+          this.addSkill();
+          this.label="Nouvelle";
+          this.getAllSkills();
+        },
+        displayInput() {
+          this.newSkillClicked = true;
+          this.label='';
+          setTimeout(function(){
+            $('.inputCircle').focus();
+          });
+        },
+        hideInput(){
+          if(this.label == "") {
+              this.label = "Nouvelle";
+          }
+          this.newSkillClicked = false;
+        },
       removeLink(link){
         axios.post(config.server + '/api/removelink', link).then(
           response => {
@@ -227,7 +225,11 @@
       },
 
       positionX(integ){
+<<<<<<<
         console.log()
+=======
+
+>>>>>>>
         return this.posX + ((integ) % 8) * 150;
       },
 
@@ -288,8 +290,7 @@
           this.skills.sort(function (a, b) {
             return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);
           });
-          console.log(this.positionY(5) + 300 + Math.floor(5/8)*10 +"px");
-          document.getElementById("svg-container").style.height = (this.positionY(this.skills.length) + 300 + (Math.floor(this.skills.length/8)*10)).toString()+"px";
+          this.myViewBox = "0 0 1250 "+ parseInt((Math.floor(this.skills.length/8)*150) + 200);
         }, response => {
           console.log(response);
         });
@@ -308,15 +309,16 @@
       },
 
       showIcon(skillId){
-        if (this.selectedSkill.skill1.id == skillId) {
-          return true;
-        }
-        else {
-          return false;
-        }
-      }
+          if(this.selectedSkill.skill1.id == skillId){
+              return true;
+          }
+          else{
+              return false;
+          }
+      },
     },
-    components: {customCircle: CustomCircle, CloseCross: CloseCross}
+    components: {customCircle: CustomCircle, CloseCross: CloseCross, wishRequest: wishRequest}
+
   }
 </script>
 
@@ -326,34 +328,27 @@
     display: inline-block;
     position: relative;
     width: 100%;
+    height:100%;
     vertical-align: middle;
     overflow: hidden;
-  }
-
-  .defaultSize {
-    font-size: 24px;
-  }
-
-  .smallSize {
-    font-size: 17px;
   }
 
   body {
     color: #075338;
     margin: 0;
-    font-family: 'Lato', sans-serif;
   }
 
-  h1 {
-    color: white;
+  hr {
+    height: 10px;
+    border: 0;
+    box-shadow: 0 10px 2px -10px #8c8c8c inset;
+    margin-right:50px;
+    margin-left:50px;
+  }
+
+  h4.mystyle {
     text-align: center;
-    margin: 0;
-  }
-
-  .header {
-    background-color: #09aa76;
-    height: 80px;
-    margin: 0px 0px 25px 0px;
+    font-size:1.75rem;
   }
 
   hr.myhrline {

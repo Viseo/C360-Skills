@@ -8,6 +8,8 @@ import Router from 'vue-router'
 import store from './vuex/store'
 import router from './config/router'
 require('../node_modules/bootstrap/dist/css/bootstrap.css');
+require('../node_modules/simplebar/dist/simplebar.css');
+require('../node_modules/simplebar/dist/simplebar.js');
 
 Vue.use(Vuex);
 Vue.use(Router);

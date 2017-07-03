@@ -4,6 +4,7 @@ import mainPage from '../components/mainPage.vue'
 import collabSVG from '../components/pages/showSkillsCollabPage.vue'
 import containerSVG from '../components/pages/addSkillsPage.vue'
 import navigationMenu from '../components/layout/signInUpMenu.vue'
+import wishrequest from '../components/pages/wishRequest.vue'
 import error404Page from '../components/pages/error404Page.vue'
 
 var jwtDecode = require('jwt-decode');
