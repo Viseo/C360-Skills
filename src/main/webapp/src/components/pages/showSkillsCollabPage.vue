@@ -120,7 +120,6 @@
         });
       },
       getAllExpertise(){
-        console.log("FUCK YOU");
         console.log(this.collabLogged);
         axios.get(config.server + '/api/getcollabexpertises/'+this.collabLogged.id).then(
           response => {

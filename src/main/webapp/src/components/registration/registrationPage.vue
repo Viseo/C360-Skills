@@ -341,17 +341,14 @@
         axios.post(config.server + "/api/collaborateurs", this.collaboratorToRegister).then(
             response => {
               if (response.data == "personnalIdNumber") {
-                console.log("PID already exist");
                 this.personalIdNumberAlreadyExist = true;
                 this.emailAlreadyExist = false;
               }
               else if (response.data == "email") {
-                console.log("email already exist");
                 this.emailAlreadyExist = true;
                 this.personalIdNumberAlreadyExist = false;
               }
               else{
-                console.log("cas normal");
                 this.user.email = this.collaboratorToRegister.email;
                 this.user.password = this.collaboratorToRegister.password;
                 this.userToConnect = JSON.parse(JSON.stringify(this.user));
