@@ -93,6 +93,57 @@ describe('test addSkillsPage.vue', function() {
     expect(vmAddSkillsPage.linkPositionY()).not.toEqual(0);
   });
 
+  it('should check if add a new circle',function () {
+    vmAddSkillsPage.label = "JAVA";
+    vmAddSkillsPage.addCircle();
+
+    expect(vmAddSkillsPage.newSkillClicked).toBe(false);
+    expect(vmAddSkillsPage.label).toEqual('Nouvelle');
+  });
+
+  it('should check if not add circle',function () {
+    vmAddSkillsPage.label = "";
+    vmAddSkillsPage.addCircle();
+
+    expect(vmAddSkillsPage.newSkillClicked).toBe(false);
+    expect(vmAddSkillsPage.label).toEqual('');
+  });
+
+  it('should check showIcon',function () {
+    var skillId = 1;
+    vmAddSkillsPage.selectedSkill = {
+      skill1: {id:1,label:'JAVA',version:0},
+      skill2: {id:2,label:'J2EE',version:0}
+    };
+
+    expect(vmAddSkillsPage.showIcon(skillId)).toBe(true);
+  });
+
+  it('should check showIcon',function () {
+    var skillId = 2;
+    vmAddSkillsPage.selectedSkill = {
+      skill1: {id:1,label:'JAVA',version:0},
+      skill2: {id:2,label:'J2EE',version:0}
+    };
+
+    expect(vmAddSkillsPage.showIcon(skillId)).toBe(false);
+  });
+
+  it('should check showIcon',function () {
+    vmAddSkillsPage.skills = [
+      {id:1,label:'JAVA',version:0},
+      {id:2,label:'J2EE',version:0},
+    ];
+
+    vmAddSkillsPage.selectedSkill = {
+      skill1: {id:1,label:'JAVA',version:0},
+      skill2: {id:2,label:'JAVA',version:0}
+    };
+    vmAddSkillsPage.cancelUpdate();
+
+    expect(vmAddSkillsPage.selectedSkill.skill1).toEqual('');
+  });
+
   /*it('should check if one skill is selected',function () {
     /!*vmAddSkillsPage.skill = [
       {id:1,label:'JAVA',version:0},
