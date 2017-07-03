@@ -44,7 +44,6 @@
       this.getCollabLogged();
       this.getAllExpertise();
       this.getAllLinks();
-      this.getAllSkills();
     },
     components: {customCircle: CustomCircle},
 
@@ -52,7 +51,6 @@
         updateAll(){
           this.getAllExpertise();
           this.getAllLinks();
-          this.getAllSkills();
         },
       getCollabLogged(){
         this.collabLogged.id = this.$store.getters.collaboratorLoggedIn.id;
@@ -105,20 +103,6 @@
         return this.posY + Math.floor((integ) / 8) * 150;
       },
 
-
-      getAllSkills(){
-        axios.get(config.server + "/api/skills/").then(response => {
-          this.skills = response.data;
-          this.skills.sort(function (a, b) {
-            return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);
-          });
-          console.log(this.positionY(this.skills.length));
-          document.getElementById("svg-container").style.height = (this.positionY(this.skills.length) + 300 + (Math.floor(this.skills.length / 8) * 10)).toString() + "px";
-
-        }, response => {
-          console.log(response);
-        });
-      },
       getAllExpertise(){
         console.log("FUCK YOU");
         console.log(this.collabLogged);
