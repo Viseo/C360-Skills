@@ -125,6 +125,7 @@
             firstName: '',
             email: '',
             password: '',
+            confirmPassword: '',
           },
           user: {
             email: '',
@@ -419,9 +420,8 @@
           this.collaborator.firstName = this.firstName;
           this.collaborator.email = this.email;
           this.collaborator.password = this.password;
+          this.collaborator.confirmPassword = this.confirmPassword;
           this.collaboratorToRegister = JSON.parse(JSON.stringify(this.collaborator));
-          this.emailAlreadyExist = false;
-          this.personalIdNumberAlreadyExist = false;
           this.addCollaborator();
         }
       },
