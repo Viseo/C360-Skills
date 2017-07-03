@@ -132,15 +132,20 @@ public class CollaboratorWS {
     @CrossOrigin
     @RequestMapping(value = "${endpoint.collaborators}", method = RequestMethod.POST)
     @ResponseBody
-    public CollaboratorDescription addCollaborator(@RequestBody CollaboratorDescription collaboratorDescription) {
+    public String addCollaborator(@RequestBody CollaboratorDescription collaboratorDescription) {
         try {
             collaboratorDescription.setDefaultPicture(true);
             Collaborator collaborator = collaboratorDAO.addCollaborator(new DescriptionToCollaborator().convert(collaboratorDescription));
-            return new CollaboratorToDescription().convert(collaborator);
+            return "success";
         } catch (PersistenceException pe) {
             UniqueFieldErrors uniqueFieldErrors = exceptionUtil.getUniqueFieldError(pe);
-            if (uniqueFieldErrors == null) throw new C360Exception(pe);
-            else throw new UniqueFieldException(uniqueFieldErrors.getField());
+            if(uniqueFieldErrors.getField() == "personnalIdNumber"){
+                return "personnalIdNumber";
+            }else if(uniqueFieldErrors.getField() == "email"){
+                return "email";
+            }else{
+                return "success";
+            }
         }
     }
 

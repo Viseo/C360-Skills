@@ -7,19 +7,23 @@ import config from '@/config/config'
 //import prepareRequest from '@/unit/test-util'
 //var InterceptorRequst = require('./test-util')
 //import 'jasmine-ajax'
-import axios from 'axios'
-import MockAdapter from 'axios-mock-adapter'
+require('jasmine-ajax');
+import Service from './service';
+var MockAdapter = require('axios-mock-adapter');
 
+import axios from 'axios'
 var Constructor = Vue.extend(RegistrationPage);
 var vmRegistrationPage;
-var mock = new MockAdapter(axios);
 
 describe('test registrationPage.vue', function() {
+ // let resource = { id: 5, name: 'foo' };
+
 
   let dispatch = jasmine.createSpy('dispatch');
   beforeEach(function () {
-    mock = new MockAdapter(axios);
+
     //jasmine.Ajax.install();
+
     vmRegistrationPage = new Constructor().$mount();
   });
 
@@ -200,58 +204,42 @@ describe('test registrationPage.vue', function() {
     },0);
   });
 
-  it('should add the collaborator', function() {
-    let collaborator = {
-          id: 1,
-          version: 0,
-          personnalIdNumber: "AAA1234",
-          lastName: "DUPONT",
-          firstName: "ERIC",
-          email: "eric.dupont@viseo.com",
-          password: "123456"
-        };
-    mock.onPost(config.server + '/api/collaborateurs').reply(200);
-/*    expect(vmRegistrationPage.emailAlreadyExist).toBe(false);
-    expect(vmRegistrationPage.personalIdNumberAlreadyExist).toBe(false);
-    expect(vmRegistrationPage.user.email).toBe(false);
-    expect(vmRegistrationPage.emailAlreadyExist).toBe(false);*/
-  });
   /* A revoir pour les requets */
-  // it('it should add the collaborator', function (done) {
-  //   jasmine.Ajax.install();
-  //   let resource = {
-  //     id: 1,
-  //     version: 0,
-  //     personnalIdNumber: "AAA1234",
-  //     lastName: "DUPONT",
-  //     firstName: "ERIC",
-  //     email: "eric.dupont@viseo.com",
-  //     password: "123456"
-  //   };
-  //
-  //   let request, promise;
-  //   //let instance = Service;
-  //   let payload = resource;
-  //   let path = config.server + '/api/collaborateurs';
-  //   let callback = jasmine.createSpy('callback');
-  //
-  //   vmRegistrationPage.collaboratorToRegister = JSON.parse(JSON.stringify(resource));
-  //   vmRegistrationPage.addCollaborator();
-  //   setTimeout(function () {
-  //     request = jasmine.Ajax.requests.mostRecent();
-  //     expect(request.url).toBe(path);
-  //     expect(request.method).toBe('POST');
-  //     //expect(request.responseType).toBe('json');
-  //     //expect(request.data()).toEqual(payload);
-  //     request.respondWith({
-  //       "status": 200,
-  //       "contentType": 'text/plain',
-  //       "responseText": JSON.stringify(payload)
-  //     });
-  //     jasmine.Ajax.uninstall();
-  //
-  //     done();
-  //   }, 200);
-  // });
+  it('it should add the collaborator', function (done) {
+    jasmine.Ajax.install();
+    let resource = {
+      id: 1,
+      version: 0,
+      personnalIdNumber: "AAA1234",
+      lastName: "DUPONT",
+      firstName: "ERIC",
+      email: "eric.dupont@viseo.com",
+      password: "123456"
+    };
+
+    let request, promise;
+    //let instance = Service;
+    let payload = resource;
+    let path = config.server + '/api/collaborateurs';
+    let callback = jasmine.createSpy('callback');
+
+    vmRegistrationPage.collaboratorToRegister = JSON.parse(JSON.stringify(resource));
+    vmRegistrationPage.addCollaborator();
+    setTimeout(function () {
+      request = jasmine.Ajax.requests.mostRecent();
+      expect(request.url).toBe(path);
+      expect(request.method).toBe('POST');
+      //expect(request.responseType).toBe('json');
+      //expect(request.data()).toEqual(payload);
+      request.respondWith({
+        "status": 200,
+        "contentType": 'text/plain',
+        "responseText": JSON.stringify(payload)
+      });
+      jasmine.Ajax.uninstall();
+
+      done();
+    }, 200);
+  });
 
 });

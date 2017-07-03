@@ -20,5 +20,4 @@ describe('test CloseCross.vue', function() {
     vmCloseCross.handleClick();
   });
 
-
 });
