@@ -15,10 +15,7 @@ describe('test customInput.vue', function() {
    vmCustomInput = new Constructor().$mount();
   });
 
-  afterEach(function () {
-    Object.assign(vmCustomInput.$data, vmCustomInput.$options.data());
-
-  });
+  afterEach(function () {});
 
   it('should check function updateValue', function() {
     vmCustomInput.updateValue('HELLO');
