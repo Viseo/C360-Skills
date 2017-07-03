@@ -1,7 +1,7 @@
 <template>
   <g>
     <circle v-show="showCircleBlur" @click="handleClick()" class="circleSkill" :id="cx+''+cy" :cx="cx" :cy="cy" r="50" :fill="fill" :stroke="stroke" stroke-width="10"></circle>
-    <circle @click="handleClick()" class="circleSkill" :cx="cx" :cy="cy" r="53" :fill="fill" :stroke="stroke" :filter="filter" stroke-width="2"></circle>
+    <circle @click="handleClick()" class="circleSkill" :cx="cx" :cy="cy" r="53" :fill="fill" :stroke="stroke" stroke-width="2"></circle>
     <text @click="handleClick()" class="textSkill" text-anchor="middle" :x="cx" :y="cy" style="fill: rgba(0,0,0,0.52);">{{content}}</text>
     <foreignObject :x="cx-45" :y="cy+5">
       <div v-show="!admin">

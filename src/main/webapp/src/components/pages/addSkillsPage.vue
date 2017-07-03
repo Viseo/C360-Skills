@@ -106,7 +106,14 @@
         this.getAllLinks();
     },
     methods: {
-        addWish(wish){
+      showCircleBlurOrNot(id){
+        if (this.selectedSkill.skill1.id == id) {
+          return true
+        }
+        return false;
+      },
+
+      addWish(wish){
           this.label = wish.label;
           this.addSkill();
           this.label="Nouvelle";
@@ -225,11 +232,6 @@
       },
 
       positionX(integ){
-<<<<<<<
-        console.log()
-=======
-
->>>>>>>
         return this.posX + ((integ) % 8) * 150;
       },
 
