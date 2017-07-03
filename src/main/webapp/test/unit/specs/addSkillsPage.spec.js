@@ -144,26 +144,29 @@ describe('test addSkillsPage.vue', function() {
     expect(vmAddSkillsPage.selectedSkill.skill1).toEqual('');
   });
 
-  /*it('should check if one skill is selected',function () {
-    /!*vmAddSkillsPage.skill = [
+  it('should check if one skill is selected',function () {
+    /*vmAddSkillsPage.skill = [
       {id:1,label:'JAVA',version:0},
       {id:2,label:'J2EE',version:0},
-    ];*!/
+    ];*/
     vmAddSkillsPage.selectedSkill = {
       skill1: '',
       skill2: ''
     };
     var skill = {id:1,label:'JAVA',version:0};
 
-    // var dummyElement = document.createElement('g');
-    // dummyElement.setAttribute("id",skill.id);
-    // //dummyElement.setAttribute("filter","url(#blurMe)");
-    // document.getElementById = jasmine.createSpy('HTML Element').and.returnValue(dummyElement);
 
+    /*var dummyElement = document.createElement('g');
+    dummyElement.setAttribute("id",skill.id);
+    dummyElement.set;
+    //dummyElement.setAttribute("filter","url(#blurMe)");
+    document.getElementById = jasmine.createSpy('HTML Element').and.returnValue(dummyElement);
+    document.getElementById(skill.id).getElementsByTagName('circle')[0];
+    console.log(document.getElementById(skill.id).getElementsByTagName('circle')[0]);*/
 
     vmAddSkillsPage.selectSkill(skill);
 
     //expect(vmAddSkillsPage.linkPositionY()).not.toEqual(0);
-  });*/
+  });
 
 });
