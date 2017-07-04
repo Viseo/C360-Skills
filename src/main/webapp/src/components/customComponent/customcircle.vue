@@ -2,7 +2,7 @@
   <g>
     <circle @click="handleClick()" class="circleSkill" :id="cx+''+cy" :cx="cx" :cy="cy" r="53" :fill="fill" :stroke="stroke" :filter="filter" stroke-width="2"></circle>
     <text @click="handleClick()" class="textSkill" text-anchor="middle" :x="cx" :y="cy" style="fill: rgba(0,0,0,0.52);">{{content}}</text>
-    <foreignObject :x="cx-45" :y="cy+5" class="myclass">
+    <foreignObject :x="cx-45" :y="cy+5" class="myclass" width="100%" height="100%">
       <div v-show="!admin">
         <p><span v-tooltip.bottom="currentLevel">
         <star-rating @rating-selected="setRating" @current-rating="showCurrentRating" v-model="rating" :show-rating="false"
