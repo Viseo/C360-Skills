@@ -174,10 +174,10 @@ describe('test addSkillsPage.vue', function() {
   });
 
   it('should fail to get all skills and links', function() {
-    mock.onGet(config.server + "/api/skills/").reply(400);
+    mock.onGet(config.server + "/api/skills/").reply(500);
     expect(vmAddSkillsPage.skills.length).toBe(0);
 
-    mock.onGet(config.server + "/api/links/").reply(400);
+    mock.onGet(config.server + "/api/links/").reply(500);
     expect(vmAddSkillsPage.links.length).toBe(0);
   });
 

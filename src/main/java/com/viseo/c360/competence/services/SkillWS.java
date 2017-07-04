@@ -28,6 +28,9 @@ public class SkillWS {
     SkillDAO skillDAO;
 
     @Inject
+    ExpertiseDAO expertiseDAO;
+
+    @Inject
     ExceptionUtil exceptionUtil;
 
     @CrossOrigin
@@ -66,6 +69,7 @@ public class SkillWS {
     @ResponseBody
     public Boolean removeSkill(@RequestBody SkillDescription skillDescription){
         try {
+            expertiseDAO.removeExpertisesBySkill(new DescriptionToSkill().convert(skillDescription));
             skillDAO.removeSkill(new DescriptionToSkill().convert(skillDescription));
             return true;
         } catch (PersistenceException pe) {
