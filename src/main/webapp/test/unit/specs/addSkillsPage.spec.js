@@ -161,13 +161,13 @@ describe('test addSkillsPage.vue', function() {
       {"id":2,"version":0,"label":"Android"}
     ];
     mock.onGet(config.server + "/api/skills/").reply(200, allSkills);
-    let containerSVG = vmAddSkillsPage.$el.querySelector('.svg-container');
-    document.getElementById = jasmine.createSpy('HTML Element').and.returnValue(containerSVG);
+    // let containerSVG = vmAddSkillsPage.$el.querySelector('.svg-container');
+    // document.getElementById = jasmine.createSpy('HTML Element').and.returnValue(containerSVG);
     vmAddSkillsPage.getAllSkills();
     setTimeout(function() {
       expect(vmAddSkillsPage.skills.length).toBe(5);
       expect(vmAddSkillsPage.skills[0].label).toBe("Android");
-      expect(containerSVG.style.height).toBe("360px");
+     // expect(containerSVG.style.height).toBe("360px");
       done();
     },0)
   });
