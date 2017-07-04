@@ -2,14 +2,11 @@
  * Created by SJO3662 on 29/06/2017.
  */
 import Vue from 'vue'
-import Vuex from 'vuex'
 import CustomCircle from '@/components/customComponent/customcircle'
-import storeVuex from '@/vuex/store'
+//import storeVuex from '@/vuex/store'
 var Constructor = Vue.extend(CustomCircle);
 var vmCustomCircle;
-Vue.use(Vuex)
-const store = new Vuex.Store(storeVuex);
-//import { MUT_PROFILE_HTML, initialState } from '@/vuex/store'
+//const store = new Vuex.Store(storeVuex);
 
 
 describe('test customcircle.vue', function() {
@@ -18,11 +15,16 @@ describe('test customcircle.vue', function() {
   });
 
   afterEach(function () {
-    //Object.assign(vmCustomCircle.$data, vmCustomCircle.$options.data());
+    Object.assign(vmCustomCircle.$data, vmCustomCircle.$options.data());
   });
 
   it('should if click on a circle',function () {
     vmCustomCircle.handleClick();
+  });
+
+  it('should check add a score',function () {
+    vmCustomCircle.score = 4;
+    expect(vmCustomCircle.rating).toEqual(4);
   });
 
  /* it('should check the position top of circle',function () {
