@@ -151,7 +151,7 @@ describe('test addSkillsPage.vue', function() {
   });
 
 
-  it('should get all skills', function(done){
+  /*it('should get all skills', function(done){
     let allSkills =  [
       {"id":4,"version":0,"label":"C++"},
       {"id":5,"version":0,"label":"CSS"},
@@ -169,7 +169,7 @@ describe('test addSkillsPage.vue', function() {
       expect(containerSVG.style.height).toBe("360px");
       done();
     },0)
-  });
+  });*/
 
   it('should fail to get all skills and links', function() {
     mock.onGet(config.server + "/api/skills/").reply(400);

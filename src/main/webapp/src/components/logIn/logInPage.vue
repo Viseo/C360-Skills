@@ -156,7 +156,8 @@
         passwordToSend: '',
         idToSend: '',
         lastNameToSend: '',
-        firstNameToSend: ''
+        firstNameToSend: '',
+        userToken:{}
       }
     },
 
@@ -172,22 +173,6 @@
         return isAdministrator;
       },
 
-      requireCollaboratorAuthentification(to, from, next) {
-        if (this.isAlreadyAuthenticated() && !this.isAdministratorAuthenticated()) {
-          router.push()
-        } else {
-          router.push('/login')
-        }
-      },
-
-      requireAdministratorAuthentification(to, from, next) {
-        if (this.isAlreadyAuthenticated() && this.isAdministratorAuthenticated()) {
-          next()
-        } else {
-          next('/login')
-        }
-      },
-
       redirectIfAlreadyAuthenticated(to, from, next) {
         if (this.isAlreadyAuthenticated() && this.isAdministratorAuthenticated()) {
           console.log("admin");
@@ -197,15 +182,13 @@
           console.log("collab");
           router.push('/showSkillsCollab');
         }
-        else {
-          router.push()
-        }
       },
 
       logIn(){
         axios.post(config.server + "/api/user", this.collaboratorToLogIn).then(response => {
           this.$store.commit('clearToken');
-          this.$store.commit('setToken', response.data['userConnected']);
+          this.userToken = response.data;
+          this.$store.commit('setToken', this.userToken.userConnected);
           this.redirectIfAlreadyAuthenticated();
         }, response => {
           console.log(response);
@@ -234,34 +217,7 @@
           this.collaboratorToLogIn = JSON.parse(JSON.stringify(this.user));
           this.logIn();
         }
-      },
-
-
-//
-//      VerifyEmailFromDatabase(){
-//        let self = this;
-//        self.isNotNewEmail = false;
-//        for (var tmp in self.allUsers) {
-//          if (self.email == self.allUsers[tmp].email) {
-//            self.emailToSend = self.allUsers[tmp].email;
-//            self.passwordToSend = self.allUsers[tmp].password;
-//            self.idToSend = self.allUsers[tmp].id;
-//            self.lastNameToSend = self.allUsers[tmp].lastName;
-//            self.firstNameToSend = self.allUsers[tmp].firstName;
-//            self.isNotNewEmail = self;
-//            break;
-//          }
-//        }
-//      }
-
-      //      showPopupFn() {
-//        if (this.email == '') {
-//          this.emailEmpty = true;
-//        } else {
-//          this.gatherUsersFromDatabaseToVerify();
-//        }
-//      },
-
+      }
     },
   }
 </script>
