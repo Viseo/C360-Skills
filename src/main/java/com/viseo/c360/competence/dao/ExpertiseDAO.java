@@ -79,4 +79,9 @@ public class ExpertiseDAO {
         daoFacade.getList("select e from Expertise e left outer join fetch e.skill where e.collaborator.id =:collaborator",param("collaborator",collaborator.getId()));
         return daoFacade.getList("select e from Expertise e left outer join fetch e.collaborator where e.collaborator.id =:collaborator",param("collaborator",collaborator.getId()));
     }
+
+    @Transactional
+    public void removeExpertisesBySkill(Skill skill){
+         daoFacade.executeRequest("delete from Expertise e where e.skill.id =:skill",param("skill",skill.getId()));
+    }
 }
