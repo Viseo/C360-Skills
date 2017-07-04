@@ -1,20 +1,15 @@
-/**
- * Created by CLH3623 on 22/06/2017.
- */
 import Vue from 'vue'
-import RegistrationPage from '@/components/registration/registrationPage'
-import config from '@/config/config'
-//import prepareRequest from '@/unit/test-util'
-//var InterceptorRequst = require('./test-util')
-//import 'jasmine-ajax'
-require('jasmine-ajax');
-import Service from './service';
-var MockAdapter = require('axios-mock-adapter');
-
 import axios from 'axios'
+import config from '@/config/config'
+import RegistrationPage from '@/components/registration/registrationPage'
+import MockAdapter from 'axios-mock-adapter'
+require('jasmine-ajax');
+
+
 var Constructor = Vue.extend(RegistrationPage);
 var vmRegistrationPage;
 
+var mock = new MockAdapter(axios);
 describe('test registrationPage.vue', function() {
  // let resource = { id: 5, name: 'foo' };
 
@@ -240,6 +235,31 @@ describe('test registrationPage.vue', function() {
 
       done();
     }, 200);*/
+  });
+
+  it('should verify if the user can connect with his/her email & password',function (done) {
+    vmRegistrationPage.email = "xiangzhe.meng@outlook.com";
+    vmRegistrationPage.password = "123456";
+    var collaboratorToLogIn = {
+      "email":"xiangzhe.meng@outlook.com",
+      "password":"123456"
+    };
+    var response = {"userConnected":"eyJhbGciOiJIUzUxMiJ9.eyJmaXJzdE5hbWUiOiJDYXJvbGluZSIsImxhc3ROYW1lIjoiTGhvdGUiLCJpc0FkbWluIjpmYWxzZSwiaWQiOjEsImVtYWlsIjoibGhvdGVAdmlzZW8uY29tIiwidmVyc2lvbiI6MCwiZGVmYXVsdHBpY3R1cmUiOnRydWV9.eguO54P8MHmWrwSREJu5-vCHkhA2Tj995efuHc4twdw"};
+    mock.onPost(config.server + '/api/user').reply(200,response);
+    vmRegistrationPage.logIn();
+    setTimeout(function() {
+      expect(vmRegistrationPage.collaboratorToLogIn).toEqual(collaboratorToLogIn);
+      done();
+    },0);
+  });
+
+  it('should fail to connect with login',function () {
+    vmRegistrationPage.collaboratorToLogIn = {
+      "email":"xiangzhe.meng@outlook.com",
+      "password":"123456"
+    };
+    mock.onPost(config.server + '/api/user').reply(400);
+    vmRegistrationPage.logIn();
   });
 
 });
