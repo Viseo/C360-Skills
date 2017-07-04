@@ -51,7 +51,7 @@
           axios.post(config.server + "/api/addwish", wish)
             .then(response => {
               console.log(response);
-              this.getAllWishes();
+//              this.getAllWishes();
             }, response => {
               console.log(response);
             })

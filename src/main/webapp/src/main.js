@@ -17,7 +17,16 @@ Vue.use(Router);
 Vue.use(VTooltip);
 Vue.config.productionTip = false;
 Vue.component('dropdown', VueStrap.dropdown);
+Vue.component('typeahead', VueStrap.typeahead);
 
+<<<<<<<
+
+=======
+
+// Vue.config.productionTip = false;
+
+/* eslint-disable no-new */
+>>>>>>>
 new Vue({
   el: '#app',
   store,

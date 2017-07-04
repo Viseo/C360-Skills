@@ -249,7 +249,7 @@
       },
 
       addSkill(){
-        var skill = {"label": this.label};
+        var skill = {"label": this.label.toUpperCase()};
         axios.post(config.server + '/api/addskill/', skill).then(response => {
           this.getAllSkills();
         }, response => {
