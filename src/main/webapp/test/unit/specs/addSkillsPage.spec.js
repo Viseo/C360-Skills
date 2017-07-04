@@ -152,7 +152,7 @@ describe('test addSkillsPage.vue', function() {
   });
 
 
-  /*it('should get all skills', function(done){
+  it('should get all skills', function(done){
     let allSkills =  [
       {"id":4,"version":0,"label":"C++"},
       {"id":5,"version":0,"label":"CSS"},
@@ -167,10 +167,11 @@ describe('test addSkillsPage.vue', function() {
     setTimeout(function() {
       expect(vmAddSkillsPage.skills.length).toBe(5);
       expect(vmAddSkillsPage.skills[0].label).toBe("Android");
+      expect(vmAddSkillsPage.myViewBox).toEqual("0 0 1250 200");
      // expect(containerSVG.style.height).toBe("360px");
       done();
     },0)
-  });*/
+  });
 
   it('should fail to get all skills and links', function() {
     mock.onGet(config.server + "/api/skills/").reply(400);

@@ -293,6 +293,7 @@
             return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);
           });
           this.myViewBox = "0 0 1250 "+ parseInt((Math.floor(this.skills.length/8)*150) + 200);
+          console.log(this.myViewBox);
         }, response => {
           console.log(response);
         });
