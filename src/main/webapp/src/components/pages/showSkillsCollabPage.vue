@@ -76,14 +76,10 @@
 
       waitForElementToDisplay(selector, time, position){
         let self = this;
-        console.log(document.getElementById(selector));
         if (document.getElementById(selector) != null) {
-            console.log("lala");
           return document.getElementById(selector).getElementsByTagName("circle")[0].getAttribute(position);
         }
         else {
-          console.log("lili");
-
           setTimeout(function () {
             self.waitForElementToDisplay(selector, time);
           }, time);

@@ -3,17 +3,18 @@ import axios from 'axios'
 import config from '@/config/config'
 import ShowSkillsCollab from '@/components/pages/showSkillsCollabPage'
 import MockAdapter from 'axios-mock-adapter'
+import { fakeGetters } from 'vue-unit'
 import Vuex from 'vuex'
 import storeVuex from '@/vuex/store'
+const store = new Vuex.Store(storeVuex);
 
 Vue.use(Vuex);
-const store = new Vuex.Store(storeVuex);
 require('jasmine-ajax');
 
 var Constructor = Vue.extend(ShowSkillsCollab);
 var vmShowSkillsCollab;
-
 var mock = new MockAdapter(axios);
+
 
 describe('Test showSkillCollab', function() {
   let collaboratorToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJDYXJvbGluZSIsImxhc3ROYW1lIjoiTGhvdGUiLCJyb2xlcyI6ZmFsc2UsImlkIjoxfQ.b6V6cYkhMD4QCXBF_3-kO4S19fwnhDkDQR4ggNqktiyYP6CrbfUCb9Ov2B-2PX1EawUeuPy9WKAobT8FMFoDtg";
@@ -27,13 +28,18 @@ describe('Test showSkillCollab', function() {
   });
 
   it('should get collaborator info', function () {
+    const collabId = fakeGetters('collaboratorLoggedIn.id').returns(1);
+    const collabVersion = fakeGetters('collaboratorLoggedIn.version').returns(0);
+    const collabLastName = fakeGetters('collaboratorLoggedIn.lastName').returns('batista');
+    const collabFirstName = fakeGetters('collaboratorLoggedIn.firstName').returns('benjamin');
+    const collabEmail = fakeGetters('collaboratorLoggedIn.email').returns('benjamin.batista@viseo.com');
+    const collabPicture= fakeGetters('collaboratorLoggedIn.defaultPicture').returns(true);
     /*    storeVuex.getters.collaboratorLoggedIn.id = 1;
      storeVuex.store.getters.collaboratorLoggedIn.version = 0;
      storeVuex.store.getters.collaboratorLoggedIn.lastName = "Batista";
      storeVuex.store.getters.collaboratorLoggedIn.firstName = "Benjamin";
      storeVuex.store.getters.collaboratorLoggedIn.email = 'benjamin.batista@viseo.com';
      storeVuex.getters.collaboratorLoggedIn.defaultPicture = true;
-     storeVuex.getters.collaboratorLoggedIn.llldefaultPicture = true;
 
      let collab = {
      id: 1,
@@ -42,9 +48,9 @@ describe('Test showSkillCollab', function() {
      firstName: 'Benjamin',
      email: 'benjamin.batista@viseo.com',
      defaultPicture: true
-     };
+     };*/
 
-     vmShowSkillsCollab.getCollabLogged();*/
+     vmShowSkillsCollab.getCollabLogged();
      })
 
     it('should get all links', function (done) {
@@ -133,9 +139,10 @@ describe('Test showSkillCollab', function() {
 
     it('should fail to get all expertises', function() {
       vmShowSkillsCollab.collabLogged.id = 3;
-      mock.onGet(config.server + '/api/getcollabexpertises/3').reply(400);
+      mock.onGet(config.server + '/api/getcollabexpertises/3').reply(500);
       expect(vmShowSkillsCollab.expertises.length).toBe(0);
     });
+
 
   it('should show icons',function () {
     var skillId = 1;
