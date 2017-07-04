@@ -111,62 +111,67 @@
   import customInput from '../customComponent/customInput.vue'
   import passwordInput from '../customComponent/passwordInput.vue'
   import config from '../../config/config'
+  import router from '../../config/router'
   import axios from 'axios'
 
   export default {
 
-      name: 'inscription-form',
-    components: { customInput: customInput, customPasswordInput: passwordInput },
+    name: 'inscription-form',
+    components: {customInput: customInput, customPasswordInput: passwordInput},
     data() {
-        return {
-          collaborator: {
-            personnalIdNumber: '',
-            lastName: '',
-            firstName: '',
-            email: '',
-            password: '',
-            confirmPassword: '',
-          },
-          user: {
-            email: '',
-            password: ""
-          },
-          userToConnect: '',
+      return {
+        collaboratorToLogIn: {},
+        collaborator: {
           personnalIdNumber: '',
           lastName: '',
           firstName: '',
           email: '',
           password: '',
           confirmPassword: '',
-          errorMessageLogin: '',
-          errorMessageLastName: '',
-          errorMessageFirstName: '',
-          errorMessageEmail: '',
-          errorMessagePassword: '',
-          errorMessageConfirmPassword: '',
-          collaboratorToRegister: {},
-          verif: true,
-          personalIdNumberAlreadyExist: false,
-          emailAlreadyExist: false,
-          loginEmpty: false,
-          lastNameEmpty: false,
-          firstNameEmpty: false,
-          emailEmpty: false,
-          passwordEmpty: false,
-          confirmPasswordEmpty: false,
-          showPass: false,
-          showPassConf: false,
-          border: 'color-red',
-          isLoginValid: true,
-          isLastNameValid: true,
-          isFirstNameValid: true,
-          isEmailValid: true,
-          isPasswordValid: true,
-          isConfirmPasswordValid: true
-        }
-      },
-    mounted: function () {
+        },
+        user: {
+          email: '',
+          password: ""
+        },
+        userToConnect: '',
+        personnalIdNumber: '',
+        lastName: '',
+        firstName: '',
+        email: '',
+        password: '',
+        user: {
+          email: '',
+          password: '',
+        },
+        confirmPassword: '',
+        errorMessageLogin: '',
+        errorMessageLastName: '',
+        errorMessageFirstName: '',
+        errorMessageEmail: '',
+        errorMessagePassword: '',
+        errorMessageConfirmPassword: '',
+        collaboratorToRegister: {},
+        verif: true,
+        personalIdNumberAlreadyExist: false,
+        emailAlreadyExist: false,
+        loginEmpty: false,
+        lastNameEmpty: false,
+        firstNameEmpty: false,
+        emailEmpty: false,
+        passwordEmpty: false,
+        confirmPasswordEmpty: false,
+        showPass: false,
+        showPassConf: false,
+        border: 'color-red',
+        isLoginValid: true,
+        isLastNameValid: true,
+        isFirstNameValid: true,
+        isEmailValid: true,
+        isPasswordValid: true,
+        isConfirmPasswordValid: true
+      }
     },
+
     watch: {
       personnalIdNumber: function (value) {
         this.verifyLogin(value);
@@ -332,75 +337,29 @@
           this.confirmPasswordEmpty = true;
         }
       },
-      handleCookie(token) {
-        document.cookie = "token=" + token;
-        document.cookie = "stayconnected=true";
-      },
 
       addCollaborator(){
         axios.post(config.server + "/api/collaborateurs", this.collaboratorToRegister).then(
-            response => {
-              if (response.data == "personnalIdNumber") {
-                console.log("PID already exist");
-                this.personalIdNumberAlreadyExist = true;
-                this.emailAlreadyExist = false;
-              }
-              else if (response.data == "email") {
-                console.log("email already exist");
-                this.emailAlreadyExist = true;
-                this.personalIdNumberAlreadyExist = false;
-              }
-              else{
-                console.log("cas normal");
-                this.user.email = this.collaboratorToRegister.email;
-                this.user.password = this.collaboratorToRegister.password;
-                this.userToConnect = JSON.parse(JSON.stringify(this.user));
-                this.verifyUserToConnectByDatabase();
-              }
-            });
-      },
-
-      verifyUserToConnectByDatabase(){
-        let redirectDependingOnRole = (token) => {
-          if (typeof token.data['userConnected'] != 'undefined') {
-            if (jwt_decode(token.data['userConnected']).roles) {
-              this.goTo('addTrainingTopic');
+          response => {
+            if (response.data == "personnalIdNumber") {
+              console.log("PID already exist");
+              this.personalIdNumberAlreadyExist = true;
+              this.emailAlreadyExist = false;
+            }
+            else if (response.data == "email") {
+              console.log("email already exist");
+              this.emailAlreadyExist = true;
+              this.personalIdNumberAlreadyExist = false;
             }
             else {
-              this.goTo('registerTrainingCollaborator');
+              console.log("cas normal");
+              this.user.email = this.collaboratorToRegister.email;
+              this.user.password = this.collaboratorToRegister.password;
             }
+          }).then(response => {
+            this.logIn();
           }
-        };
-
-        let connectUser = (userPersistedToken) => {
-          this.handleCookie(userPersistedToken.data['userConnected']);
-          redirectDependingOnRole(userPersistedToken);
-        };
-
-        axios.post(config.server +"/api/user", this.userToConnect, connectUser)
-          .then( function (response){
-            console.log('success');
-          });
-      },
-
-      verifyUserToConnectByDatabase(){
-        let redirectDependingOnRole = (token) => {
-          if (typeof token.data['userConnected'] != 'undefined') {
-            if (jwt_decode(token.data['userConnected']).roles) {
-              this.goTo('addTrainingTopic');
-            }
-            else {
-              this.goTo('registerTrainingCollaborator');
-            }
-          }
-        };
-
-        let connectUser = (userPersistedToken) => {
-          this.handleCookie(userPersistedToken.data['userConnected']);
-          redirectDependingOnRole(userPersistedToken);
-        };
-
-        axios.post(config.server+"api/user", this.userToConnect, connectUser);
+        );
       },
 
       verifyForm (){
@@ -423,9 +382,23 @@
           this.collaborator.confirmPassword = this.confirmPassword;
           this.collaboratorToRegister = JSON.parse(JSON.stringify(this.collaborator));
           this.addCollaborator();
+
         }
       },
-      }
+
+      logIn(){
+          this.user.email = this.email;
+          this.user.password = this.password;
+          this.collaboratorToLogIn = JSON.parse(JSON.stringify(this.user));
+          axios.post(config.server + "/api/user", this.collaboratorToLogIn).then(response => {
+            this.$store.commit('setToken', response.data['userConnected']);
+            router.push("/showSkillsCollab");
+            console.log(response);
+          }, response => {
+            console.log(response);
+          });
+      },
     }
+  }
 
 </script>
