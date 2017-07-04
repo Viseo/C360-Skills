@@ -1,36 +1,27 @@
-/**
- * Created by CLH3623 on 22/06/2017.
- */
 import Vue from 'vue'
-import RegistrationPage from '@/components/registration/registrationPage'
-import config from '@/config/config'
-//import prepareRequest from '@/unit/test-util'
-//var InterceptorRequst = require('./test-util')
-//import 'jasmine-ajax'
-require('jasmine-ajax');
-import Service from './service';
-var MockAdapter = require('axios-mock-adapter');
-
 import axios from 'axios'
+import config from '@/config/config'
+import RegistrationPage from '@/components/registration/registrationPage'
+import MockAdapter from 'axios-mock-adapter'
+require('jasmine-ajax');
+
+
 var Constructor = Vue.extend(RegistrationPage);
 var vmRegistrationPage;
 
+var mock = new MockAdapter(axios);
 describe('test registrationPage.vue', function() {
  // let resource = { id: 5, name: 'foo' };
 
 
   let dispatch = jasmine.createSpy('dispatch');
   beforeEach(function () {
-
-    //jasmine.Ajax.install();
-
     vmRegistrationPage = new Constructor().$mount();
+    mock = new MockAdapter(axios);
   });
 
   afterEach(function () {
-    //jasmine.Ajax.uninstall();
     Object.assign(vmRegistrationPage.$data, vmRegistrationPage.$options.data());
-    //clearRequests();
   });
 
   it('it should verify if the last name is valid when collaborator is filling the last name field', function (done) {
@@ -204,42 +195,69 @@ describe('test registrationPage.vue', function() {
     },0);
   });
 
-  /* A revoir pour les requets */
-  it('it should add the collaborator', function () {
-/*    jasmine.Ajax.install();
-    let resource = {
-      id: 1,
-      version: 0,
-      personnalIdNumber: "AAA1234",
-      lastName: "DUPONT",
-      firstName: "ERIC",
-      email: "eric.dupont@viseo.com",
-      password: "123456"
+  it('it should add a collaborator',function (done) {
+    vmRegistrationPage.collaboratorToRegister = {
+      personnalIdNumber:'ABC1234',
+      lastName:'DUPONT',
+      firstName:'Eric',
+      email:'eric@viseo.com',
+      password:'123456',
     };
-
-    let request, promise;
-    //let instance = Service;
-    let payload = resource;
-    let path = config.server + '/api/collaborateurs';
-    let callback = jasmine.createSpy('callback');
-
-    vmRegistrationPage.collaboratorToRegister = JSON.parse(JSON.stringify(resource));
+    var response = "success";
+    mock.onPost(config.server + '/api/collaborateurs').reply(200,response);
     vmRegistrationPage.addCollaborator();
-    setTimeout(function () {
-      request = jasmine.Ajax.requests.mostRecent();
-      expect(request.url).toBe(path);
-      expect(request.method).toBe('POST');
-      //expect(request.responseType).toBe('json');
-      //expect(request.data()).toEqual(payload);
-      request.respondWith({
-        "status": 200,
-        "contentType": 'text/plain',
-        "responseText": JSON.stringify(payload)
-      });
-      jasmine.Ajax.uninstall();
-
+    setTimeout(function() {
+      expect(vmRegistrationPage.personalIdNumberAlreadyExist).toBe(false);
+      expect(vmRegistrationPage.emailAlreadyExist).toBe(false);
       done();
-    }, 200);*/
+    },0);
+  });
+
+  it('should fail to add a collaborator because of email',function (done) {
+    var response = "personnalIdNumber";
+    mock.onPost(config.server + '/api/collaborateurs').reply(200,response);
+    vmRegistrationPage.addCollaborator();
+    setTimeout(function() {
+      expect(vmRegistrationPage.personalIdNumberAlreadyExist).toBe(true);
+      expect(vmRegistrationPage.emailAlreadyExist).toBe(false);
+      done();
+    },0);
+  });
+
+  it('should fail to add a collaborator because of personnalIdNumber',function (done) {
+    var response = "email";
+    mock.onPost(config.server + '/api/collaborateurs').reply(200,response);
+    vmRegistrationPage.addCollaborator();
+    setTimeout(function() {
+      expect(vmRegistrationPage.personalIdNumberAlreadyExist).toBe(false);
+      expect(vmRegistrationPage.emailAlreadyExist).toBe(true);
+      done();
+    },0);
+  });
+
+  it('should verify if the user can connect with his/her email & password',function (done) {
+    vmRegistrationPage.email = "xiangzhe.meng@outlook.com";
+    vmRegistrationPage.password = "123456";
+    var collaboratorToLogIn = {
+      "email":"xiangzhe.meng@outlook.com",
+      "password":"123456"
+    };
+    var response = {"userConnected":"eyJhbGciOiJIUzUxMiJ9.eyJmaXJzdE5hbWUiOiJDYXJvbGluZSIsImxhc3ROYW1lIjoiTGhvdGUiLCJpc0FkbWluIjpmYWxzZSwiaWQiOjEsImVtYWlsIjoibGhvdGVAdmlzZW8uY29tIiwidmVyc2lvbiI6MCwiZGVmYXVsdHBpY3R1cmUiOnRydWV9.eguO54P8MHmWrwSREJu5-vCHkhA2Tj995efuHc4twdw"};
+    mock.onPost(config.server + '/api/user').reply(200,response);
+    vmRegistrationPage.logIn();
+    setTimeout(function() {
+      expect(vmRegistrationPage.collaboratorToLogIn).toEqual(collaboratorToLogIn);
+      done();
+    },0);
+  });
+
+  it('should fail to connect with login',function () {
+    vmRegistrationPage.collaboratorToLogIn = {
+      "email":"xiangzhe.meng@outlook.com",
+      "password":"123456"
+    };
+    mock.onPost(config.server + '/api/user').reply(400);
+    vmRegistrationPage.logIn();
   });
 
 });

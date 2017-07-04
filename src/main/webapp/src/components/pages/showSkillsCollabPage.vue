@@ -48,10 +48,11 @@
     components: {customCircle: CustomCircle},
 
     methods: {
-        updateAll(){
-          this.getAllExpertise();
-          this.getAllLinks();
-        },
+      updateAll(){
+        this.getAllExpertise();
+        this.getAllLinks();
+      },
+
       getCollabLogged(){
         this.collabLogged.id = this.$store.getters.collaboratorLoggedIn.id;
         this.collabLogged.version = this.$store.getters.collaboratorLoggedIn.version;
@@ -60,12 +61,11 @@
         this.collabLogged.email = this.$store.getters.collaboratorLoggedIn.email;
         this.collabLogged.defaultPicture = this.$store.getters.collaboratorLoggedIn.defaultPicture;
       },
+
       getAllLinks(){
         this.showCross=false;
         axios.get(config.server + "/api/links/").then(response => {
           this.links = response.data;
-          if(this.selectedlink=='')
-            this.showCross =false;
           this.links.sort(function (a, b) {
             return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);
           });
@@ -95,7 +95,6 @@
       },
 
       positionX(integ){
-        console.log()
         return this.posX + ((integ) % 8) * 150;
       },
 
@@ -104,7 +103,6 @@
       },
 
       getAllExpertise(){
-        console.log(this.collabLogged);
         axios.get(config.server + '/api/getcollabexpertises/'+this.collabLogged.id).then(
           response => {
             this.expertises = response.data;
@@ -112,24 +110,9 @@
             this.expertises.sort(function (a, b) {
               return (a.skill.id > b.skill.id) ? 1 : ((b.skill.id > a.skill.id) ? -1 : 0);
             });
-            console.log(response);
           }, response => {
             console.log(response);
           });
-      },
-
-      getAllLinks(){
-        this.showCross = false;
-        axios.get(config.server + "/api/links/").then(response => {
-          this.links = response.data;
-          if (this.selectedlink == '')
-            this.showCross = false;
-          this.links.sort(function (a, b) {
-            return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);
-          });
-        }, response => {
-          console.log(response);
-        });
       },
 
       showIcon(skillId){
