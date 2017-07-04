@@ -12,18 +12,21 @@
           <div id="navbar-right-part"
                class="col-lg-4 col-lg-offset-4 col-md-5 col-sm-5 col-xs-5"
                @mouseleave="setDisconnectedToFalse()"
-              >
+          >
             <div id="navbar-user"
-                 class="col-lg-7 col-lg-offset-1 col-md-8 col-sm-8 col-xs-9 text-right" @mouseover="setDisconnectedToTrue()"
-                >
+                 class="col-lg-7 col-lg-offset-1 col-md-8 col-sm-8 col-xs-9 text-right"
+                 @mouseover="setDisconnectedToTrue()"
+            >
               <div v-show="showPicture()" class="col-lg-2 col-md-5 col-sm-5 col-xs-5">
                 <img style="cursor:default;" class="image-min" v-if="$store.getters.collaboratorLoggedIn.defaultPicture"
                      src="../../assets/profile.jpg">
                 <img style="cursor:default;" class="image-min" v-else-if="$store.getters.collaboratorLoggedIn.id!=null"
                      :src="'img/'+$store.getters.collaboratorLoggedIn.id+'.jpg'">
               </div>
-              <span class="text-left col-lg-8 col-lg-offset-2 col-md-5 col-sm-5 col-xs-5" style="margin-top:10px" @mouseover="setDisconnectedToTrue()" v-show="showName()">{{ lastName }} {{ firstName }}</span>
-              <dropdown class="col-lg-8 col-lg-offset-2 col-md-5 col-sm-5 col-xs-5" type="default" v-if="showPicture()" v-show="showDisconnexion()" text="Choisissez une action" id="menu">
+              <span class="text-left col-lg-8 col-lg-offset-2 col-md-5 col-sm-5 col-xs-5" style="margin-top:10px"
+                    @mouseover="setDisconnectedToTrue()" v-show="showName()">{{ lastName }} {{ firstName }}</span>
+              <dropdown class="col-lg-8 col-lg-offset-2 col-md-5 col-sm-5 col-xs-5" type="default" v-if="showPicture()"
+                        v-show="showDisconnexion()" text="Choisissez une action" id="menu">
                 <li><a @click="$router.push('/addSkills')">Espace compétences</a></li>
                 <li><a @click="$router.push('/profiltoupdate')">Modifier mon profil</a></li>
                 <li role="separator" class="divider"></li>
@@ -37,18 +40,22 @@
               <ul class="nav navbar-nav">
                 <li class="dropdown">
                   <span id="navbar-app" class="col-lg-2 col-sm-2 col-md-2 glyphicon glyphicon-th dropdown-toggle"
-                          data-toggle="dropdown" aria-hidden="true" href="#"></span>
+                        data-toggle="dropdown" aria-hidden="true" href="#"></span>
 
                   <ul id="dropdown-app" class="dropdown-menu">
                     <li>
-                      <span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img src="../../assets/microservices_icon/icon_cv.png"
-                                                                             class="text-center  icon-app"><p>GCv</p></a></span>
-                      <span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img src="../../assets/microservices_icon/icon_competence.png"
-                                                                             class="text-center icon-app"><p>GCon</p></span>
-                      <span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img src="../../assets/microservices_icon/icon_formation.png"
-                                                                             class="text-center icon-app"><p>GF</p></a></span>
-                      <span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img src="../../assets/microservices_icon/icon_mission.png"
-                                                                             class="text-center icon-app"><p>GM</p></span>
+                      <span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img
+                        src="../../assets/microservices_icon/icon_cv.png"
+                        class="text-center  icon-app"><p>GCv</p></a></span>
+                      <span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img
+                        src="../../assets/microservices_icon/icon_competence.png"
+                        class="text-center icon-app"><p>GCon</p></span>
+                      <span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img
+                        src="../../assets/microservices_icon/icon_formation.png"
+                        class="text-center icon-app"><p>GF</p></a></span>
+                      <span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img
+                        src="../../assets/microservices_icon/icon_mission.png"
+                        class="text-center icon-app"><p>GM</p></span>
                     </li>
                   </ul>
                 </li>
@@ -71,30 +78,20 @@
   import axios from 'axios'
 
   export default{
-      props:["name"],
+    props: ["name"],
     data () {
       return {
-        title:'Gestion des compétences',
+        title: 'Gestion des compétences',
         disconnect: false,
         dialog: false
       }
     },
 
-    computed:{
-//      isLoggedIn() {
-//        return this.$store.getters.isLoggedIn;
-//      },
-
-//      ...Vuex.mapGetters(["isLoggedIn"])
-
-
-  },
-
     mounted() {
-          if(this.$route.path != "/login" && localStorage.getItem("token")) {
-            this.$store.commit('setTokenFromLocalStorage');
-            this.$store.dispatch('isTokenValid', this.$router);
-          }
+      if (this.$route.path != "/login" && localStorage.getItem("token")) {
+        this.$store.commit('setTokenFromLocalStorage');
+        this.$store.dispatch('isTokenValid', this.$router);
+      }
       $('ul.nav li.dropdown').hover(function () {
         $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
       }, function () {
@@ -102,10 +99,10 @@
       });
 
     },
-    computed:{
+    computed: {
 
-      lastName: function (){
-        if(this.$store.getters.isAuthenticated && this.$store.getters.collaboratorLoggedIn.lastName) {
+      lastName: function () {
+        if (this.$store.getters.isAuthenticated && this.$store.getters.collaboratorLoggedIn.lastName) {
           return this.$store.getters.collaboratorLoggedIn.lastName;
         }
         else {
@@ -113,8 +110,8 @@
         }
       },
 
-      firstName: function (){
-        if(this.$store.getters.isAuthenticated && this.$store.getters.collaboratorLoggedIn.firstName) {
+      firstName: function () {
+        if (this.$store.getters.isAuthenticated && this.$store.getters.collaboratorLoggedIn.firstName) {
           return this.$store.getters.collaboratorLoggedIn.firstName;
         }
         else {
@@ -139,19 +136,19 @@
       },
 
       showPicture(){
-          if(this.$store.getters.isAuthenticated){
-              return true;
-          }
-          else {
-              return false;
-          }
+        if (this.$store.getters.isAuthenticated) {
+          return true;
+        }
+        else {
+          return false;
+        }
       },
       disconnectUser(){
         axios.post(config.server + '/api/userdisconnect', this.$store.getters.token).then(
           response => {
-              this.$store.commit('resetStore');
-              this.$store.commit('clearToken');
-              this.$router.push('/login');
+            this.$store.commit('resetStore');
+            this.$store.commit('clearToken');
+            this.$router.push('/login');
           }, response => {
             console.log(response);
           });
@@ -231,12 +228,12 @@
   }
 
   #btn-disconnect {
-    padding:1% 5%;
-    font-size:95%;
+    padding: 1% 5%;
+    font-size: 95%;
     box-shadow: none;
     background-color: #dcdcdc;
     border: solid 1px #dcdcdc;
-    border-radius:15px;
+    border-radius: 15px;
   }
 
   #navbar-app {
@@ -244,7 +241,7 @@
   }
 
   i.glyphicon {
-    top:2.5px;
+    top: 2.5px;
   }
 
   #dropdown-app {
@@ -261,12 +258,11 @@
     color: black;
   }
 
-
   .dialog {
     width: 100%;
     height: 670px;
     margin-top: -40px;
-    background-color: rgba(0,0,0,0.30);
+    background-color: rgba(0, 0, 0, 0.30);
     margin-left: auto;
     margin-right: auto;
     position: absolute;
@@ -279,7 +275,7 @@
     background-color: #FBFBFB;
     width: 360px;
     height: 189px;
-    margin-top:100px;
+    margin-top: 100px;
     margin-left: auto;
     margin-right: auto;
     -webkit-border-radius: 7px; /* Saf3-4, iOS 1-3.2, Android <1.6 */
@@ -333,7 +329,6 @@
     margin-top: 20px;
     text-align: center;
   }
-
 
   .button {
     font-size: 11px;

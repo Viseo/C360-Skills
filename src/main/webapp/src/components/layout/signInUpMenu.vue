@@ -38,21 +38,6 @@
         newCollab: false
       }
     },
-  beforeCreate: function () {
-
-    let isTokenPresent = document.cookie.match('(^|;)\\s*' + "token" + '\\s*=\\s*([^;]+)');
-
-    let redirectToTrainingCollaborator = (response) => {
-      if (response) {
-        this.goTo('registerTrainingCollaborator')
-      }
-    };
-
-    if (isTokenPresent) {
-      let token = String(isTokenPresent.pop());
-      this.post(config.server+"api/sendtoken", token, redirectToTrainingCollaborator);
-    }
-  },
 
   mounted: function () {
   },

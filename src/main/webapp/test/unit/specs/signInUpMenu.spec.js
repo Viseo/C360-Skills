@@ -7,13 +7,10 @@ require('jasmine-ajax');
 
 var Constructor = Vue.extend(SignInUpMenu);
 var vmSignInUpMenu;
-let collaboratorToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJDYXJvbGluZSIsImxhc3ROYW1lIjoiTGhvdGUiLCJyb2xlcyI6ZmFsc2UsImlkIjoxfQ.b6V6cYkhMD4QCXBF_3-kO4S19fwnhDkDQR4ggNqktiyYP6CrbfUCb9Ov2B-2PX1EawUeuPy9WKAobT8FMFoDtg";
 
 describe('test signInUpMenu.vue', function() {
    beforeEach(function () {
-
     vmSignInUpMenu = new Constructor().$mount();
-    document.cookie = "token=" + collaboratorToken;
   });
 
   afterEach(function () {
@@ -43,4 +40,3 @@ describe('test signInUpMenu.vue', function() {
   });
 
 });
-document.cookie = "token=" + collaboratorToken + "; expires=Thu, 18 Dec 2013 12:00:00 UTC";
