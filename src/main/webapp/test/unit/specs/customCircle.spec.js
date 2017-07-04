@@ -11,9 +11,10 @@ var Constructor = Vue.extend(CustomCircle);
 var vmCustomCircle;
 var mock;
 //const store = new Vuex.Store(storeVuex);
-
+var $ = window.jQuery = require('jquery');
 
 describe('test customcircle.vue', function() {
+
   beforeEach(function () {
     vmCustomCircle = new Constructor().$mount();
     mock = new MockAdapter(axios);
@@ -108,11 +109,40 @@ describe('test customcircle.vue', function() {
     },0);
   });
 
-  it('should ',function () {
+  it('should check the position balise "div" ',function () {
     var cx = 250;
     var cy = 150;
     vmCustomCircle.divPosition(cx,cy);
     expect(vmCustomCircle.divPosition(cx,cy)).toEqual('z-index:1;position:relative;left:250px;top:150px;');
   });
 
+  it('should check the elevel expertise is "Expert"',function () {
+    var rating = 5;
+    vmCustomCircle.showCurrentRating(rating);
+    expect(vmCustomCircle.currentLevel).toEqual('Expert');
+  });
+
+  it('should check the elevel expertise is "Avancé"',function () {
+    var rating = 4;
+    vmCustomCircle.showCurrentRating(rating);
+    expect(vmCustomCircle.currentLevel).toEqual('Avancé');
+  });
+
+  it('should check the elevel expertise is "Confirmé"',function () {
+    var rating = 3;
+    vmCustomCircle.showCurrentRating(rating);
+    expect(vmCustomCircle.currentLevel).toEqual('Confirmé');
+  });
+
+  it('should check the elevel expertise is "Débutant"',function () {
+    var rating = 2;
+    vmCustomCircle.showCurrentRating(rating);
+    expect(vmCustomCircle.currentLevel).toEqual('Débutant');
+  });
+
+  it('should check the elevel expertise is "Élémentaire"',function () {
+    var rating = 1;
+    vmCustomCircle.showCurrentRating(rating);
+    expect(vmCustomCircle.currentLevel).toEqual('Élémentaire');
+  });
 });

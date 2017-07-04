@@ -331,4 +331,15 @@ describe('test addSkillsPage.vue', function() {
     },0);
   });
 
+  it('should add a add wish', function(done) {
+    var wish = {id:2,label:'JAVA',version:0};
+    vmAddSkillsPage.addWish(wish);
+    setTimeout(function () {
+      expect(vmAddSkillsPage.label).toEqual('Nouvelle');
+      done();
+    });
+
+
+  });
+
 });
