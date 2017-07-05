@@ -95,7 +95,7 @@
   .typeaheadSkills {
     width: 800px;
     margin-left: 400px;
-    height: 90px;
+    height: 80px;
     box-sizing: border-box;
   }
 
@@ -149,6 +149,8 @@
   }
 
   .noResultDiv {
+    position:relative;
+    bottom:10px;
     text-align: center;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     Font-Weight: Bold;

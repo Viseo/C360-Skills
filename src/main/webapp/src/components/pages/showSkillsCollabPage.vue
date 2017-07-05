@@ -203,6 +203,7 @@
     border-top: 1px solid #8c8b8b;
     margin-left: 50px;
     margin-right: 50px;
+    margin-top:5px;
   }
 
   h4.mystyle {
