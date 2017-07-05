@@ -88,7 +88,7 @@
     },
 
     mounted() {
-      if (this.$route.path != "/login" && localStorage.getItem("token")) {
+      if (this.$route.name != "login" && localStorage.getItem("token")) {
         this.$store.commit('setTokenFromLocalStorage');
         this.$store.dispatch('isTokenValid', this.$router);
       }

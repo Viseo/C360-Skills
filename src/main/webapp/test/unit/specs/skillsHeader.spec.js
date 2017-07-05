@@ -21,7 +21,7 @@ describe('test logInPage.vue', function() {
       'skillsHeader': SkillsHeader
     },
     store: storeVuex,
-    route: routerConfig
+    router: routerConfig
   }).$mount();
 
 
