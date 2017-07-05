@@ -9,8 +9,7 @@
         placeholder="Chercher une compétence">
       </typeahead>
       <div class="noResultDiv" v-show="noSkillsFound">
-        <div>La compétence que vous rechercher n'est pas référencée</div>
-        <span @click="sendWish(valueStock[0])"> Cliquez ici pour la proposer </span>
+        <span>La compétence que vous recherchez n'est pas référencée.</span><span class="pointer" @click="sendWish(valueStock[0])"> Cliquez ici pour la proposer.</span>
       </div>
     </div>
 </template>
@@ -96,7 +95,7 @@
   .typeaheadSkills {
     width: 800px;
     margin-left: 400px;
-    padding: 12px 20px;
+    height: 100px;
     box-sizing: border-box;
   }
 
@@ -127,24 +126,38 @@
   }
 
   .inputForm .form-control {
-    padding: 25px 15px;
+    padding: 20px 15px;
+  }
+
+  .inputForm {
+    bottom:20px;
+    z-index:5;
+  }
+
+  .inputForm .form-control:focus {
+    outline: none !important;
+    border:1px solid #ff9ebe;
+    box-shadow: 0 0 10px #76071b;
   }
 
   .glyphicon-search {
-    top: 40px;
-    z-index: 1;
+    top: 15px;
+    z-index: 6;
     left: 95%;
     font-size: 20px;
     color: tan;
   }
 
   .noResultDiv {
+    text-align: center;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    margin-top: 25px;
     Font-Weight: Bold;
-
   }
 
+  .noResultDiv .pointer {
+    cursor: pointer;
+    color: #b92e4a;
+  }
 
 
 

@@ -1,8 +1,8 @@
 <template>
   <div>
     <FindSkills></FindSkills>
-    <div class="svg-container" id="svg-container">
-      <b class="mybstyle">Liste de vos compétences</b>
+    <div class="svg-container collab" id="svg-container">
+      <h4 class="mystyle">Liste de vos compétences</h4>
       <hr class="myhrline">
       <svg version="1.1" viewBox="0 0 1250 1250" preserveAspectRatio="xMinYMin meet">
         <defs>
@@ -169,6 +169,10 @@
     overflow: hidden;
   }
 
+  .svg-container.collab {
+    z-index:0;
+  }
+
   .defaultSize {
     font-size: 24px;
   }
@@ -201,9 +205,9 @@
     margin-right: 50px;
   }
 
-  b.mybstyle {
-    margin-left: 50px;
-    margin-right: 50px;
+  h4.mystyle {
+    text-align: center;
+    font-size:1.75rem;
   }
 
   input[type=text].inputCircle:focus {
