@@ -170,7 +170,7 @@ describe('test addSkillsPage.vue', function() {
       expect(vmAddSkillsPage.myViewBox).toEqual("0 0 1250 200");
      // expect(containerSVG.style.height).toBe("360px");
       done();
-    },0);
+    },0)
   });
 
   it('should fail to get all skills and links', function() {

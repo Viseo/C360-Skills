@@ -3,10 +3,8 @@ import axios from 'axios'
 import config from '@/config/config'
 import ShowSkillsCollab from '@/components/pages/showSkillsCollabPage'
 import MockAdapter from 'axios-mock-adapter'
-import Vuex from 'vuex'
 import storeVuex from '@/vuex/store'
 
-Vue.use(Vuex);
 
 //var Constructor = Vue.extend(ShowSkillsCollab);
 //var vmShowSkillsCollab;
@@ -15,6 +13,7 @@ var mock = new MockAdapter(axios);
 var vmShowSkillsCollab;
 
 describe('Test showSkillCollab', function () {
+
   const vm = new Vue({
     template: '<div><showSkillsCollab></showSkillsCollab></div>',
     components: {
@@ -28,6 +27,7 @@ describe('Test showSkillCollab', function () {
     vmShowSkillsCollab = vm.$children[0];
 
     mock = new MockAdapter(axios);
+
   });
 
   afterEach(function () {
@@ -52,7 +52,7 @@ describe('Test showSkillCollab', function () {
     vmShowSkillsCollab.updateAll();
   });
 
-  it('should get all links', function (done) {
+  it('should get all links with link selected', function (done) {
     let allLinks = [{
       "id": 28,
       "version": 0,
@@ -77,11 +77,7 @@ describe('Test showSkillCollab', function () {
       expect(vmShowSkillsCollab.links[0].skill1.label).toBe("Tests");
       expect(vmShowSkillsCollab.links.length).toBe(3);
       done();
-    }, 0)
-  });
-
-  it('should return x position', function () {
-
+    }, 0);
   });
 
   it('should calculate x position for circles', function () {
@@ -126,7 +122,7 @@ describe('Test showSkillCollab', function () {
       },
       "level": 2,
       "noted": false
-    }]
+    }];
     mock.onGet(config.server + '/api/getcollabexpertises/3').reply(200, allExpertises);
     vmShowSkillsCollab.getAllExpertise();
     setTimeout(function () {
@@ -162,16 +158,43 @@ describe('Test showSkillCollab', function () {
     expect(vmShowSkillsCollab.showIcon(skillId)).toBe(false);
   });
 
-  it('should check wait for element to display', function () {
-    var id = 4;
-
-    let containerSVG = vmShowSkillsCollab.$el.querySelector('g');
-    document.getElementById = jasmine.createSpy('HTML Element').and.returnValue(containerSVG);
-
+  it('should check wait for element to display', function (done) {
+    var id = 1;
     console.log(vmShowSkillsCollab.waitForElementToDisplay(id, 0, "cx"));
     //expect(vmShowSkillsCollab.showIcon(skillId)).toBe(false);
-  })
+    setTimeout(function () {
+      done();
+    });
+  });
 
+  it('should check wait for element to display 2', function () {
+    var id = 1;
+    console.log(vmShowSkillsCollab.waitForElementToDisplay(id, 0, "cx"));
+
+  });
+
+  it('should check if find skill', function () {
+    var findSkill = [{id: 1, label: 'JAVA', version: 0}];
+    storeVuex.commit('setFoundedSkillsLabel',findSkill);
+    var id = 1;
+    expect(vmShowSkillsCollab.showFocusOnSearch(id)).toBe(true);
+  });
+
+  it('should check if not find skill', function () {
+    var findSkill = [];
+    storeVuex.commit('setFoundedSkillsLabel',findSkill);
+    var id = 1;
+
+    expect(vmShowSkillsCollab.showFocusOnSearch(id)).toBe(false);
+  });
+
+  it('should check if find skill and the id is different', function () {
+    var findSkill = [{id: 1, label: 'JAVA', version: 0}];
+    storeVuex.commit('setFoundedSkillsLabel',findSkill);
+    var id = 2;
+
+    expect(vmShowSkillsCollab.showFocusOnSearch(id)).toBe(false);
+  });
 });
 
 
