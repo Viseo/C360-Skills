@@ -3,20 +3,26 @@ import axios from 'axios'
 import config from '@/config/config'
 import RegistrationPage from '@/components/registration/registrationPage'
 import MockAdapter from 'axios-mock-adapter'
+import Vuex from 'vuex'
+import storeVuex from '@/vuex/store'
 require('jasmine-ajax');
 
-
-var Constructor = Vue.extend(RegistrationPage);
-var vmRegistrationPage;
+Vue.use(Vuex);
 
 var mock = new MockAdapter(axios);
+var vmRegistrationPage;
+
 describe('test registrationPage.vue', function() {
- // let resource = { id: 5, name: 'foo' };
-
-
+  const vm = new Vue({
+    template: '<div><registrationPage></registrationPage></div>',
+    components: {
+      'registrationPage': RegistrationPage
+    },
+    store: storeVuex
+  }).$mount();
   let dispatch = jasmine.createSpy('dispatch');
   beforeEach(function () {
-    vmRegistrationPage = new Constructor().$mount();
+    vmRegistrationPage = vm.$children[0];
     mock = new MockAdapter(axios);
   });
 
