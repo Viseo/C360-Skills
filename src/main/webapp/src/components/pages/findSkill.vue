@@ -1,7 +1,7 @@
 <template>
     <div class=" col-lg-4 col-lg-offset-4 col-lg-4 searchField typeaheadSkills"
          @keyup.enter="storeSkillsFound(capitalizeSearch)">
-      <span class="glyphicon glyphicon-search" @click="storeSkillsFound(capitalizeSearch)"></span>
+      <span class="glyphicon glyphicon-search" ref="searchSkill" @click="storeSkillsFound(capitalizeSearch)"></span>
       <typeahead
         class="inputForm "
         v-model="value"
@@ -29,7 +29,7 @@
         value: '',
         wish:'',
         showAnimation: false,
-        valueStock: []
+        valueStock: {}
 
       };
     },
@@ -67,34 +67,21 @@
       },
       storeSkillsFound(nom){
         this.skillsFound.splice(0, this.skillsFound.length);
-        console.log(nom);
         for (let index in this.skills) {
           if (this.skills[index].label.indexOf(nom) != -1) {
             this.skillsFound.push(this.skills[index]);
           }
         };
-        this.valueStock.push(this.value);
-        for(let i in this.valueStock){
-            for(let index in this.skills) {
-              if ( this.skills[index].label.indexOf(this.valueStock[i]) != -1){
-                this.valueStock.splice(0, this.valueStock.length);
-
-              }
-            }
-
-        };
         this.noSkillsFound = (this.skillsFound.length == 0) ? true : false;
+        if(this.noSkillsFound)
+          this.valueStock=this.value;
         this.$store.commit('setFoundedSkillsLabel', this.skillsFound);
-
-
       },
       sendWish(wish){
         var wish = {"label": wish};
         axios.post(config.server + "/api/addwish", wish)
           .then(response => {
-              console.log("hello")
-            this.valueStock.splice(0,this.valueStock.length);
-            console.log(this.valueStock);
+            console.log(response);
           }, response => {
             console.log(response);
           })
