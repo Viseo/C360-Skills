@@ -80,7 +80,8 @@ const router = new Router({
         path: "/addSkills",
         component: containerSVG
       }]
-    },    {
+    },
+    {
       path: '/showSkillsCollab',
       name: 'showSkillsCollab',
       component: mainPage,
@@ -88,9 +89,19 @@ const router = new Router({
       children: [{
         name: 'mainPage',
         path: "/showSkillsCollab",
-        component: collabSVG
+        component: collabSVG,
       }]
     },
+    // {
+    //   path: '/showSkillsCollab',
+    //   name: 'showSkillsCollab',
+    //   component: mainPage,
+    //   children: [{
+    //     name: 'mainPage',
+    //     path: "/findSkill",
+    //     component: findSkill
+    //   }]
+    // }
   ]
 });
 

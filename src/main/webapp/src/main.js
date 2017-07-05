@@ -3,11 +3,17 @@
 
 import Vue from 'vue'
 import Vuex from 'vuex'
-import VueStrap from 'vue-strap'
 import Router from 'vue-router'
 import store from './vuex/store'
-import router from './config/router'
 import VTooltip from 'v-tooltip'
+<<<<<<<
+
+=======
+import router from './config/router.js'
+import Dropdown from 'vue-js-dropdown'
+import VueStrap from 'vue-strap'
+
+>>>>>>>
 require('../node_modules/bootstrap/dist/css/bootstrap.css');
 require('../node_modules/simplebar/dist/simplebar.css');
 require('../node_modules/simplebar/dist/simplebar.js');
@@ -21,8 +27,12 @@ Vue.component('typeahead', VueStrap.typeahead);
 
 <<<<<<<
 
+<<<<<<<
 =======
 
+=======
+
+>>>>>>>
 // Vue.config.productionTip = false;
 
 /* eslint-disable no-new */

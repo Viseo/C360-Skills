@@ -1,5 +1,4 @@
 <template>
-  <div>
     <div class=" col-lg-4 col-lg-offset-4 col-lg-4 searchField typeaheadSkills"
          @keyup.enter="storeSkillsFound(capitalizeSearch)">
       <span class="glyphicon glyphicon-search" @click="storeSkillsFound(capitalizeSearch)"></span>
@@ -14,7 +13,6 @@
         <span @click="sendWish(valueStock[0])"> Cliquez ici pour la proposer </span>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -30,7 +28,7 @@
         noSkillsFound: false,
         value: '',
         wish:'',
-        showWish:true,
+        showAnimation: false,
         valueStock: []
 
       };
@@ -74,10 +72,20 @@
           if (this.skills[index].label.indexOf(nom) != -1) {
             this.skillsFound.push(this.skills[index]);
           }
-        }
-        ;
+        };
         this.valueStock.push(this.value);
+        for(let i in this.valueStock){
+            for(let index in this.skills) {
+              if ( this.skills[index].label.indexOf(this.valueStock[i]) != -1){
+                this.valueStock.splice(0, this.valueStock.length);
+
+              }
+            }
+
+        };
         this.noSkillsFound = (this.skillsFound.length == 0) ? true : false;
+        this.$store.commit('setFoundedSkillsLabel', this.skillsFound);
+
 
       },
       sendWish(wish){
@@ -85,7 +93,7 @@
         axios.post(config.server + "/api/addwish", wish)
           .then(response => {
               console.log("hello")
-            this.valueStock.splice(0,this.valueStock.length)
+            this.valueStock.splice(0,this.valueStock.length);
             console.log(this.valueStock);
           }, response => {
             console.log(response);
@@ -150,51 +158,8 @@
 
   }
 
-  /*.modal-mask {*/
-    /*position: fixed;*/
-    /*z-index: 9998;*/
-    /*top: 0;*/
-    /*left: 0;*/
-    /*width: 100%;*/
-    /*height: 100%;*/
-    /*background-color: rgba(0, 0, 0, .5);*/
-    /*display: table;*/
-    /*transition: opacity .3s ease;*/
-  /*}*/
 
-  .modal-wrapper {
-    display: table-cell;
-    vertical-align: middle;
-  }
 
-  /*.modal-container {*/
-    /*width: 1000px;*/
-    /*margin: 0px auto;*/
-    /*padding: 70px 30px;*/
-    /*background-color: #fff;*/
-    /*border-radius: 2px;*/
-    /*box-shadow: 0 2px 8px rgba(0, 0, 0, .33);*/
-    /*transition: all .3s ease;*/
-    /*font-family: Helvetica, Arial, sans-serif;*/
-  /*}*/
 
-  .modal-header {
-    margin-top: 25px;
-    color: #42b983;
-  }
-
-  .modal-body {
-    margin: 50px 0;
-  }
-
-  .modal-default-button {
-    float: right;
-  }
-
-  .modal-footer {
-    padding: 15px;
-    margin-top: 50px;
-    text-align: center;
-  }
 
 </style>

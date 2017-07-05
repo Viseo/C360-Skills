@@ -19,8 +19,10 @@ var storeInit = {
     firstName: null,
     defaultPicture: null,
     email: null,
-    version: null
-  }
+    version: null,
+  },
+  foundedSkillsLabel: null,
+
 };
 
 const store = new Vuex.Store({
@@ -49,6 +51,9 @@ const store = new Vuex.Store({
   },
 
   mutations: {
+    setFoundedSkillsLabel(state, skillsFoundLabel){
+      state.foundedSkillsLabel = skillsFoundLabel;
+    },
     setToken(state, collaboratorToken) {
       if(collaboratorToken!=null) {
         state.token = collaboratorToken;
@@ -100,6 +105,10 @@ const store = new Vuex.Store({
 
     token: state => {
       return state.token;
+    },
+
+    foundedSkillsLabel: state => {
+      return state.foundedSkillsLabel;
     }
   }
 });
