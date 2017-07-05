@@ -1,9 +1,15 @@
 <template>
   <div>
+    <FindSkills></FindSkills>
     <div class="svg-container" id="svg-container">
       <b class="mybstyle">Liste de vos compétences</b>
       <hr class="myhrline">
       <svg version="1.1" viewBox="0 0 1250 1250" preserveAspectRatio="xMinYMin meet">
+        <defs>
+          <filter id="blurMe">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="4"/>
+          </filter>
+        </defs>
         <g v-for="link in links">
           <line :x1="getPositionXById(link.skill1.id)"
                 :y1="getPositionYById(link.skill1.id)"
@@ -11,8 +17,10 @@
                 :y2="getPositionYById(link.skill2.id)" style="stroke:rgba(0,0,0,0.52);stroke-width:3"/>
         </g>
         <g v-for="(expertise,i) in expertises">
-          <customCircle @refresh="updateAll" :id="expertise.skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="expertise.skill.label"
-                        stroke="#E03559" fill="white" :score="expertise.level" :expertise="expertise"/>
+          <customCircle @refresh="updateAll" :id="expertise.skill.id" :cx="positionX(i)" :cy="positionY(i)"
+                        :content="expertise.skill.label"
+                        stroke="#E03559" fill="white" :score="expertise.level" :expertise="expertise"
+                        :showCircleBlur="showFocusOnSearch(expertise.skill.id)"/>
         </g>
       </svg>
     </div>
@@ -22,8 +30,10 @@
 <script>
   import CustomCircle from "../customComponent/customcircle.vue"
   import CloseCross from "../customComponent/CloseCross.vue"
+  import FindSkills from "../pages/findSkill.vue"
   import config from '../../config/config'
   import axios from 'axios'
+  import * as Vuex from "vuex";
   var $ = window.jQuery = require('jquery');
 
   export default {
@@ -32,12 +42,19 @@
         skills: [],
         text: [],
         posX: 100,
-        posY: 55,
+        posY: 60,
         row: 0,
         expertises: [],
         links: [],
-        collabLogged: {}
+        collabLogged: {},
       }
+    },
+
+    computed: {
+      foundedSkillsTypeahead: function () {
+        console.log("test");
+        return this.$store.state.foundedSkillsLabel;
+      },
     },
 
     mounted(){
@@ -45,7 +62,7 @@
       this.getAllExpertise();
       this.getAllLinks();
     },
-    components: {customCircle: CustomCircle},
+    components: {customCircle: CustomCircle, FindSkills: FindSkills},
 
     methods: {
       updateAll(){
@@ -63,9 +80,12 @@
       },
 
       getAllLinks(){
-        this.showCross=false;
+        this.showCross = false;
         axios.get(config.server + "/api/links/").then(response => {
           this.links = response.data;
+
+          if (this.selectedlink == '')
+            this.showCross = false;
           this.links.sort(function (a, b) {
             return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);
           });
@@ -105,14 +125,14 @@
       getAllExpertise(){
         axios.get(config.server + '/api/getcollabexpertises/'+this.collabLogged.id).then(
           response => {
-            this.expertises = response.data;
-            this.getAllLinks();
-            this.expertises.sort(function (a, b) {
-              return (a.skill.id > b.skill.id) ? 1 : ((b.skill.id > a.skill.id) ? -1 : 0);
-            });
-          }, response => {
-            console.log(response);
-          });
+          this.expertises = response.data;
+        this.getAllLinks();
+        this.expertises.sort(function (a, b) {
+          return (a.skill.id > b.skill.id) ? 1 : ((b.skill.id > a.skill.id) ? -1 : 0);
+        });
+      }, response => {
+          console.log(response);
+        });
       },
 
       showIcon(skillId){
@@ -122,6 +142,20 @@
         else {
           return false;
         }
+      },
+
+      showFocusOnSearch(id){
+        if (this.foundedSkillsTypeahead) {
+            if(this.foundedSkillsTypeahead[0]){
+              if (this.foundedSkillsTypeahead[0].id == id) {
+                document.getElementById(id).getElementsByTagName("circle")[0].setAttribute("filter", "url(#blurMe)");
+                return true;
+              }
+              return false;
+            }
+          return false;
+        }
+return false;
       }
     }
   }

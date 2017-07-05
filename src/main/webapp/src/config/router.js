@@ -4,6 +4,7 @@ import mainPage from '../components/mainPage.vue'
 import collabSVG from '../components/pages/showSkillsCollabPage.vue'
 import containerSVG from '../components/pages/addSkillsPage.vue'
 import navigationMenu from '../components/layout/signInUpMenu.vue'
+import findSkill from '../components/pages/findSkill.vue'
 import wishrequest from '../components/pages/wishRequest.vue'
 import error404Page from '../components/pages/error404Page.vue'
 
@@ -79,7 +80,8 @@ const router = new Router({
         path: "/addSkills",
         component: containerSVG
       }]
-    },    {
+    },
+    {
       path: '/showSkillsCollab',
       name: 'showSkillsCollab',
       component: mainPage,
@@ -87,9 +89,19 @@ const router = new Router({
       children: [{
         name: 'mainPage',
         path: "/showSkillsCollab",
-        component: collabSVG
+        component: collabSVG,
       }]
     },
+    // {
+    //   path: '/showSkillsCollab',
+    //   name: 'showSkillsCollab',
+    //   component: mainPage,
+    //   children: [{
+    //     name: 'mainPage',
+    //     path: "/findSkill",
+    //     component: findSkill
+    //   }]
+    // }
   ]
 });
 
