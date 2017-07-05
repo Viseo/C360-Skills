@@ -95,7 +95,7 @@
   .typeaheadSkills {
     width: 800px;
     margin-left: 400px;
-    height: 100px;
+    height: 90px;
     box-sizing: border-box;
   }
 
