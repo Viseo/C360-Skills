@@ -121,7 +121,6 @@
 
     },
     methods: {
-
       setDisconnectedToTrue(){
         this.disconnect = true;
       },
@@ -152,13 +151,7 @@
           }, response => {
             console.log(response);
           });
-      },
-      setDisconnectedToTrue(){
-        this.disconnect = true;
-      },
-      setDisconnectedToFalse(){
-        this.disconnect = false;
-      },
+      }
     }
   }
 </script>
