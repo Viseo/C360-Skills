@@ -83,12 +83,9 @@
         this.showCross = false;
         axios.get(config.server + "/api/links/").then(response => {
           this.links = response.data;
-<<<<<<<
 
-=======
           if (this.selectedlink == '')
             this.showCross = false;
->>>>>>>
           this.links.sort(function (a, b) {
             return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);
           });
@@ -126,53 +123,36 @@
       },
 
       getAllExpertise(){
-<<<<<<<
         axios.get(config.server + '/api/getcollabexpertises/'+this.collabLogged.id).then(
-=======
-        console.log(this.collabLogged);
-        axios.get(config.server + '/api/getcollabexpertises/' + this.collabLogged.id).then(
->>>>>>>
           response => {
-            this.expertises = response.data;
-            this.getAllLinks();
-            this.expertises.sort(function (a, b) {
-              return (a.skill.id > b.skill.id) ? 1 : ((b.skill.id > a.skill.id) ? -1 : 0);
-            });
-          }, response => {
-            console.log(response);
-          });
+          this.expertises = response.data;
+        this.getAllLinks();
+        this.expertises.sort(function (a, b) {
+          return (a.skill.id > b.skill.id) ? 1 : ((b.skill.id > a.skill.id) ? -1 : 0);
+        });
+      }, response => {
+          console.log(response);
+        });
       },
 
-<<<<<<<
       showIcon(skillId){
         if (this.selectedSkill.skill1.id == skillId) {
           return true;
         }
         else {
-=======
-      getAllLinks(){
-        this.showCross = false;
-        axios.get(config.server + "/api/links/").then(response => {
-          this.links = response.data;
-          if (this.selectedlink == '')
-            this.showCross = false;
-          this.links.sort(function (a, b) {
-            return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);
-          });
-        }, response => {
-          console.log(response);
-        });
+          return false;
+        }
       },
 
       showFocusOnSearch(id){
-
-        if (this.foundedSkillsTypeahead != null) {
-          if (this.foundedSkillsTypeahead[0].id == id) {
-            document.getElementById(id).getElementsByTagName("circle")[0].setAttribute("filter", "url(#blurMe)");
-            return true;
-          }
-
->>>>>>>
+        if (this.foundedSkillsTypeahead) {
+            if(this.foundedSkillsTypeahead[0]){
+              if (this.foundedSkillsTypeahead[0].id == id) {
+                document.getElementById(id).getElementsByTagName("circle")[0].setAttribute("filter", "url(#blurMe)");
+                return true;
+              }
+              return false;
+            }
           return false;
         }
 return false;
