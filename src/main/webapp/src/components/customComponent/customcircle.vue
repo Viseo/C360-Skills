@@ -51,7 +51,7 @@
     },
     mounted: function () {
       $('foreignObject').ready(function(){
-        $('foreignObject').find('div').mousemove(function(){
+        $('foreignObject').find('div').mousemove(function(e){
           window.mouseXPos = e.pageX;
           window.mouseYPos = e.pageY;
           $(".tooltip-inner").css("position", "absolute !important");

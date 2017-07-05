@@ -340,7 +340,6 @@ describe('test addSkillsPage.vue', function() {
       done();
     });
 
-
   });
 
 });

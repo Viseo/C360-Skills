@@ -32,6 +32,7 @@ describe('Test showSkillCollab', function () {
 
   afterEach(function () {
     Object.assign(vmShowSkillsCollab.$data, vmShowSkillsCollab.$options.data());
+    storeVuex.commit('resetStore');
   });
 
   it('should get collaborator info', function () {
@@ -167,9 +168,10 @@ describe('Test showSkillCollab', function () {
     });
   });
 
-  it('should check wait for element to display 2', function () {
-    var id = 1;
-    console.log(vmShowSkillsCollab.waitForElementToDisplay(id, 0, "cx"));
+  it('should check wait for element to display', function () {
+    var id = 3;
+    console.log(vmShowSkillsCollab.waitForElementToDisplay(id, 2, "cx"));
+    //expect(vmShowSkillsCollab.showIcon(skillId)).toBe(false);
 
   });
 
@@ -180,21 +182,19 @@ describe('Test showSkillCollab', function () {
     expect(vmShowSkillsCollab.showFocusOnSearch(id)).toBe(true);
   });
 
-  it('should check if not find skill', function () {
-    var findSkill = [];
-    storeVuex.commit('setFoundedSkillsLabel',findSkill);
-    var id = 1;
-
-    expect(vmShowSkillsCollab.showFocusOnSearch(id)).toBe(false);
-  });
-
   it('should check if find skill and the id is different', function () {
     var findSkill = [{id: 1, label: 'JAVA', version: 0}];
     storeVuex.commit('setFoundedSkillsLabel',findSkill);
     var id = 2;
-
     expect(vmShowSkillsCollab.showFocusOnSearch(id)).toBe(false);
   });
+
+  it('should check if not find skill', function () {
+    var id = 1;
+    storeVuex.state.foundedSkillsLabel = false;
+    expect(vmShowSkillsCollab.showFocusOnSearch(id)).toBe(false);
+  });
+
 });
 
 
