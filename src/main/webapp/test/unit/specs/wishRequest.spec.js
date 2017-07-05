@@ -15,7 +15,7 @@ var mock;
 var Constructor = Vue.extend(WishRequest);
 var vmWishRequest;
 
-describe('test skillsHeader.vue', function() {
+describe('test wishRequest.vue', function() {
   let Token = "eyJhbGciOiJIUzUxMiJ9.eyJmaXJzdE5hbWUiOiJDYXJvbGluZSIsImxhc3ROYW1lIjoiTGhvdGUiLCJpc0FkbWluIjpmYWxzZSwiaWQiOjEsImVtYWlsIjoibGhvdGVAdmlzZW8uY29tIiwidmVyc2lvbiI6MCwiZGVmYXVsdHBpY3R1cmUiOnRydWV9.eguO54P8MHmWrwSREJu5-vCHkhA2Tj995efuHc4twdw";
   beforeEach(function () {
     mock = new MockAdapter(axios);

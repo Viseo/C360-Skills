@@ -50,7 +50,7 @@
     },
     mounted: function () {
       $('foreignObject').ready(function(){
-        $('foreignObject').find('div').mousemove(function(e){
+        $('foreignObject').find('div').mousemove(function(){
           window.mouseXPos = e.pageX;
           window.mouseYPos = e.pageY;
           $(".tooltip-inner").css("position", "absolute !important");
