@@ -91,9 +91,9 @@ describe('Test showSkillCollab', function () {
 
   it('should calculate y position for circles', function () {
     let yPosition = vmShowSkillsCollab.positionY(5);
-    expect(yPosition).toBe(55);
+    expect(yPosition).toBe(60);
     let yPositionThirdLine = vmShowSkillsCollab.positionY(22);
-    expect(yPositionThirdLine).toBe(355);
+    expect(yPositionThirdLine).toBe(360);
   });
 
   it('should get all expertises', function (done) {
