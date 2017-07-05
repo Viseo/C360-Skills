@@ -3,18 +3,28 @@ import axios from 'axios'
 import config from '@/config/config'
 import LogInPage from '@/components/logIn/logInPage'
 import MockAdapter from 'axios-mock-adapter'
+import Vuex from 'vuex'
+import storeVuex from '@/vuex/store'
+
 require('jasmine-ajax');
+Vue.use(Vuex);
 
-
-var Constructor = Vue.extend(LogInPage);
-var vmLogInPage;
 
 var mock = new MockAdapter(axios);
+var vmLogInPage;
+
 
 describe('test logInPage.vue', function() {
   let Token = "eyJhbGciOiJIUzUxMiJ9.eyJmaXJzdE5hbWUiOiJDYXJvbGluZSIsImxhc3ROYW1lIjoiTGhvdGUiLCJpc0FkbWluIjpmYWxzZSwiaWQiOjEsImVtYWlsIjoibGhvdGVAdmlzZW8uY29tIiwidmVyc2lvbiI6MCwiZGVmYXVsdHBpY3R1cmUiOnRydWV9.eguO54P8MHmWrwSREJu5-vCHkhA2Tj995efuHc4twdw";
+  const vm = new Vue({
+    template: '<div><logInPage></logInPage></div>',
+    components: {
+      'logInPage': LogInPage
+    },
+    store: storeVuex
+  }).$mount();
   beforeEach(function () {
-    vmLogInPage = new Constructor().$mount();
+    vmLogInPage = vm.$children[0];
     mock = new MockAdapter(axios);
   });
 
