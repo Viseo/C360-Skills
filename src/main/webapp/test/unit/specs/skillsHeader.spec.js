@@ -56,7 +56,4 @@ describe('test logInPage.vue', function() {
     vmSkillsHeader.disconnectUser();
   });
 
-
-
-
 });
