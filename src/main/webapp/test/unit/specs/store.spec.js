@@ -27,16 +27,17 @@ describe('test store.vue', function() {
 
   });
 
-  it('should call the store with value initial', function () {
-    /*storeVuex.commit('resetStore');
+  it('should call the store with value initial', function (done) {
+    //storeVuex.commit('resetStore');
     setTimeout(function () {
       expect(storeVuex.state.stayConnected).toBeNull();
       expect(storeVuex.state.token).toBeNull();
-      expect(storeVuex.state.collaboratorLoggedIn.id).toBeNull();
-      done();
-    });*/
 
-   /* expect(storeVuex.state.collaboratorLoggedIn.lastName).toBeNull();
+      done();
+    });
+
+   /*expect(storeVuex.state.collaboratorLoggedIn.id).toBeNull();
+   expect(storeVuex.state.collaboratorLoggedIn.lastName).toBeNull();
     expect(storeVuex.state.collaboratorLoggedIn.isAdmin).toBeNull();
     expect(storeVuex.state.collaboratorLoggedIn.firstName).toBeNull();
     expect(storeVuex.state.collaboratorLoggedIn.defaultPicture).toBeNull();
