@@ -5,7 +5,6 @@ import ShowSkillsCollab from '@/components/pages/showSkillsCollabPage'
 import MockAdapter from 'axios-mock-adapter'
 import storeVuex from '@/vuex/store'
 
-
 //var Constructor = Vue.extend(ShowSkillsCollab);
 //var vmShowSkillsCollab;
 var mock = new MockAdapter(axios);
