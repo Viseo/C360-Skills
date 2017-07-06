@@ -4,63 +4,80 @@
 
 import Vue from 'vue'
 import Vuex from 'vuex'
-
+import axios from 'axios'
+import MockAdapter from 'axios-mock-adapter'
+import config from '@/config/config'
 import storeVuex from '@/vuex/store'
+import routerConfig from '@/config/router'
+var jwtDecode = require('jwt-decode');
 
 // Vue.use(Vuex)
-// const store = new Vuex.Store(storeVuex);
-//import { MUT_PROFILE_HTML, initialState } from '@/vuex/store'
-
+var mock;
 
 describe('test store.vue', function() {
-  beforeEach(function () {
 
+  beforeEach(function () {
+    mock = new MockAdapter(axios);
+    //storeVuex.commit('resetStore');
+    storeVuex.commit('clearToken');
+    storeVuex.commit('clearStayConnected');
   });
 
   afterEach(function () {
 
   });
 
-  it('should call the store', function () {
+  it('should call the store with value initial', function (done) {
+    //storeVuex.commit('resetStore');
+    setTimeout(function () {
+      expect(storeVuex.state.stayConnected).toBeNull();
+      expect(storeVuex.state.token).toBeNull();
 
-    /*const getterTest = function getter(state, getters) {
-      return state.count
-    }
+      done();
+    });
 
-    const spy = spyOn({getterTest}, 'getter').and.callThrough();
-    const spyCb = jasmine.createSpy();*/
+   /*expect(storeVuex.state.collaboratorLoggedIn.id).toBeNull();
+   expect(storeVuex.state.collaboratorLoggedIn.lastName).toBeNull();
+    expect(storeVuex.state.collaboratorLoggedIn.isAdmin).toBeNull();
+    expect(storeVuex.state.collaboratorLoggedIn.firstName).toBeNull();
+    expect(storeVuex.state.collaboratorLoggedIn.defaultPicture).toBeNull();
+    expect(storeVuex.state.collaboratorLoggedIn.email).toBeNull();
+    expect(storeVuex.state.collaboratorLoggedIn.version).toBeNull();
+    expect(storeVuex.state.collaboratorLoggedIn.foundedSkillsLabel).toBeNull();*/
 
-    /*store.watch(spy, spyCb);
-
-    Vue.nextTick(() => {
-      //store.commit(TEST);
-      expect(store.state.cx).toBe(1);
-
-      Vue.nextTick(() => {
-        expect(spy).toHaveBeenCalledWith(store.state, store.getters);
-        done();
-      })
-    })*/
   });
 
-  /* it('should check the position top of circle',function () {
+  it('should check if the token is absent ', function (done) {
+    let Token = null;
+    storeVuex.commit('setToken',Token);
+    storeVuex.commit('setStayConnected',null);
+    storeVuex.commit('setTokenFromLocalStorage');
+    storeVuex.commit('clearToken');
 
-   spyOn(vmCustomCircle, 'cx');
+    mock.onPost(config.server + '/api/sendtoken').reply(200);
+    storeVuex.dispatch('isTokenValid', routerConfig);
+    setTimeout(function () {
+      expect(storeVuex.getters.stayConnected).toBeNull();
+      expect(storeVuex.state.token).toBeNull();
+      done();
+    });
+  });
 
-   Vue.nextTick(() => {
-   expect(vmCustomCircle.store).toHaveBeenCalled()
-   done()
-   });
+  it('should check if the token is present and valide', function (done) {
+    let Token = "eyJhbGciOiJIUzUxMiJ9.eyJmaXJzdE5hbWUiOiJDYXJvbGluZSIsImxhc3ROYW1lIjoiTGhvdGUiLCJpc0FkbWluIjpmYWxzZSwiaWQiOjEsImVtYWlsIjoibGhvdGVAdmlzZW8uY29tIiwidmVyc2lvbiI6MCwiZGVmYXVsdHBpY3R1cmUiOnRydWV9.eguO54P8MHmWrwSREJu5-vCHkhA2Tj995efuHc4twdw";
 
-   //vmCustomCircle.store.state.cy = 150;
-   vmCustomCircle.cy = 0;
-   var cxLine = 0;
-   var cyLine = 0;
-   vmCustomCircle.calculatePosition(cxLine,cyLine);
-   var cxLine = 10;
-   var cyLine = 10;
-   vmCustomCircle.calculatePosition(cxLine,cyLine);
-   });*/
+    storeVuex.commit('setToken',Token);
+    storeVuex.commit('setStayConnected',true);
+
+    mock.onPost(config.server + '/api/sendtoken').reply(200,Token);
+    storeVuex.dispatch('isTokenValid', routerConfig);
+    setTimeout(function () {
+      expect(storeVuex.getters.stayConnected).toBe(true);
+      expect(storeVuex.getters.foundedSkillsLabel).toBe(false);
+      done();
+    });
+
+  });
 
 
 });

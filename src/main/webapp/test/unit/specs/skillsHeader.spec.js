@@ -6,7 +6,8 @@ import MockAdapter from 'axios-mock-adapter'
 import storeVuex from '@/vuex/store'
 import routerConfig from '@/config/router'
 
-
+//var $ = require('jasmine-jquery');
+var $ = window.jQuery = require('jquery');
 
 var mock = new MockAdapter(axios);
 var vmSkillsHeader;

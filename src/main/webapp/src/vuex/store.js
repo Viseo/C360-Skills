@@ -26,6 +26,7 @@ var storeInit = {
 
 };
 
+
 const store = new Vuex.Store({
   state: storeInit,
 

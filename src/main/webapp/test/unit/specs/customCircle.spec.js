@@ -5,12 +5,10 @@ import Vue from 'vue'
 import CustomCircle from '@/components/customComponent/customcircle'
 import axios from 'axios'
 import config from '@/config/config'
-//import storeVuex from '@/vuex/store'
 import MockAdapter from 'axios-mock-adapter'
 var Constructor = Vue.extend(CustomCircle);
 var vmCustomCircle;
 var mock;
-//const store = new Vuex.Store(storeVuex);
 var $ = window.jQuery = require('jquery');
 
 describe('test customcircle.vue', function() {
