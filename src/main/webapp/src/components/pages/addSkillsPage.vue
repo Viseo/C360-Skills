@@ -402,7 +402,7 @@
   }
 
   hr.myhrline {
-    border-top: 1px solid #8c8b8b;
+    border-top: 1px solid #b7b7b7;
     margin-left: 50px;
     margin-right: 50px;
   }

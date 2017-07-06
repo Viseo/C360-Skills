@@ -9,7 +9,8 @@
         placeholder="Chercher une compétence">
       </typeahead>
       <div class="noResultDiv" v-show="noSkillsFound">
-        <span>La compétence que vous recherchez n'est pas référencée.</span><span class="pointer" @click="sendWish(valueStock[0])"> Cliquez ici pour la proposer.</span>
+        <span>La compétence que vous recherchez n'est pas référencée.</span><span class="pointer" @click="sendWish"> Cliquez ici pour la proposer.</span>
+        <div v-show="wishSent">Votre proposition de compétence {{valueStock}} a bien été prise en compte.</div>
       </div>
     </div>
 </template>
@@ -28,8 +29,9 @@
         value: '',
         wish:'',
         showAnimation: false,
-        valueStock: {}
-
+        valueStock: {},
+        wishSent: false,
+        savedValue: ''
       };
     },
     mounted(){
@@ -44,6 +46,14 @@
         else return null;
       },
 
+    },
+
+    watch: {
+      value: function() {
+          if(this.value) {
+            this.savedValue = this.value;
+          }
+      }
     },
 
     methods: {
@@ -76,10 +86,16 @@
           this.valueStock=this.value;
         this.$store.commit('setFoundedSkillsLabel', this.skillsFound);
       },
-      sendWish(wish){
-        var wish = {"label": wish};
+      sendWish(){
+        if(!this.valueStock) this.valueStock = this.savedValue;
+        var wish = {"label": this.valueStock};
         axios.post(config.server + "/api/addwish", wish)
           .then(response => {
+            this.wishSent = true;
+            setTimeout( () => {
+                this.wishSent = false;
+              },3000);
+            this.savedValue = "";
             console.log(response);
           }, response => {
             console.log(response);
@@ -95,7 +111,7 @@
   .typeaheadSkills {
     width: 800px;
     margin-left: 400px;
-    height: 80px;
+    height: 92px;
     box-sizing: border-box;
   }
 
@@ -153,14 +169,15 @@
     bottom:10px;
     text-align: center;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    Font-Weight: Bold;
   }
 
   .noResultDiv .pointer {
     cursor: pointer;
-    color: #b92e4a;
+    color: #0979af;
   }
-
+  .noResultDiv div {
+    color: #4c924c;
+  }
 
 
 
