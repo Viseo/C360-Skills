@@ -81,17 +81,35 @@ describe('Test findSkill', function () {
     }, 0)
   });
 
-  it("should send wish to database",function () {
-    let wish ={id:3,version:0,label:'Android'};
+  it("should send wish to database",function (done) {
+    let wish = {"label": "Android"};
+    vmfindSkill.value = 'Android';
     mock.onPost(config.server + "/api/addwish").reply(200, wish);
     vmfindSkill.sendWish('Android');
+    setTimeout(function () {
+      expect(vmfindSkill.savedValue).toEqual("");
+      expect(vmfindSkill.wishSent).toBe(false);
+      done();
+    },3001);
   });
 
-  it("should fail to send wish to database",function () {
-    let wish ={id:3,version:0,label:'Android'};
+  it("should fail to send wish to database",function (done) {
+    vmfindSkill.valueStock = 'Android';
     mock.onPost(config.server + "/api/addwish").reply(400);
     vmfindSkill.sendWish('Android');
-  })
+    setTimeout(function () {
+      expect(vmfindSkill.savedValue).toEqual("");
+      done();
+    },0);
+  });
+
+  /*it("should store the value",function (done) {
+    vmfindSkill.value = 'JAVA';
+    setTimeout(function () {
+      expect(vmfindSkill.savedValue).toEqual(vmfindSkill.value);
+      done();
+    })
+  });*/
 
 
 

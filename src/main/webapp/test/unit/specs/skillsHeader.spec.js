@@ -29,7 +29,6 @@ describe('test logInPage.vue', function() {
   beforeEach(function () {
     vmSkillsHeader = vm.$children[0];
     mock = new MockAdapter(axios);
-
   });
 
   afterEach(function () {

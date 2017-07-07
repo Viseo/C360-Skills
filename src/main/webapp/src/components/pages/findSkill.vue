@@ -29,7 +29,7 @@
         value: '',
         wish:'',
         showAnimation: false,
-        valueStock: {},
+        valueStock: '',
         wishSent: false,
         savedValue: ''
       };
