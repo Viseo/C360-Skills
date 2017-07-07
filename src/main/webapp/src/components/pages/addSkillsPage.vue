@@ -130,7 +130,6 @@
       },
 
       CollabExist(name){
-        console.log('hahah');
         for(var i in this.collabs){
           if(name.indexOf(this.collabs[i].lastName)!=-1){
             return true;
@@ -171,7 +170,7 @@
       },
       getCollabs(){
           this.searchResult.splice(0,this.searchResult.length);
-          axios.get(config.server+'/api//collaborateurs').then(response => {
+          axios.get(config.server+'/api/collaborateurs').then(response => {
               this.collabs=response.data;
               for(var index in this.skills){
               this.searchResult.push(this.skills[index].label);

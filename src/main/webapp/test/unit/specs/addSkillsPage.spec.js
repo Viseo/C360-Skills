@@ -168,7 +168,33 @@ describe('test addSkillsPage.vue', function() {
       expect(vmAddSkillsPage.skills.length).toBe(5);
       expect(vmAddSkillsPage.skills[0].label).toBe("Android");
       expect(vmAddSkillsPage.myViewBox).toEqual("0 0 1250 200");
-     // expect(containerSVG.style.height).toBe("360px");
+      // expect(containerSVG.style.height).toBe("360px");
+      done();
+    },0)
+  });
+
+  it('should get all collabs', function(done){
+    let allCollabs =
+      [{"id":1,"version":0,"lastName":"Bourakkadi","firstName":"Hamza","email":"hamza.bourakkadi@gmail.com","defaultPicture":true},
+        {"id":2,"version":0,"lastName":"Caroline","firstName":"Lhote","email":"caroline.lhote@gmail.com","defaultPicture":true}];
+    mock.onGet(config.server + "/api/collaborateurs").reply(200, allCollabs);
+    vmAddSkillsPage.getCollabs();
+    setTimeout(function() {
+      expect(vmAddSkillsPage.collabs.length).toBe(2);
+      done();
+    },0)
+  });
+
+  it('should find the collab in the typeahead', function(done){
+    let allCollabs =
+      [{"id":1,"version":0,"lastName":"Bourakkadi","firstName":"Hamza","email":"hamza.bourakkadi@gmail.com","defaultPicture":true},
+        {"id":2,"version":0,"lastName":"Caroline","firstName":"Lhote","email":"caroline.lhote@gmail.com","defaultPicture":true}];
+    mock.onGet(config.server + "/api/collaborateurs").reply(200, allCollabs);
+    vmAddSkillsPage.getCollabs();
+    setTimeout(function() {;
+      expect(vmAddSkillsPage.CollabExist('Bourakkadi')).toBe(true);
+      expect(vmAddSkillsPage.CollabExist('BimbimBaps')).toBe(false);
+
       done();
     },0)
   });
