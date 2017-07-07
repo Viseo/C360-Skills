@@ -56,9 +56,7 @@ const store = new Vuex.Store({
     setFoundedSkillsLabel(state, skillsFoundLabel){
       state.foundedSkillsLabel = skillsFoundLabel;
     },
-    setFoundedCollabs(state, collabsFound){
-      state.collabs = collabsFound;
-    },
+
     setToken(state, collaboratorToken) {
       if(collaboratorToken!=null) {
         state.token = collaboratorToken;
@@ -98,10 +96,6 @@ const store = new Vuex.Store({
 
     stayConnected: state => {
       return state.stayConnected;
-    },
-
-    collabs: state => {
-      return state.collabs;
     },
 
     isAuthenticated: state => {

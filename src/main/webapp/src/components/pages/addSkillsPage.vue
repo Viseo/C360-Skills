@@ -401,7 +401,7 @@
   }
 
   hr.myhrline {
-    border-top: 1px solid #8c8b8b;
+    border-top: 1px solid #b7b7b7;
     margin-left: 50px;
     margin-right: 50px;
   }
@@ -455,8 +455,19 @@
     display: block;
   }
 
+  .inputForm {
+    bottom:20px;
+    z-index:5;
+  }
+
+  .inputForm .form-control:focus {
+    outline: none !important;
+    border:1px solid #ff9ebe;
+    box-shadow: 0 0 10px #76071b;
+  }
+
   .glyphicon-search {
-    top: 15px;
+    top: 12px;
     z-index: 6;
     left: 95%;
     font-size: 20px;
