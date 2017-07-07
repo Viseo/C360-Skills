@@ -170,6 +170,7 @@
           })
       },
       getCollabs(){
+          this.searchResult.splice(0,this.searchResult.length);
           axios.get(config.server+'/api//collaborateurs').then(response => {
               this.collabs=response.data;
               for(var index in this.skills){
