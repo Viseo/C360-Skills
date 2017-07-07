@@ -4,7 +4,7 @@
     <div class="svg-container collab" id="svg-container">
       <h4 class="mystyle">Liste de vos compétences</h4>
       <hr class="myhrline">
-      <svg version="1.1" viewBox="0 0 1250 1250" preserveAspectRatio="xMinYMin meet">
+      <svg version="1.1" :viewBox="myViewBox" preserveAspectRatio="xMinYMin meet">
         <defs>
           <filter id="blurMe">
             <feGaussianBlur in="SourceGraphic" stdDeviation="4"/>
@@ -44,6 +44,7 @@
         posX: 100,
         posY: 60,
         row: 0,
+        myViewBox: "0 0 1250 1250",
         expertises: [],
         links: [],
         collabLogged: {},
@@ -127,6 +128,7 @@
             this.expertises.sort(function (a, b) {
               return (a.skill.id > b.skill.id) ? 1 : ((b.skill.id > a.skill.id) ? -1 : 0);
             });
+            this.myViewBox = "0 0 1250 "+ parseInt((Math.floor(this.expertises.length/8)*150) + 200);
           }, response => {
             console.log(response);
           });
@@ -200,9 +202,10 @@
   }
 
   hr.myhrline {
-    border-top: 1px solid #8c8b8b;
+    border-top: 1px solid #b7b7b7;
     margin-left: 50px;
     margin-right: 50px;
+    margin-top:5px;
   }
 
   h4.mystyle {
