@@ -11,7 +11,7 @@
       </typeahead>
     </div>
     <div class="svg-container" id="svg-container">
-      <h4 class="mystyle">Recherche des compétences</h4>
+      <h4 class="mystyle">Rechercher des compétences</h4>
       <hr class="myhrline">
     </div>
     <svg version="1.1" :viewBox="myViewBox"  preserveAspectRatio="xMinYMin meet">
