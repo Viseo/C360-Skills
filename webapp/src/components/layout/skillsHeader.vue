@@ -28,7 +28,7 @@
               <dropdown class="col-lg-8 col-lg-offset-2 col-md-5 col-sm-5 col-xs-5" type="default" v-if="showPicture()"
                         v-show="showDisconnexion()" text="Choisissez une action" id="menu">
                 <li><a @click="$router.push('/addSkills')">Espace compétences</a></li>
-                <li><a @click="$router.push('/profiltoupdate')">Modifier mon profil</a></li>
+                <li><a @click="isAdminOrCollabPath">{{ isAdminOrCollabName() }}</a></li>
                 <li role="separator" class="divider"></li>
                 <li><a @click="disconnectUser">Déconnexion</a></li>
               </dropdown>
@@ -151,6 +151,32 @@
           }, response => {
             console.log(response);
           });
+      },
+      isAdminOrCollabPath(){
+        if (this.$store.getters.isAuthenticated && this.$store.getters.collaboratorLoggedIn.isAdmin) {
+          if (this.$route.path == '/searchSkillCollabByAdmin') {
+            this.$router.push('/addSkills');
+          }
+          else {
+            this.$router.push('/searchSkillCollabByAdmin');
+          }
+        }
+        else {
+          this.$router.push('/profiltoupdate');
+        }
+      },
+      isAdminOrCollabName(){
+        if (this.$store.getters.isAuthenticated && this.$store.getters.collaboratorLoggedIn.isAdmin) {
+          if (this.$route.path == '/searchSkillCollabByAdmin') {
+            return "Ajouter une nouvelle compéte";
+          }
+          else {
+            return "Rechercher un profil";
+          }
+        }
+        else {
+          return "Modifier mon profil";
+        }
       }
     }
   }
@@ -342,9 +368,10 @@
   }
 
   #menu ul.dropdown-menu {
-    left: 13px;
+    left: 2px;
     top: 32px;
-    width: 170px;
+    width: 215px;
+
   }
 
   #menu ul {
