@@ -20,7 +20,7 @@
           </filter>
         </defs>
         <g v-for="link in links">
-          <line @mouseover="selectedlink = link;showCross = true;" :x1="getPositionXById(link.skill1.id)"
+          <line :id="link.id" @mouseover="selectedlink = link;showCross = true;" :x1="getPositionXById(link.skill1.id)"
                 :y1="getPositionYById(link.skill1.id)"
                 :x2="getPositionXById(link.skill2.id)"
                 :y2="getPositionYById(link.skill2.id)" style="stroke:rgba(0,0,0,0.52);stroke-width:3"/>
@@ -251,8 +251,16 @@
         if (self.selectedSkill.skill1 == '') {
           self.selectedSkill.skill1 = skill;
           document.getElementById(skill.id).getElementsByTagName("circle")[0].setAttribute("filter", "url(#blurMe)");
+          for(var i in this.links){
+            document.getElementById(this.links[i].id).setAttribute("style","stroke:rgba(0,0,0,0.52);stroke-width:3");
+              if(this.links[i].skill1.id == skill.id || this.links[i].skill2.id == skill.id)
+                document.getElementById(this.links[i].id).setAttribute("style","stroke:rgba(9, 170, 118, 1);stroke-width:3");
+          }
         }
         else if (skill != self.selectedSkill.skill1) {
+          for(var i in this.links) {
+            document.getElementById(this.links[i].id).setAttribute("style", "stroke:rgba(0,0,0,0.52);stroke-width:3");
+          }
           self.selectedSkill.skill2 = skill;
           axios.post(config.server + '/api/addlink', self.selectedSkill).then(
             response => {
@@ -316,6 +324,9 @@
       },
 
       cancelUpdate(){
+        for(var i in this.links) {
+          document.getElementById(this.links[i].id).setAttribute("style", "stroke:rgba(0,0,0,0.52);stroke-width:3");
+        }
         this.hideInput()
         for (var i = 0; i < this.skills.length; i++) {
           if (this.skills[i].id == this.selectedSkill.skill1.id) {
