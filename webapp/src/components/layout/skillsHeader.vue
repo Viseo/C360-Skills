@@ -168,7 +168,7 @@
       isAdminOrCollabName(){
         if (this.$store.getters.isAuthenticated && this.$store.getters.collaboratorLoggedIn.isAdmin) {
           if (this.$route.path == '/searchSkillCollabByAdmin') {
-            return "Ajouter une nouvelle compéte";
+            return "Ajouter une compétetance";
           }
           else {
             return "Rechercher un profil";
@@ -370,7 +370,7 @@
   #menu ul.dropdown-menu {
     left: 2px;
     top: 32px;
-    width: 215px;
+    width: 200px;
 
   }
 
