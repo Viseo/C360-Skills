@@ -27,7 +27,7 @@
                     @mouseover="setDisconnectedToTrue()" v-show="showName()">{{ lastName }} {{ firstName }}</span>
               <dropdown class="col-lg-8 col-lg-offset-2 col-md-5 col-sm-5 col-xs-5" type="default" v-if="showPicture()"
                         v-show="showDisconnexion()" text="Choisissez une action" id="menu">
-                <li><a @click="isAdminOrCollabPath">{{ isAdminOrCollabName() }}</a></li>
+                <li><a @click="isAdminOrCollabPath">Espace compétences</a></li>
                 <li><a @click="isAdminOrCollabPath">{{ isAdminOrCollabName() }}</a></li>
                 <li role="separator" class="divider"></li>
                 <li><a @click="disconnectUser">Déconnexion</a></li>
@@ -167,12 +167,9 @@
       },
       isAdminOrCollabName(){
         if (this.$store.getters.isAuthenticated && this.$store.getters.collaboratorLoggedIn.isAdmin) {
-          if (this.$route.path == '/searchSkillCollabByAdmin') {
-            return "Espace compétences";
-          }
-          else {
+
             return "Rechercher un profil";
-          }
+
         }
         else {
           return "Modifier mon profil";
