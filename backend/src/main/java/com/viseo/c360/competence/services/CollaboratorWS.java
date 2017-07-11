@@ -247,7 +247,7 @@ public class CollaboratorWS {
     }
 
     @CrossOrigin
-    @RequestMapping(value = "${endpoint.collaboratorsexpertises}", method = RequestMethod.GET)
+    @RequestMapping(value = "${endpoint.collaboratorsexpertises}", method = RequestMethod.POST)
     @ResponseBody
     public List<ExpertiseDescription> getCollabsByExpertises(@RequestBody List<ExpertiseDescription> list){
         try {

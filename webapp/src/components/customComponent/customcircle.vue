@@ -71,7 +71,8 @@
     },
     methods: {
       setRating: function(raiting){
-        this.updateExpertise(this.selectedExpertise,raiting);
+          if(!this.$store.getters.collaboratorLoggedIn.isAdmin)
+              this.updateExpertise(this.selectedExpertise,raiting);
       },
 
       showCurrentRating: function(rating) {
