@@ -61,14 +61,14 @@
             posY: 60,
             skills: [],
             row: 0,
-
-
+            collaboratorsByExpertise: []
 
           }
       },
     mounted(){
       this.getAllLinks();
       this.getAllSkills();
+      this.getCollaboratorsByExpertises();
 
     },
 
@@ -180,6 +180,16 @@
             console.log(response);
           })
       },
+      getCollaboratorsByExpertises(){
+        axios.get(config.server+'/api/collaboratorsexpertises',this.).then(response => {
+            this.collaboratorsByExpertise=response.data;
+
+          },
+          response =>{
+            console.log(response);
+          })
+      }
+      ,
 
       CollabExist(name){
         for(var i in this.collabs){
@@ -191,6 +201,8 @@
         }
 
       },
+
+
     },
 
     components: {customCircle: CustomCircle},
