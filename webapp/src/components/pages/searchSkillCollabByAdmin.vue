@@ -71,7 +71,13 @@
         inductExpertiseByCollaborators: [],
         foundCollab: {},
         collabExpertises: [],
-        inductedExpertiseCollab: []
+        inductedExpertiseCollab: [],
+        listCollaboratorsExpertises:[],
+        CollabSkillChosenAndInduit:{
+          collaborator:{},
+          expertisesChosen:[],
+          expertisesInduit:[]
+        }
 
       }
     },
@@ -187,10 +193,12 @@
         }
         this.collaboratorsByExpertise.splice(0, this.collaboratorsByExpertise.length);
         for(var i in this.collabs){
-            if(this.value.indexOf(this.collabs[i].lastName) != -1)
+            if(this.value != null){
+              if(this.value.indexOf(this.collabs[i].lastName) != -1)
                 this.foundCollab =this.collabs[i];
+            }
         }
-        if(this.foundCollab != null){
+        if(this.foundCollab != ""){
           this.getFoundCollabExpertises();
         }
         else
@@ -282,6 +290,32 @@
         axios.post(config.server + '/api/collaboratorsexpertises', listExpertises).then(response => {
             this.collaboratorsByExpertise = response.data;
 
+            this.collaboratorsByExpertise.sort(function (a, b) {
+              return (a.collaborator.id > b.collaborator.id) ? 1 : ((b.collaborator.id > a.collaborator.id) ? -1 : 0);
+            });
+            this.listCollaboratorsExpertises = [];
+            this.CollabSkillChosenAndInduit = {
+              collaborator:{},
+              expertisesChosen:[],
+              expertisesInduit:[]
+            };
+            this.CollabSkillChosenAndInduit.collaborator = this.collaboratorsByExpertise[0].collaborator;
+            this.CollabSkillChosenAndInduit.expertisesChosen.push(this.collaboratorsByExpertise[0]);
+            for(var i = 1; i<this.collaboratorsByExpertise.length;i++){
+                if(this.CollabSkillChosenAndInduit.collaborator.id == this.collaboratorsByExpertise[i].collaborator.id){
+                  this.CollabSkillChosenAndInduit.expertisesChosen.push(this.collaboratorsByExpertise[i]);
+                }
+                else{
+                  this.listCollaboratorsExpertises.push(this.CollabSkillChosenAndInduit);
+                  this.CollabSkillChosenAndInduit = {
+                      collaborator:{},
+                      expertisesChosen:[],
+                      expertisesInduit:[]
+                  };
+                  this.CollabSkillChosenAndInduit.collaborator = this.collaboratorsByExpertise[i].collaborator;
+                  this.CollabSkillChosenAndInduit.expertisesChosen.push(this.collaboratorsByExpertise[i]);
+                }
+            }
           },
           response => {
             console.log(response);
@@ -289,6 +323,20 @@
 
           axios.post(config.server + '/api/expertisebycollaborator', this.collaboratorsByExpertise).then(response => {
               this.inductExpertiseByCollaborators = response.data;
+              for(var i = 0;i < this.inductExpertiseByCollaborators.length;i++){
+                  for(var j = 0;j < this.listCollaboratorsExpertises.length;j++){
+                      if(this.listCollaboratorsExpertises[j].collaborator.id == this.inductExpertiseByCollaborators[i].collaborator.id){
+                          this.listCollaboratorsExpertises[j].expertisesInduit.push(this.inductExpertiseByCollaborators[i]);
+                          break;
+                      }
+                  }
+              }
+              for(var m = 0;m < this.listCollaboratorsExpertises.length;m++){
+                  this.listCollaboratorsExpertises[i].expertisesInduit.sort(function (a, b) {
+                    return (a.level > b.level) ? 1 : ((b.level > a.level) ? -1 : 0);
+                  });
+                  this.listCollaboratorsExpertises[i].splice(3,this.listCollaboratorsExpertises[i].expertisesInduit.length-3);
+              }
             },
             response => {
               console.log(response);
