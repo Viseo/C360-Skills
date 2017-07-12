@@ -71,7 +71,8 @@
     },
     methods: {
       setRating: function(raiting){
-        this.updateExpertise(this.selectedExpertise,raiting);
+          if(!this.$store.getters.collaboratorLoggedIn.isAdmin)
+              this.updateExpertise(this.selectedExpertise,raiting);
       },
 
       showCurrentRating: function(rating) {
@@ -91,7 +92,7 @@
         }
         if(rating==2){
           this.currentLevel = "Débutant";
-          $(".tooltip-inner").css("background","#e1879a");
+          $(".tooltip-inner").css("background","#e17155");
 
         }
         if(rating==1){
