@@ -92,6 +92,7 @@ public class ExpertiseDAO {
             for(int j=0 ; j<list2.size(); j++){
                 if (list2.get(j).getCollaborator() == list1.get(i).getCollaborator()){
                     list3.add(list2.get(j));
+                    list3.add(list1.get(i));
                 }
             }
         }
@@ -117,4 +118,21 @@ public class ExpertiseDAO {
         return result;
 
     }
+
+    @Transactional
+    public List<Expertise> getInductedExpertisesByCollaborators (List<Expertise> list){
+        List<Expertise> listExpertise = new ArrayList();
+        for(int i = 0; i<list.size(); i++){
+            daoFacade.getList("select e from Expertise e, Link l left outer join fetch e.skill where (l.skill1 = :skill and l.skill2 = e.skill and e.collaborator = :collaborator and e.isNoted = false and e.level >0)" +
+                    "or (l.skill2 = :skill and l.skill1 = e.skill and e.collaborator = :collaborator and e.isNoted = false and e.level >0)", param("skill", list.get(i).getSkill()),param("collaborator", list.get(i).getCollaborator()));
+            List<Expertise> tmp = daoFacade.getList("select e from Expertise e, Link l left outer join fetch e.collaborator where (l.skill1 = :skill and l.skill2 = e.skill and e.collaborator = :collaborator and e.isNoted = false and e.level >0)" +
+                            "or (l.skill2 = :skill and l.skill1 = e.skill and e.collaborator = :collaborator and e.isNoted = false and e.level >0)", param("skill", list.get(i).getSkill()),param("collaborator", list.get(i).getCollaborator()));
+            for(int j = 0; j<tmp.size();j++){
+                listExpertise.add(tmp.get(j));
+            }
+        }
+        return  listExpertise;
+    }
+
+
 }
