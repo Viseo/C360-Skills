@@ -92,7 +92,7 @@
         }
         if(rating==2){
           this.currentLevel = "Débutant";
-          $(".tooltip-inner").css("background","#e1879a");
+          $(".tooltip-inner").css("background","#e17155");
 
         }
         if(rating==1){
