@@ -132,6 +132,11 @@
   }
 
   /* Star rating */
+  div.star-rating {
+    height:0px;
+    padding-top:7px;
+  }
+  
   .stars {
     cursor: pointer;
     width: 90px;
