@@ -53,7 +53,7 @@
         <span>{{item}}</span></div>
         <span v-else>{{item}}</span>`,
         value: '',
-        levelSelected:'',
+        levelSelected:0,
         searchResult: [],
         links: [],
         selectedSkill: {
