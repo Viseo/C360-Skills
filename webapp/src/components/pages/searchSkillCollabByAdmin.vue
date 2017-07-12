@@ -37,12 +37,15 @@
 </template>
 
 <script>
-  import CustomCircle from "../customComponent/customcircle.vue";
-  import axios from "axios";
-  import config from '../../config/config';
+    import Vue from 'vue'
+    import CustomCircle from "../customComponent/customcircle.vue";
+    import axios from "axios";
+    import config from '../../config/config';
+    import VueStrap from 'vue-strap';
 
 
-  var $ = window.jQuery = require('jquery');
+    var $ = window.jQuery = require('jquery');
+    Vue.component('typeahead', VueStrap.typeahead);
 
   export default {
     data(){
