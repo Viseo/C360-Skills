@@ -78,7 +78,7 @@
           expertisesInduit:[]
         },
         inductedExpertiseCollab: [],
-        listCollaboratorsExpertises:[], ////variable pour recherche par compétence
+        listCollaboratorsExpertises:[], //variable pour recherche par compétence
         CollaboratorExpertises: { //variable pour typeheader
           collaborator: {},
           expertisesChosen: [],
@@ -152,6 +152,8 @@
                 for(var i = 0; i < this.inductedExpertiseCollab.length; i++){
                   this.CollaboratorExpertises.expertisesInduit.push(this.inductedExpertiseCollab[i]);
                 }
+                this.listCollaboratorsExpertises = [];
+                this.listCollaboratorsExpertises.push(this.CollaboratorExpertises);
               },
               response => {
                 console.log(response);
