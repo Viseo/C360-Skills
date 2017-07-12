@@ -258,4 +258,20 @@ public class CollaboratorWS {
             throw new C360Exception(e);
         }
     }
+
+    @CrossOrigin
+    @RequestMapping(value = "${endpoint.expertisebycollaborator}", method = RequestMethod.POST)
+    @ResponseBody
+    public List<ExpertiseDescription> getInductedExpertisesByCollaborators(@RequestBody List<ExpertiseDescription> list){
+        try {
+            return new ExpertiseToDescription().convert(expertiseDAO.getInductedExpertisesByCollaborators(new DescriptionToExpertise().convert(list)));
+
+        }catch(ConversionException e) {
+            e.printStackTrace();
+            throw new C360Exception(e);
+        }
+    }
+
+
+
 }
