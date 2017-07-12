@@ -91,7 +91,7 @@
       },
       isFound(name){
         for (var i in this.foundSkills) {
-          if (this.foundSkills[i].label == name)
+          if (this.foundSkills[i].skill.label == name)
             return true;
         }
       },
@@ -147,8 +147,8 @@
 
         }
         this.value = "";
-        this.collaboratorsByExpertise.splice(0,this.collaboratorsByExpertise.length);
-        this.getCollaboratorsByExpertises(this.foundSkills);
+        /*this.collaboratorsByExpertise.splice(0,this.collaboratorsByExpertise.length);
+        this.getCollaboratorsByExpertises(this.foundSkills);*/
       },
 
       positionX(integ){
