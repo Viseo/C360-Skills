@@ -30,7 +30,7 @@
       <g v-for="(expertise,i) in expertises">
         <customCircle :id="expertise.skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="expertise.skill.label"
                       stroke="#E03559" fill="white" @click="selectedSkills(expertise.skill.label)"
-                      :showCircleBlur="isFound(expertise.skill.label)" :score="expertise.level" :expertise="expertise"/>
+                      :showCircleBlur="isFound(expertise.skill.label)" :score="expertise.level" :expertise="expertise" @clicked="onClickChild"/>
       </g>
     </svg>
     <ShowCollab></ShowCollab>
@@ -53,6 +53,7 @@
         <span>{{item}}</span></div>
         <span v-else>{{item}}</span>`,
         value: '',
+        levelSelected:'',
         searchResult: [],
         links: [],
         selectedSkill: {
@@ -84,6 +85,9 @@
     },
 
     methods: {
+      onClickChild (value) {
+        this.levelSelected=value;
+      },
       getAllExpertise(){
         axios.get(config.server + '/api/getcollabexpertises/' + this.collabLogged.id).then(
           response => {
@@ -180,6 +184,7 @@
         }
         for (var index in this.expertises) {
           if (this.expertises[index].skill.label == name) {
+              this.expertises[index].level = this.levelSelected;
             this.foundSkills.push(this.expertises[index]);
             document.getElementById(this.expertises[index].skill.id).getElementsByTagName("circle")[0].setAttribute("filter", "url(#blurMe)");
           }
@@ -187,10 +192,11 @@
         }
         this.collaboratorsByExpertise.splice(0, this.collaboratorsByExpertise.length);
         for(var i in this.collabs){
-            if(this.value.indexOf(this.collabs[i].lastName) != -1)
-                this.foundCollab =this.collabs[i];
+            if(this.value != null){
+              if(this.value.indexOf(this.collabs[i].lastName) != -1){
+                this.foundCollab =this.collabs[i];}}
         }
-        if(this.foundCollab != null){
+        if(this.foundCollab != ""){
           this.getFoundCollabExpertises();
         }
         else
