@@ -4,7 +4,7 @@
     <circle @click="handleClick()" class="circleSkill" :cx="cx" :cy="cy" r="53" :fill="fill" :stroke="stroke" stroke-width="2"></circle>
     <text @click="handleClick()" class="textSkill" text-anchor="middle" :x="cx" :y="cy" style="fill: rgba(0,0,0,0.52);">{{content}}</text>
     <foreignObject :x="cx-45" :y="cy+5" class="myclass" width="100%" height="100%">
-      <div v-show="!admin">
+      <div v-show="!star">
         <p><span v-tooltip.bottom="currentLevel">
         <star-rating @rating-selected="setRating" @current-rating="showCurrentRating" v-model="rating" :show-rating="false"
                      :star-size="18">
@@ -28,7 +28,7 @@
     components: {
       StarRating
     },
-    props:["admin","cx","cy", "content","fill","stroke","showCircleBlur","score","expertise"],
+    props:["star","cx","cy", "content","fill","stroke","showCircleBlur","score","expertise"],
     data () {
       return {
         selectedExpertise:this.expertise,
@@ -71,7 +71,8 @@
     },
     methods: {
       setRating: function(raiting){
-        this.updateExpertise(this.selectedExpertise,raiting);
+          if(!this.$store.getters.collaboratorLoggedIn.isAdmin)
+              this.updateExpertise(this.selectedExpertise,raiting);
       },
 
       showCurrentRating: function(rating) {
@@ -91,7 +92,7 @@
         }
         if(rating==2){
           this.currentLevel = "Débutant";
-          $(".tooltip-inner").css("background","#e1879a");
+          $(".tooltip-inner").css("background","#e17155");
 
         }
         if(rating==1){

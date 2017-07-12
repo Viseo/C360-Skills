@@ -84,4 +84,55 @@ public class ExpertiseDAO {
     public void removeExpertisesBySkill(Skill skill){
          daoFacade.executeRequest("delete from Expertise e where e.skill.id =:skill",param("skill",skill.getId()));
     }
+
+    @Transactional
+    public List<Expertise> intersectionExpertises(List<Expertise> list1, List<Expertise> list2){
+        List<Expertise> list3 = new ArrayList<>();
+        for(int i=0 ; i<list1.size() ; i++){
+            for(int j=0 ; j<list2.size(); j++){
+                if (list2.get(j).getCollaborator() == list1.get(i).getCollaborator()){
+                    list3.add(list2.get(j));
+                    list3.add(list1.get(i));
+                }
+            }
+        }
+        return list3;
+    }
+
+    @Transactional
+    public List<Expertise> getCollabsByExpertise (List<Expertise> list){
+
+        daoFacade.getList("select e from Expertise e left outer join fetch e.skill where e.skill= :skill and e.level = :level",
+                param("skill", list.get(0).getSkill()), param("level", list.get(0).getLevel()));
+        List<Expertise> result = daoFacade.getList("select e from Expertise e left outer join fetch e.collaborator where e.skill= :skill and e.level = :level",
+                param("skill", list.get(0).getSkill()), param("level", list.get(0).getLevel()));
+        if(list.size()>1){
+            for(int i=1; i<list.size(); i++){
+                daoFacade.getList("select e from Expertise e left outer join fetch e.skill where e.skill= :skill and e.level = :level",
+                        param("skill", list.get(i).getSkill()), param("level", list.get(i).getLevel()));
+                List<Expertise> tmp = daoFacade.getList("select e from Expertise e left outer join fetch e.collaborator where e.skill= :skill and e.level = :level",
+                        param("skill", list.get(i).getSkill()), param("level", list.get(i).getLevel()));
+                result = this.intersectionExpertises(result, tmp);
+            }
+        }
+        return result;
+
+    }
+
+    @Transactional
+    public List<Expertise> getInductedExpertisesByCollaborators (List<Expertise> list){
+        List<Expertise> listExpertise = new ArrayList();
+        for(int i = 0; i<list.size(); i++){
+            daoFacade.getList("select e from Expertise e, Link l left outer join fetch e.skill where (l.skill1 = :skill and l.skill2 = e.skill and e.collaborator = :collaborator and e.isNoted = false and e.level >0)" +
+                    "or (l.skill2 = :skill and l.skill1 = e.skill and e.collaborator = :collaborator and e.isNoted = false and e.level >0)", param("skill", list.get(i).getSkill()),param("collaborator", list.get(i).getCollaborator()));
+            List<Expertise> tmp = daoFacade.getList("select e from Expertise e, Link l left outer join fetch e.collaborator where (l.skill1 = :skill and l.skill2 = e.skill and e.collaborator = :collaborator and e.isNoted = false and e.level >0)" +
+                            "or (l.skill2 = :skill and l.skill1 = e.skill and e.collaborator = :collaborator and e.isNoted = false and e.level >0)", param("skill", list.get(i).getSkill()),param("collaborator", list.get(i).getCollaborator()));
+            for(int j = 0; j<tmp.size();j++){
+                listExpertise.add(tmp.get(j));
+            }
+        }
+        return  listExpertise;
+    }
+
+
 }

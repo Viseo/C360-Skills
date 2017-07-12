@@ -4,6 +4,7 @@ import mainPage from '../components/mainPage.vue'
 import collabSVG from '../components/pages/showSkillsCollabPage.vue'
 import containerSVG from '../components/pages/addSkillsPage.vue'
 import navigationMenu from '../components/layout/signInUpMenu.vue'
+import searchSkillCollabByAdmin from '../components/pages/searchSkillCollabByAdmin.vue'
 import findSkill from '../components/pages/findSkill.vue'
 import wishrequest from '../components/pages/wishRequest.vue'
 import error404Page from '../components/pages/error404Page.vue'
@@ -92,6 +93,17 @@ const router = new Router({
         component: collabSVG,
       }]
     },
+    {
+      path: '/searchSkillCollabByAdmin',
+      name: 'searchSkillCollabByAdmin',
+      component: mainPage,
+      beforeEnter: requireAdministratorAuthentification,
+      children: [{
+        name: 'mainPage',
+        path: "/searchSkillCollabByAdmin",
+        component: searchSkillCollabByAdmin
+      }]
+    }
     // {
     //   path: '/showSkillsCollab',
     //   name: 'showSkillsCollab',
