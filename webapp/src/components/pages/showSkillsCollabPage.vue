@@ -24,6 +24,7 @@
         </g>
       </svg>
     </div>
+    <ShowCollab></ShowCollab>
   </div>
 </template>
 
@@ -31,6 +32,7 @@
   import CustomCircle from "../customComponent/customcircle.vue"
   import CloseCross from "../customComponent/CloseCross.vue"
   import FindSkills from "../pages/findSkill.vue"
+  import ShowCollab from '../pages/showCollab.vue'
   import config from '../../config/config'
   import axios from 'axios'
   import * as Vuex from "vuex";

@@ -31,6 +31,7 @@
         <customCircle :id="expertise.skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="expertise.skill.label" stroke="#E03559" fill="white" @click="selectedSkills(expertise.skill.label)" :showCircleBlur="isFound(expertise.skill.label)" :score="expertise.level" :expertise="expertise"/>
       </g>
     </svg>
+    <ShowCollab></ShowCollab>
   </div>
 </template>
 
@@ -38,6 +39,7 @@
   import CustomCircle from "../customComponent/customcircle.vue";
   import axios from "axios";
   import config from '../../config/config';
+  import ShowCollab from "../pages/showCollab.vue";
 
 
   var $ = window.jQuery = require('jquery');
@@ -256,7 +258,7 @@
 
     },
 
-    components: {customCircle: CustomCircle},
+    components: {customCircle: CustomCircle, ShowCollab: ShowCollab},
   }
 
 
