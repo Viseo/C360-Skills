@@ -73,6 +73,9 @@
       setRating: function(raiting){
           if(!this.$store.getters.collaboratorLoggedIn.isAdmin)
               this.updateExpertise(this.selectedExpertise,raiting);
+          else
+            this.$emit('clicked', raiting);
+
       },
 
       showCurrentRating: function(rating) {
