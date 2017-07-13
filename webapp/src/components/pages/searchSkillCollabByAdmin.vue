@@ -38,13 +38,16 @@
 </template>
 
 <script>
-  import CustomCircle from "../customComponent/customcircle.vue";
-  import axios from "axios";
-  import config from '../../config/config';
-  import ShowCollab from "../pages/showCollab.vue";
+    import Vue from 'vue'
+    import CustomCircle from "../customComponent/customcircle.vue";
+    import axios from "axios";
+    import config from '../../config/config';
+    import ShowCollab from "../pages/showCollab.vue";
+    import VueStrap from 'vue-strap';
 
 
-  var $ = window.jQuery = require('jquery');
+    var $ = window.jQuery = require('jquery');
+    Vue.component('typeahead', VueStrap.typeahead);
 
   export default {
     data(){
@@ -160,6 +163,33 @@
                 }
                 this.listCollaboratorsExpertises = [];
                 this.listCollaboratorsExpertises.push(this.CollaboratorExpertises);
+                for(var i = 0; i< this.listCollaboratorsExpertises.length; i++){
+                  this.listCollaboratorsExpertises[i].expertisesChosen.sort(function (a, b) {
+                    return (a.skill.label > b.skill.label) ? 1 : ((b.skill.label > a.skill.label) ? -1 : 0);
+                  });
+                  var tmp = [this.listCollaboratorsExpertises[i].expertisesChosen[0]];
+                  for(var j=0;j<this.listCollaboratorsExpertises[i].expertisesChosen.length;j++){
+                    if(this.listCollaboratorsExpertises[i].expertisesChosen[j].skill.label != tmp[tmp.length-1].skill.label){
+                      tmp.push(this.listCollaboratorsExpertises[i].expertisesChosen[j]);
+                    }
+                  }
+                  this.listCollaboratorsExpertises[i].expertisesChosen = tmp;
+
+                  this.listCollaboratorsExpertises[i].expertisesInduit.sort(function (a, b) {
+                    return (a.skill.label > b.skill.label) ? 1 : ((b.skill.label > a.skill.label) ? -1 : 0);
+                  });
+                  tmp = [this.listCollaboratorsExpertises[i].expertisesInduit[0]];
+                  for(var j=0;j<this.listCollaboratorsExpertises[i].expertisesInduit.length;j++){
+                    if(this.listCollaboratorsExpertises[i].expertisesInduit[j].skill.label != tmp[tmp.length-1].skill.label){
+                      tmp.push(this.listCollaboratorsExpertises[i].expertisesInduit[j]);
+                    }
+                  }
+                  this.listCollaboratorsExpertises[i].expertisesInduit = tmp;
+
+                  this.listCollaboratorsExpertises[i].expertisesChosen.reverse();
+                  this.listCollaboratorsExpertises[i].expertisesInduit.reverse();
+                }
+
               },
               response => {
                 console.log(response);
@@ -338,24 +368,24 @@
               this.listCollaboratorsExpertises.push(this.CollabSkillChosenAndInduit);
             }
             else{
+              console.log("hello0");
               for(var i = 1; i<this.collaboratorsByExpertise.length;i++){
                 if(this.CollabSkillChosenAndInduit.collaborator.id == this.collaboratorsByExpertise[i].collaborator.id){
-                    console.log("hello1");
-                  this.CollabSkillChosenAndInduit.expertisesChosen.push(this.collaboratorsByExpertise[i]);
-                  if(i == this.collaboratorsByExpertise.length -1){
-                    console.log("hello2");
-                    this.listCollaboratorsExpertises.push(this.CollabSkillChosenAndInduit);
-                  }
+                    this.CollabSkillChosenAndInduit.expertisesChosen.push(this.collaboratorsByExpertise[i]);
                 }
                 else{
+                  console.log("hello1");
                   this.listCollaboratorsExpertises.push(this.CollabSkillChosenAndInduit);
-                  this.CollabSkillChosenAndInduit = {
-                    collaborator:{},
-                    expertisesChosen:[],
-                    expertisesInduit:[]
-                  };
-                  this.CollabSkillChosenAndInduit.collaborator = this.collaboratorsByExpertise[i].collaborator;
-                  this.CollabSkillChosenAndInduit.expertisesChosen.push(this.collaboratorsByExpertise[i]);
+                    this.CollabSkillChosenAndInduit = {
+                      collaborator:{},
+                      expertisesChosen:[],
+                      expertisesInduit:[]
+                    };
+                    this.CollabSkillChosenAndInduit.collaborator = this.collaboratorsByExpertise[i].collaborator;
+                    this.CollabSkillChosenAndInduit.expertisesChosen.push(this.collaboratorsByExpertise[i]);
+                }
+                if(i == this.collaboratorsByExpertise.length -1){
+                  this.listCollaboratorsExpertises.push(this.CollabSkillChosenAndInduit);
                 }
               }
             }
@@ -383,6 +413,34 @@
                       this.listCollaboratorsExpertises[m].expertisesInduit.splice(3,this.listCollaboratorsExpertises[m].expertisesInduit.length-3);
                   }
               }
+              for(var i = 0; i< this.listCollaboratorsExpertises.length; i++){
+                this.listCollaboratorsExpertises[i].expertisesChosen.sort(function (a, b) {
+                  return (a.skill.label > b.skill.label) ? 1 : ((b.skill.label > a.skill.label) ? -1 : 0);
+                });
+                var tmp = [this.listCollaboratorsExpertises[i].expertisesChosen[0]];
+                for(var j=0;j<this.listCollaboratorsExpertises[i].expertisesChosen.length;j++){
+                    if(this.listCollaboratorsExpertises[i].expertisesChosen[j].skill.label != tmp[tmp.length-1].skill.label){
+                        tmp.push(this.listCollaboratorsExpertises[i].expertisesChosen[j]);
+                    }
+                }
+                this.listCollaboratorsExpertises[i].expertisesChosen = tmp;
+
+                this.listCollaboratorsExpertises[i].expertisesInduit.sort(function (a, b) {
+                  return (a.skill.label > b.skill.label) ? 1 : ((b.skill.label > a.skill.label) ? -1 : 0);
+                });
+                tmp = [this.listCollaboratorsExpertises[i].expertisesInduit[0]];
+                for(var j=0;j<this.listCollaboratorsExpertises[i].expertisesInduit.length;j++){
+                  if(this.listCollaboratorsExpertises[i].expertisesInduit[j].skill.label != tmp[tmp.length-1].skill.label){
+                    tmp.push(this.listCollaboratorsExpertises[i].expertisesInduit[j]);
+                  }
+                }
+                this.listCollaboratorsExpertises[i].expertisesInduit = tmp;
+
+                this.listCollaboratorsExpertises[i].expertisesChosen.reverse();
+                this.listCollaboratorsExpertises[i].expertisesInduit.reverse();
+
+              }
+
             },
             response => {
               console.log(response);

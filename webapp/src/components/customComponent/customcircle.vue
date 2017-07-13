@@ -33,6 +33,7 @@
       return {
         selectedExpertise:this.expertise,
         rating: this.score,
+        ratingSaved: 0,
         currentRating: 0,
         currentLevel: null,
         cx1: "",
@@ -71,6 +72,11 @@
     },
     methods: {
       setRating: function(raiting){
+        if(this.ratingSaved == this.rating) {
+            raiting = 0;
+            this.rating=0;
+        }
+        this.ratingSaved = raiting;
           if(!this.$store.getters.collaboratorLoggedIn.isAdmin)
               this.updateExpertise(this.selectedExpertise,raiting);
           else

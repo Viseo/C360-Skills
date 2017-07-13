@@ -4,12 +4,10 @@ import config from '@/config/config'
 import searchSkillCollabByAdmin from '@/components/pages/searchSkillCollabByAdmin'
 import MockAdapter from 'axios-mock-adapter'
 import storeVuex from '@/vuex/store'
-import VueStrap from 'vue-strap'
 
 var mock = new MockAdapter(axios);
 
 var vmSearchSkillCollabByAdmin;
-Vue.component('typeahead', VueStrap.typeahead);
 
 
 fdescribe('Test searchSkillCollabByAdmin', function () {
@@ -26,20 +24,26 @@ fdescribe('Test searchSkillCollabByAdmin', function () {
   let collaboratorToken = "eyJhbGciOiJIUzUxMiJ9.eyJmaXJzdE5hbWUiOiJDYXJvbGluZSIsImxhc3ROYW1lIjoiTGhvdGUiLCJpc0FkbWluIjpmYWxzZSwiaWQiOjEsImVtYWlsIjoibGhvdGVAdmlzZW8uY29tIiwidmVyc2lvbiI6MCwiZGVmYXVsdHBpY3R1cmUiOnRydWV9.eguO54P8MHmWrwSREJu5-vCHkhA2Tj995efuHc4twdw";
 
   beforeEach(function () {
-      vmSearchSkillCollabByAdmin = vm.$children[0];
-    mock = new MockAdapter(axios);
-    let allCollabs =
-          [{"id":1, "version":0,"lastName":"Bourakkadi","firstName":"Hamza","email":"hamza.bourakkadi@gmail.com","defaultPicture":true},
-              {"id":2,"version":0,"lastName":"Caroline","firstName":"Lhote","email":"caroline.lhote@gmail.com","defaultPicture":true}];
-    let allSkills =  [
-          {"id":4,"version":0,"label":"C++"},
-          {"id":5,"version":0,"label":"CSS"},
-          {"id":18,"version":0,"label":"HTML"},
-          {"id":15,"version":0,"label":"Java"},
-          {"id":2,"version":0,"label":"Android"}
-      ];
-    mock.onGet(config.server + "/api/collaborateurs").reply(200, allCollabs);
-    mock.onGet(config.server + "/api/skills/").reply(200, allSkills);
+    vmSearchSkillCollabByAdmin = vm.$children[0];
+      mock = new MockAdapter(axios);
+      let allFunctionOnPageLoad = () =>  {
+          let allCollabs =
+              [{"id":1, "version":0,"lastName":"Bourakkadi","firstName":"Hamza","email":"hamza.bourakkadi@gmail.com","defaultPicture":true},
+                  {"id":2,"version":0,"lastName":"Caroline","firstName":"Lhote","email":"caroline.lhote@gmail.com","defaultPicture":true}];
+          let allSkills =  [
+              {"id":4,"version":0,"label":"C++"},
+              {"id":5,"version":0,"label":"CSS"},
+              {"id":18,"version":0,"label":"HTML"},
+              {"id":15,"version":0,"label":"Java"},
+              {"id":2,"version":0,"label":"Android"}
+          ];
+          mock.onGet(config.server + "/api/collaborateurs").reply(200, allCollabs);
+          mock.onGet(config.server + "/api/skills/").reply(200, allSkills);
+          vmSearchSkillCollabByAdmin.getAllSkills();
+      };
+
+      allFunctionOnPageLoad();
+
   });
 
   afterEach(function () {
@@ -47,8 +51,25 @@ fdescribe('Test searchSkillCollabByAdmin', function () {
     storeVuex.commit('resetStore');
   });
 
-  it('should check if specific collaborator and skills are displayed when administrator is typing some specifics letter in the typeahead', function () {
-     console.log(vmSearchSkillCollabByAdmin.skills);
+  fit('should check if typeahead is initialize with all skills and all collaborators when page is loaded', function (done) {
+      let allSkillsAndCollabName = ['Android','C++','CSS','Java','HTML','Hamza Bourakkadi','Lhote Caroline'];
+      setTimeout(function(){
+          expect(vmSearchSkillCollabByAdmin.searchResult).toEqual(allSkillsAndCollabName);
+          done();
+      }, 0);
+  });
+
+  fit('should check if specific collaborator and skills are displayed when administrator is typing some specifics letter in the typeahead', function (done) {
+      vmSearchSkillCollabByAdmin.value = "J";
+      setTimeout(function(){
+
+          console.log("coucou"+vmSearchSkillCollabByAdmin.$children[0].val);
+          console.log("coucou"+vmSearchSkillCollabByAdmin.$children[0].data);
+          console.log("coucou"+vmSearchSkillCollabByAdmin.$children[0].showDropdown);
+             console.log("coucou"+vmSearchSkillCollabByAdmin.$children[0].items);
+
+          done();
+      }, 0);
   });
 
   it('should check if only collaborators are displayed with profile picture when administrator is typing some specifics collaborator firstname/lastname in the typeahead', function () {
