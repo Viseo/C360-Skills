@@ -155,12 +155,8 @@
                 this.listCollaboratorsExpertises = [];
                 this.listCollaboratorsExpertises.push(this.CollaboratorExpertises);
                 for(var i = 0; i< this.listCollaboratorsExpertises.length; i++){
-                  this.listCollaboratorsExpertises[i].expertisesChosen.sort(function (a, b) {
-                    return (a.level > b.level) ? 1 : ((b.level > a.level) ? -1 : 0);
-                  });
-                  this.listCollaboratorsExpertises[i].expertisesInduit.sort(function (a, b) {
-                    return (a.level > b.level) ? 1 : ((b.level > a.level) ? -1 : 0);
-                  });
+                  this.listCollaboratorsExpertises[i].expertisesChosen.reverse();
+                  this.listCollaboratorsExpertises[i].expertisesInduit.reverse();
                 }
 
               },
@@ -362,14 +358,6 @@
                   this.CollabSkillChosenAndInduit.expertisesChosen.push(this.collaboratorsByExpertise[i]);
                 }
               }
-              for(var i = 0; i< this.listCollaboratorsExpertises.length; i++){
-                this.listCollaboratorsExpertises[i].expertisesChosen.sort(function (a, b) {
-                  return (a.level > b.level) ? 1 : ((b.level > a.level) ? -1 : 0);
-                });
-                this.listCollaboratorsExpertises[i].expertisesInduit.sort(function (a, b) {
-                  return (a.level > b.level) ? 1 : ((b.level > a.level) ? -1 : 0);
-                });
-              }
             }
 
           },
@@ -395,6 +383,11 @@
                       this.listCollaboratorsExpertises[m].expertisesInduit.splice(3,this.listCollaboratorsExpertises[m].expertisesInduit.length-3);
                   }
               }
+              for(var i = 0; i< this.listCollaboratorsExpertises.length; i++){
+                this.listCollaboratorsExpertises[i].expertisesChosen.reverse();
+                this.listCollaboratorsExpertises[i].expertisesInduit.reverse();
+              }
+
             },
             response => {
               console.log(response);
