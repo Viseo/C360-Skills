@@ -24,7 +24,6 @@
         </g>
       </svg>
     </div>
-    <ShowCollab></ShowCollab>
   </div>
 </template>
 

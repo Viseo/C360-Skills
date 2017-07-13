@@ -33,7 +33,7 @@
                       :showCircleBlur="isFound(expertise.skill.label)" :score="expertise.level" :expertise="expertise" @clicked="onClickChild"/>
       </g>
     </svg>
-    <ShowCollab></ShowCollab>
+    <ShowCollab :expertises="listCollaboratorsExpertises"></ShowCollab>
   </div>
 </template>
 
