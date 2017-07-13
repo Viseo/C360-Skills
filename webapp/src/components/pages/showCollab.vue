@@ -1,5 +1,5 @@
 <template>
-  <div class="row-fluid" style="margin:0 20px;overflow-x: scroll;">
+  <div class="row-fluid" style="margin:0 20px;overflow-x: auto;">
     <div v-for="expertise in  expertises" class="col-lg-2">
       <div class="row">
         <div class="col-lg-12">
@@ -28,7 +28,7 @@
         </div>
       </div>
 
-      <div class="row">
+      <div class="row" v-show="skillInducedExists">
         <div class="col-lg-12">
           <p style="margin-top:0.5em;margin-bottom:0; text-align: center">Compétences induites</p>
           <hr>
@@ -72,7 +72,11 @@
     mounted(){
     },
 
-    computed: {},
+    computed: {
+        skillInducedExists() {
+            return this.expertises[0].expertisesInduit.length!=0;
+        }
+    },
 
     watch: {},
 
