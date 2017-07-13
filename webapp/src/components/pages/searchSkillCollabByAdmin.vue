@@ -363,24 +363,24 @@
               this.listCollaboratorsExpertises.push(this.CollabSkillChosenAndInduit);
             }
             else{
+              console.log("hello0");
               for(var i = 1; i<this.collaboratorsByExpertise.length;i++){
                 if(this.CollabSkillChosenAndInduit.collaborator.id == this.collaboratorsByExpertise[i].collaborator.id){
-                    console.log("hello1");
-                  this.CollabSkillChosenAndInduit.expertisesChosen.push(this.collaboratorsByExpertise[i]);
-                  if(i == this.collaboratorsByExpertise.length -1){
-                    console.log("hello2");
-                    this.listCollaboratorsExpertises.push(this.CollabSkillChosenAndInduit);
-                  }
+                    this.CollabSkillChosenAndInduit.expertisesChosen.push(this.collaboratorsByExpertise[i]);
                 }
                 else{
+                  console.log("hello1");
                   this.listCollaboratorsExpertises.push(this.CollabSkillChosenAndInduit);
-                  this.CollabSkillChosenAndInduit = {
-                    collaborator:{},
-                    expertisesChosen:[],
-                    expertisesInduit:[]
-                  };
-                  this.CollabSkillChosenAndInduit.collaborator = this.collaboratorsByExpertise[i].collaborator;
-                  this.CollabSkillChosenAndInduit.expertisesChosen.push(this.collaboratorsByExpertise[i]);
+                    this.CollabSkillChosenAndInduit = {
+                      collaborator:{},
+                      expertisesChosen:[],
+                      expertisesInduit:[]
+                    };
+                    this.CollabSkillChosenAndInduit.collaborator = this.collaboratorsByExpertise[i].collaborator;
+                    this.CollabSkillChosenAndInduit.expertisesChosen.push(this.collaboratorsByExpertise[i]);
+                }
+                if(i == this.collaboratorsByExpertise.length -1){
+                  this.listCollaboratorsExpertises.push(this.CollabSkillChosenAndInduit);
                 }
               }
             }
