@@ -160,6 +160,12 @@
                 for(var i = 0; i< this.listCollaboratorsExpertises.length; i++){
                   this.listCollaboratorsExpertises[i].expertisesChosen.reverse();
                   this.listCollaboratorsExpertises[i].expertisesInduit.reverse();
+                  this.listCollaboratorsExpertises[i].expertisesChosen = this.listCollaboratorsExpertises[i].expertisesChosen.filter(function(elem, index, self) {
+                    return index == self.indexOf(elem);
+                  });
+                  this.listCollaboratorsExpertises[i].expertisesInduit = this.listCollaboratorsExpertises[i].expertisesInduit.filter(function(elem, index, self) {
+                    return index == self.indexOf(elem);
+                  });
                 }
 
               },
@@ -389,6 +395,12 @@
               for(var i = 0; i< this.listCollaboratorsExpertises.length; i++){
                 this.listCollaboratorsExpertises[i].expertisesChosen.reverse();
                 this.listCollaboratorsExpertises[i].expertisesInduit.reverse();
+                this.listCollaboratorsExpertises[i].expertisesChosen = this.listCollaboratorsExpertises[i].expertisesChosen.filter(function(elem, index, self) {
+                  return index == self.indexOf(elem);
+                });
+                this.listCollaboratorsExpertises[i].expertisesInduit = this.listCollaboratorsExpertises[i].expertisesInduit.filter(function(elem, index, self) {
+                  return index == self.indexOf(elem);
+                });
               }
 
             },
