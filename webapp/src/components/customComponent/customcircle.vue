@@ -8,7 +8,7 @@
         <p><span v-tooltip.bottom="currentLevel">
         <star-rating @rating-selected="setRating" @current-rating="showCurrentRating" v-model="rating" :show-rating="false"
                      :star-size="18">
-        </star-rating>
+          </star-rating>
         </span></p>
       </div>
     </foreignObject>
@@ -33,6 +33,7 @@
       return {
         selectedExpertise:this.expertise,
         rating: this.score,
+        ratingSaved: 0,
         currentRating: 0,
         currentLevel: null,
         cx1: "",
@@ -71,11 +72,15 @@
     },
     methods: {
       setRating: function(raiting){
+        if(this.ratingSaved == this.rating) {
+            raiting = 0;
+            this.rating=0;
+        }
+        this.ratingSaved = raiting;
           if(!this.$store.getters.collaboratorLoggedIn.isAdmin)
               this.updateExpertise(this.selectedExpertise,raiting);
           else
             this.$emit('clicked', raiting);
-
       },
 
       showCurrentRating: function(rating) {
