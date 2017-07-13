@@ -1,51 +1,18 @@
 <template>
-    <g>
-        <circle v-show="showCircleBlur"
-                @click="handleClick()"
-                class="circleSkill"
-                :id="cx+''+cy"
-                :cx="cx"
-                :cy="cy"
-                r="50"
-                :fill="fill"
-                :stroke="stroke"
-                stroke-width="10">
-        </circle>
-        <circle @click="handleClick()"
-                class="circleSkill"
-                :cx="cx"
-                :cy="cy"
-                r="53"
-                :fill="fill"
-                :stroke="stroke"
-                stroke-width="2">
-        </circle>
-        <text @click="handleClick()"
-              class="textSkill"
-              text-anchor="middle"
-              :x="cx"
-              :y="cy"
-              style="fill: rgba(0,0,0,0.52);">{{content}}
-        </text>
-        <foreignObject :x="cx-45"
-                       :y="cy+5"
-                       class="myclass"
-                       width="100%"
-                       height="100%">
-            <div v-show="!star">
-                <p>
-                   <span v-tooltip.bottom="currentLevel">
-                       <star-rating @rating-selected="setRating"
-                                    @current-rating="showCurrentRating"
-                                    v-model="rating"
-                                    :show-rating="false"
-                                    :star-size="18">
-                       </star-rating>
-                   </span>
-                </p>
-            </div>
-        </foreignObject>
-    </g>
+  <g>
+    <circle v-show="showCircleBlur" @click="handleClick()" class="circleSkill" :id="cx+''+cy" :cx="cx" :cy="cy" r="50" :fill="fill" :stroke="stroke" stroke-width="10"></circle>
+    <circle @click="handleClick()" class="circleSkill" :cx="cx" :cy="cy" r="53" :fill="fill" :stroke="stroke" stroke-width="2"></circle>
+    <text @click="handleClick()" class="textSkill" text-anchor="middle" :x="cx" :y="cy" style="fill: rgba(0,0,0,0.52);">{{content}}</text>
+    <foreignObject :x="cx-45" :y="cy+5" class="myclass" width="100%" height="100%">
+      <div v-show="!star">
+        <p><span v-tooltip.bottom="currentLevel">
+        <star-rating @rating-selected="setRating" @current-rating="showCurrentRating" v-model="rating" :show-rating="false"
+                     :star-size="18">
+        </star-rating>
+        </span></p>
+      </div>
+    </foreignObject>
+  </g>
 </template>
 
 <script>
@@ -57,16 +24,16 @@
 
   export default {
 
+
     components: {
       StarRating
     },
-
     props:["star","cx","cy", "content","fill","stroke","showCircleBlur","score","expertise"],
-
     data () {
       return {
         selectedExpertise:this.expertise,
         rating: this.score,
+        ratingSaved: 0,
         currentRating: 0,
         currentLevel: null,
         cx1: "",
@@ -83,7 +50,6 @@
         cxLine3:"",
       }
     },
-
     mounted: function () {
       $('foreignObject').ready(function(){
         $('foreignObject').find('div').mousemove(function(e){
@@ -96,23 +62,28 @@
         });
       });
     },
-
     watch:{
       score: function(newValue){
         this.rating = newValue;
       },
-
       expertise:function(newValue){
         this.selectedExpertise = newValue;
       }
     },
-
     methods: {
       setRating: function(raiting){
+        if(this.ratingSaved == this.rating) {
+            raiting = 0;
+            this.rating=0;
+        }
+        this.ratingSaved = raiting;
           if(!this.$store.getters.collaboratorLoggedIn.isAdmin)
               this.updateExpertise(this.selectedExpertise,raiting);
           else
             this.$emit('clicked', raiting);
+            this.$emit('getExpertise', this.selectedExpertise);
+
+
       },
 
       showCurrentRating: function(rating) {
@@ -138,12 +109,14 @@
         if(rating==1){
           this.currentLevel = "Élémentaire";
           $(".tooltip-inner").css("background","#97253d");
+
         }
       },
 
       updateExpertise(expertise,value){
         this.selectedExpertise.level = value;
         axios.put(config.server + '/api/expertise', expertise).then(
+
           response => {
             this.$emit('refresh');
             console.log(response);
@@ -151,11 +124,9 @@
             console.log(response);
           });
       },
-
       handleClick(){
         this.$emit('click');
       },
-
       divPosition(cx,cy){
         return 'z-index:1;position:relative;left:'+cx+'px;top:'+cy+'px;'
       }

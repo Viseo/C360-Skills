@@ -29,22 +29,25 @@
 
       <g v-for="(expertise,i) in expertises">
         <customCircle :id="expertise.skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="expertise.skill.label"
-                      stroke="#E03559" fill="white" @click="selectedSkills(expertise.skill.label)"
-                      :showCircleBlur="isFound(expertise.skill.label)" :score="expertise.level" :expertise="expertise" @clicked="onClickChild"/>
+                      stroke="#E03559" fill="white" @click="selectedSkills(expertise)"
+                      :showCircleBlur="isFound(expertise.skill.label)" :score="expertise.level" :expertise="expertise" @clicked="onClickChild" @getExpertise="setExpertise"/>
       </g>
     </svg>
-    <ShowCollab></ShowCollab>
+    <ShowCollab :expertises="listCollaboratorsExpertises"></ShowCollab>
   </div>
 </template>
 
 <script>
-  import CustomCircle from "../customComponent/customcircle.vue";
-  import axios from "axios";
-  import config from '../../config/config';
-  import ShowCollab from "../pages/showCollab.vue";
+    import Vue from 'vue'
+    import CustomCircle from "../customComponent/customcircle.vue";
+    import axios from "axios";
+    import config from '../../config/config';
+    import ShowCollab from "../pages/showCollab.vue";
+    import VueStrap from 'vue-strap';
 
 
-  var $ = window.jQuery = require('jquery');
+    var $ = window.jQuery = require('jquery');
+    Vue.component('typeahead', VueStrap.typeahead);
 
   export default {
     data(){
@@ -97,7 +100,13 @@
 
     methods: {
       onClickChild (value) {
+        console.log(value);
         this.levelSelected=value;
+      },
+      setExpertise (value) {
+        console.log(value);
+        this.selectedExpertise=value;
+        this.selectedSkills();
       },
       getAllExpertise(){
         axios.get(config.server + '/api/getcollabexpertises/' + this.collabLogged.id).then(
@@ -154,6 +163,33 @@
                 }
                 this.listCollaboratorsExpertises = [];
                 this.listCollaboratorsExpertises.push(this.CollaboratorExpertises);
+                for(var i = 0; i< this.listCollaboratorsExpertises.length; i++){
+                  this.listCollaboratorsExpertises[i].expertisesChosen.sort(function (a, b) {
+                    return (a.skill.label > b.skill.label) ? 1 : ((b.skill.label > a.skill.label) ? -1 : 0);
+                  });
+                  var tmp = [this.listCollaboratorsExpertises[i].expertisesChosen[0]];
+                  for(var j=0;j<this.listCollaboratorsExpertises[i].expertisesChosen.length;j++){
+                    if(this.listCollaboratorsExpertises[i].expertisesChosen[j].skill.label != tmp[tmp.length-1].skill.label){
+                      tmp.push(this.listCollaboratorsExpertises[i].expertisesChosen[j]);
+                    }
+                  }
+                  this.listCollaboratorsExpertises[i].expertisesChosen = tmp;
+
+                  this.listCollaboratorsExpertises[i].expertisesInduit.sort(function (a, b) {
+                    return (a.skill.label > b.skill.label) ? 1 : ((b.skill.label > a.skill.label) ? -1 : 0);
+                  });
+                  tmp = [this.listCollaboratorsExpertises[i].expertisesInduit[0]];
+                  for(var j=0;j<this.listCollaboratorsExpertises[i].expertisesInduit.length;j++){
+                    if(this.listCollaboratorsExpertises[i].expertisesInduit[j].skill.label != tmp[tmp.length-1].skill.label){
+                      tmp.push(this.listCollaboratorsExpertises[i].expertisesInduit[j]);
+                    }
+                  }
+                  this.listCollaboratorsExpertises[i].expertisesInduit = tmp;
+
+                  this.listCollaboratorsExpertises[i].expertisesChosen.reverse();
+                  this.listCollaboratorsExpertises[i].expertisesInduit.reverse();
+                }
+
               },
               response => {
                 console.log(response);
@@ -203,23 +239,22 @@
 
       },
 
-      selectedSkills(name){
+      selectedSkills(){
         this.foundCollab = '';
         for (var i in this.foundSkills) {
-          if (this.foundSkills[i].skill.label == name) {
+          if (this.foundSkills[i].skill.id == this.selectedExpertise.skill.id) {
             document.getElementById(this.foundSkills[i].skill.id).getElementsByTagName("circle")[0].removeAttribute("filter");
             this.foundSkills.splice(i, 1);
-            return;
+            if(this.levelSelected==0){
+                //àcompléter
+                this.selectedExpertise.level =0;
+                return;
+            }
           }
         }
-        for (var index in this.expertises) {
-          if (this.expertises[index].skill.label == name) {
-              this.expertises[index].level = this.levelSelected;
-            this.foundSkills.push(this.expertises[index]);
-            document.getElementById(this.expertises[index].skill.id).getElementsByTagName("circle")[0].setAttribute("filter", "url(#blurMe)");
-          }
-
-        }
+              this.selectedExpertise.level = this.levelSelected;
+            this.foundSkills.push(this.selectedExpertise);
+            document.getElementById(this.selectedExpertise.skill.id).getElementsByTagName("circle")[0].setAttribute("filter", "url(#blurMe)");
         this.collaboratorsByExpertise.splice(0, this.collaboratorsByExpertise.length);
         for(var i in this.collabs){
             if(this.value != null){
@@ -231,7 +266,7 @@
         }
         else
         this.getCollaboratorsByExpertises(this.foundSkills);
-
+        this.levelSelected =0;
       },
 
       positionX(integ){
@@ -333,24 +368,24 @@
               this.listCollaboratorsExpertises.push(this.CollabSkillChosenAndInduit);
             }
             else{
+              console.log("hello0");
               for(var i = 1; i<this.collaboratorsByExpertise.length;i++){
                 if(this.CollabSkillChosenAndInduit.collaborator.id == this.collaboratorsByExpertise[i].collaborator.id){
-                    console.log("hello1");
-                  this.CollabSkillChosenAndInduit.expertisesChosen.push(this.collaboratorsByExpertise[i]);
-                  if(i == this.collaboratorsByExpertise.length -1){
-                    console.log("hello2");
-                    this.listCollaboratorsExpertises.push(this.CollabSkillChosenAndInduit);
-                  }
+                    this.CollabSkillChosenAndInduit.expertisesChosen.push(this.collaboratorsByExpertise[i]);
                 }
                 else{
+                  console.log("hello1");
                   this.listCollaboratorsExpertises.push(this.CollabSkillChosenAndInduit);
-                  this.CollabSkillChosenAndInduit = {
-                    collaborator:{},
-                    expertisesChosen:[],
-                    expertisesInduit:[]
-                  };
-                  this.CollabSkillChosenAndInduit.collaborator = this.collaboratorsByExpertise[i].collaborator;
-                  this.CollabSkillChosenAndInduit.expertisesChosen.push(this.collaboratorsByExpertise[i]);
+                    this.CollabSkillChosenAndInduit = {
+                      collaborator:{},
+                      expertisesChosen:[],
+                      expertisesInduit:[]
+                    };
+                    this.CollabSkillChosenAndInduit.collaborator = this.collaboratorsByExpertise[i].collaborator;
+                    this.CollabSkillChosenAndInduit.expertisesChosen.push(this.collaboratorsByExpertise[i]);
+                }
+                if(i == this.collaboratorsByExpertise.length -1){
+                  this.listCollaboratorsExpertises.push(this.CollabSkillChosenAndInduit);
                 }
               }
             }
@@ -378,6 +413,34 @@
                       this.listCollaboratorsExpertises[m].expertisesInduit.splice(3,this.listCollaboratorsExpertises[m].expertisesInduit.length-3);
                   }
               }
+              for(var i = 0; i< this.listCollaboratorsExpertises.length; i++){
+                this.listCollaboratorsExpertises[i].expertisesChosen.sort(function (a, b) {
+                  return (a.skill.label > b.skill.label) ? 1 : ((b.skill.label > a.skill.label) ? -1 : 0);
+                });
+                var tmp = [this.listCollaboratorsExpertises[i].expertisesChosen[0]];
+                for(var j=0;j<this.listCollaboratorsExpertises[i].expertisesChosen.length;j++){
+                    if(this.listCollaboratorsExpertises[i].expertisesChosen[j].skill.label != tmp[tmp.length-1].skill.label){
+                        tmp.push(this.listCollaboratorsExpertises[i].expertisesChosen[j]);
+                    }
+                }
+                this.listCollaboratorsExpertises[i].expertisesChosen = tmp;
+
+                this.listCollaboratorsExpertises[i].expertisesInduit.sort(function (a, b) {
+                  return (a.skill.label > b.skill.label) ? 1 : ((b.skill.label > a.skill.label) ? -1 : 0);
+                });
+                tmp = [this.listCollaboratorsExpertises[i].expertisesInduit[0]];
+                for(var j=0;j<this.listCollaboratorsExpertises[i].expertisesInduit.length;j++){
+                  if(this.listCollaboratorsExpertises[i].expertisesInduit[j].skill.label != tmp[tmp.length-1].skill.label){
+                    tmp.push(this.listCollaboratorsExpertises[i].expertisesInduit[j]);
+                  }
+                }
+                this.listCollaboratorsExpertises[i].expertisesInduit = tmp;
+
+                this.listCollaboratorsExpertises[i].expertisesChosen.reverse();
+                this.listCollaboratorsExpertises[i].expertisesInduit.reverse();
+
+              }
+
             },
             response => {
               console.log(response);

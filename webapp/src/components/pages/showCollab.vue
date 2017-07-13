@@ -1,6 +1,6 @@
 <template>
-  <div class="row-fluid" style="margin:0 20px;overflow-x: scroll;">
-    <div v-for="i in 13" class="col-lg-2">
+  <div class="row-fluid" style="margin:0 20px;overflow-x: auto;">
+    <div v-for="expertise in  expertises" class="col-lg-2">
       <div class="row">
         <div class="col-lg-12">
           <img class=" img-responsive center-block" src="../../../static/lion.jpg"
@@ -9,25 +9,26 @@
       </div>
 
       <div class="row">
-        <p class="col-lg-12" style="margin-top:0.5em; margin-bottom:1em; text-align: center">Caroline L'hote</p>
+        <p class="col-lg-12" style="margin-top:0.5em; margin-bottom:1em; text-align: center">
+          {{expertise.collaborator.firstName}} {{expertise.collaborator.lastName}}</p>
       </div>
 
       <div class="row">
         <div class="col-lg-12">
-          <div v-for="i in 3">
-            <div class="levelCircle" :class="colorCircle">A</div>
-            <span>Javascript</span>
-            <span v-for="i in level" style="margin-left: 2px; padding: 0px; color:#eedd31;">
+          <div v-for="skill in expertise.expertisesChosen">
+            <div class="levelCircle" :class="'level'+skill.level+'Circle'">{{ showLevel (skill.level) }}</div>
+            <span>{{skill.skill.label }}</span>
+            <span v-for="levelStar in skill.level" style="margin-left: 2px; padding: 0px; color:#eedd31;">
         <i class="glyphicon glyphicon-star"></i>
       </span>
-            <span v-for="i in 5-level" style="margin-right: 2px; padding: 0px;color:#eedd31;">
+            <span v-for="levelStarEmpty in 5-skill.level" style="margin-right: 2px; padding: 0px;color:#eedd31;">
         <i class="glyphicon glyphicon-star-empty"></i>
       </span>
           </div>
         </div>
       </div>
 
-      <div class="row">
+      <div class="row" v-show="skillInducedExists">
         <div class="col-lg-12">
           <p style="margin-top:0.5em;margin-bottom:0; text-align: center">Compétences induites</p>
           <hr>
@@ -36,13 +37,13 @@
 
       <div class="row">
         <div class="col-lg-12">
-          <div v-for="i in 3">
-            <div class="levelCircle" :class="colorCircle">D</div>
-            <span>Javascript</span>
-            <span v-for="i in level" style="margin-left: 2px; padding: 0px; color:#eedd31;">
+          <div v-for="skillInduit in expertise.expertisesInduit">
+            <div class="levelCircle" :class="'level'+skillInduit.level+'Circle'">{{ showLevel (skillInduit.level) }}</div>
+            <span> {{skillInduit.skill.label}}</span>
+            <span v-for="levelStar in skillInduit.level" style="margin-left: 2px; padding: 0px; color:#eedd31;">
         <i class="glyphicon glyphicon-star"></i>
       </span>
-            <span v-for="i in 5-level" style="margin-right: 2px; padding: 0px;color:#eedd31;">
+            <span v-for="levelStarEmpty in 5-skillInduit.level" style="margin-right: 2px; padding: 0px;color:#eedd31;">
         <i class="glyphicon glyphicon-star-empty"></i>
       </span>
           </div>
@@ -59,8 +60,10 @@
   import config from '../../config/config';
 
   export default {
+    props: ['expertises'],
     data (){
       return {
+        listCollaboratorsExpertises: [],
         colorCircle: "level3Circle",
         level: 2
       };
@@ -69,11 +72,33 @@
     mounted(){
     },
 
-    computed: {},
+    computed: {
+        skillInducedExists() {
+            return this.expertises[0].expertisesInduit.length!=0;
+        }
+    },
 
     watch: {},
 
-    methods: {}
+    methods: {
+      showLevel (rating) {
+        if (rating == 5) {
+          return "E";
+        }
+        if (rating == 4) {
+          return "A";
+        }
+        if (rating == 3) {
+          return "C";
+        }
+        if (rating == 2) {
+          return "D";
+        }
+        if (rating == 1) {
+          return "E";
+        }
+      }
+    }
   }
 
 
