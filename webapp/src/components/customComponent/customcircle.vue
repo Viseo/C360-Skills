@@ -1,51 +1,19 @@
 <template>
-   <g>
-      <circle v-show="showCircleBlur"
-              @click="handleClick()"
-              class="circleSkill"
-              :id="cx+''+cy"
-              :cx="cx"
-              :cy="cy"
-              r="50"
-              :fill="fill"
-              :stroke="stroke"
-              stroke-width="10">
-      </circle>
-      <circle @click="handleClick()"
-              class="circleSkill"
-              :cx="cx"
-              :cy="cy"
-              r="53"
-              :fill="fill"
-              :stroke="stroke"
-              stroke-width="2">
-      </circle>
-      <text @click="handleClick()"
-            class="textSkill"
-            text-anchor="middle"
-            :x="cx"
-            :y="cy"
-            style="fill: rgba(0,0,0,0.52);">{{content}}
-      </text>
-      <foreignObject :x="cx-45"
-                     :y="cy+5"
-                     class="myclass"
-                     width="100%"
-                     height="100%">
-          <div v-show="!star">
-              <p>
-                 <span v-tooltip.bottom="currentLevel">
-                      <star-rating @rating-selected="setRating"
-                                   @current-rating="showCurrentRating"
-                                   v-model="rating"
-                                   :show-rating="false"
-                                   :star-size="18">
-                      </star-rating>
-                 </span>
-              </p>
-          </div>
-      </foreignObject>
-   </g>
+  <g>
+    <circle v-show="showCircleBlur" @click="handleClick()" class="circleSkill" :id="cx+''+cy" :cx="cx" :cy="cy" r="50" :fill="fill" :stroke="stroke" stroke-width="10"></circle>
+    <circle @click="handleClick()" class="circleSkill" :cx="cx" :cy="cy" r="53" :fill="fill" :stroke="stroke" stroke-width="2"></circle>
+    <text @click="handleClick()" class="textSkill" text-anchor="middle" :x="cx" :y="cy" style="fill: rgba(0,0,0,0.52);">{{content}}</text>
+    <foreignObject :x="cx-45" :y="cy+5" class="myclass" width="100%" height="100%">
+      <div v-show="!star">
+        <p><span v-tooltip.bottom="currentLevel">
+        <star-rating @rating-selected="setRating" @current-rating="showCurrentRating" v-model="rating" :show-rating="false"
+                     :star-size="18">
+          </star-rating>
+          <p id="testt">Hello</p>
+        </span></p>
+      </div>
+    </foreignObject>
+  </g>
 </template>
 
 <script>
@@ -86,7 +54,13 @@
     },
 
     mounted: function () {
+      $("div.star-rating span.pointer:first-child polygon:nth-child(3)").hover(function(){
+        $("#testt").css("background-color", "yellow");
+      }, function(){
+        $("#testt").css("background-color", "pink");
+      });
       $('foreignObject').ready(function(){
+
         $('foreignObject').find('div').mousemove(function(e){
           window.mouseXPos = e.pageX;
           window.mouseYPos = e.pageY;
@@ -124,29 +98,29 @@
 
       showCurrentRating: function(rating) {
         this.currentRating = rating;
-        if(rating==5){
-          this.currentLevel = "Expert";
-          $(".tooltip-inner").css("background","#0c8700");
-        }
-        if(rating==4){
-          this.currentLevel = "Avancé";
-          $(".tooltip-inner").css("background","#00d466");
-        }
-        if(rating==3){
-          this.currentLevel = "Confirmé";
-          $(".tooltip-inner").css("background","#d66d25");
-
-        }
-        if(rating==2){
-          this.currentLevel = "Débutant";
-          $(".tooltip-inner").css("background","#e17155");
-
-        }
-        if(rating==1){
-          this.currentLevel = "Élémentaire";
-          $(".tooltip-inner").css("background","#97253d");
-
-        }
+//        if(rating==5){
+//          this.currentLevel = "Expert";
+//          $(".tooltip-inner").css("background","#0c8700");
+//        }
+//        if(rating==4){
+//          this.currentLevel = "Avancé";
+//          $(".tooltip-inner").css("background","#00d466");
+//        }
+//        if(rating==3){
+//          this.currentLevel = "Confirmé";
+//          $(".tooltip-inner").css("background","#d66d25");
+//
+//        }
+//        if(rating==2){
+//          this.currentLevel = "Débutant";
+//          $(".tooltip-inner").css("background","#e17155");
+//
+//        }
+//        if(rating==1){
+//          this.currentLevel = "Élémentaire";
+//          $(".tooltip-inner").css("background","#97253d");
+//
+//        }
       },
 
       updateExpertise(expertise,value){
@@ -175,6 +149,18 @@
 <style>
   .textSkill, .circleSkill {
     cursor: pointer;
+  }
+
+  p#testt {
+    background-color: pink;
+    display: inline-block;
+    margin: 15px 0px 0px 25px;
+    border-radius: 50px;
+    padding: 0px 5px;
+  }
+
+  div.star-rating svg polygon:nth-child(3):hover{
+
   }
 
   /* Star rating */
