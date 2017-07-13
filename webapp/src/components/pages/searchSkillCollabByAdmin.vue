@@ -154,6 +154,15 @@
                 }
                 this.listCollaboratorsExpertises = [];
                 this.listCollaboratorsExpertises.push(this.CollaboratorExpertises);
+                for(var i = 0; i< this.listCollaboratorsExpertises.length; i++){
+                  this.listCollaboratorsExpertises[i].expertisesChosen.sort(function (a, b) {
+                    return (a.level > b.level) ? 1 : ((b.level > a.level) ? -1 : 0);
+                  });
+                  this.listCollaboratorsExpertises[i].expertisesInduit.sort(function (a, b) {
+                    return (a.level > b.level) ? 1 : ((b.level > a.level) ? -1 : 0);
+                  });
+                }
+
               },
               response => {
                 console.log(response);
@@ -352,6 +361,14 @@
                   this.CollabSkillChosenAndInduit.collaborator = this.collaboratorsByExpertise[i].collaborator;
                   this.CollabSkillChosenAndInduit.expertisesChosen.push(this.collaboratorsByExpertise[i]);
                 }
+              }
+              for(var i = 0; i< this.listCollaboratorsExpertises.length; i++){
+                this.listCollaboratorsExpertises[i].expertisesChosen.sort(function (a, b) {
+                  return (a.level > b.level) ? 1 : ((b.level > a.level) ? -1 : 0);
+                });
+                this.listCollaboratorsExpertises[i].expertisesInduit.sort(function (a, b) {
+                  return (a.level > b.level) ? 1 : ((b.level > a.level) ? -1 : 0);
+                });
               }
             }
 
