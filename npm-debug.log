@@ -1,7 +1,8 @@
 0 info it worked if it ends with ok
 1 verbose cli [ 'C:\\Program Files\\nodejs\\node.exe',
 1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
-1 verbose cli   'test' ]
+1 verbose cli   'run',
+1 verbose cli   'dev' ]
 2 info using npm@3.10.10
 3 info using node@v6.9.5
 4 verbose config Skipping project config: C:\Users\XME3612/.npmrc. (matches userconfig)
@@ -9,7 +10,7 @@
 5 verbose stack     at Error (native)
 6 verbose cwd C:\Users\XME3612\Documents\GitHub\C360_SKILLS
 7 error Windows_NT 10.0.15063
-8 error argv "C:\\Program Files\\nodejs\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "test"
+8 error argv "C:\\Program Files\\nodejs\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "run" "dev"
 9 error node v6.9.5
 10 error npm  v3.10.10
 11 error path C:\Users\XME3612\package.json

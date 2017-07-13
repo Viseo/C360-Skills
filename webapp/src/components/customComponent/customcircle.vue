@@ -73,6 +73,9 @@
       setRating: function(raiting){
           if(!this.$store.getters.collaboratorLoggedIn.isAdmin)
               this.updateExpertise(this.selectedExpertise,raiting);
+          else
+            this.$emit('clicked', raiting);
+
       },
 
       showCurrentRating: function(rating) {
@@ -129,6 +132,12 @@
   }
 
   /* Star rating */
+  div.star-rating {
+    width: 0px;
+    height:0px;
+    padding-top:7px;
+  }
+
   .stars {
     cursor: pointer;
     width: 90px;

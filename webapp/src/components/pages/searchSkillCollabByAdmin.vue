@@ -28,10 +28,12 @@
       </g>
 
       <g v-for="(expertise,i) in expertises">
-        <customCircle :id="expertise.skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="expertise.skill.label" stroke="#E03559" fill="white" @click="selectedSkills(expertise.skill.label)" :showCircleBlur="isFound(expertise.skill.label)" :score="expertise.level" :expertise="expertise"/>
+        <customCircle :id="expertise.skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="expertise.skill.label"
+                      stroke="#E03559" fill="white" @click="selectedSkills(expertise.skill.label)"
+                      :showCircleBlur="isFound(expertise.skill.label)" :score="expertise.level" :expertise="expertise" @clicked="onClickChild"/>
       </g>
     </svg>
-    <ShowCollab></ShowCollab>
+    <ShowCollab :expertises="listCollaboratorsExpertises"></ShowCollab>
   </div>
 </template>
 
@@ -54,6 +56,7 @@
         <span>{{item}}</span></div>
         <span v-else>{{item}}</span>`,
         value: '',
+        levelSelected:0,
         searchResult: [],
         links: [],
         selectedSkill: {
@@ -68,7 +71,22 @@
         foundSkills: [],
         expertises: [],
         collaboratorsByExpertise: [],
-        collabLogged: {}
+        collabLogged: {},
+        inductExpertiseByCollaborators: [],
+        foundCollab: {},
+        collabExpertises: [],
+        CollabSkillChosenAndInduit:{
+          collaborator:{},
+          expertisesChosen:[],
+          expertisesInduit:[]
+        },
+        inductedExpertiseCollab: [],
+        listCollaboratorsExpertises:[], //variable pour recherche par compétence
+        CollaboratorExpertises: { //variable pour typeheader
+          collaborator: {},
+          expertisesChosen: [],
+          expertisesInduit: []
+        }
 
       }
     },
@@ -81,6 +99,9 @@
     },
 
     methods: {
+      onClickChild (value) {
+        this.levelSelected=value;
+      },
       getAllExpertise(){
         axios.get(config.server + '/api/getcollabexpertises/' + this.collabLogged.id).then(
           response => {
@@ -89,10 +110,59 @@
             this.expertises.sort(function (a, b) {
               return (a.skill.id > b.skill.id) ? 1 : ((b.skill.id > a.skill.id) ? -1 : 0);
             });
-            this.myViewBox = "0 0 1250 "+ parseInt((Math.floor(this.expertises.length/8)*150) + 200);
+            this.myViewBox = "0 0 1250 " + parseInt((Math.floor(this.expertises.length / 8) * 150) + 200);
           }, response => {
             console.log(response);
           });
+      },
+
+      getFoundCollabExpertises(){
+        axios.get(config.server + '/api/getcollabexpertises/' + this.foundCollab.id).then(
+          response => {
+            this.collabExpertises = response.data;
+            var length = this.collabExpertises.length;
+            for (var index = 0; index < length; index++) {
+              if (this.collabExpertises[index].noted == false) {
+                console.log("in");
+                this.collabExpertises.splice(index, 1);
+                length = this.collabExpertises.length;
+                index--;
+              }
+            }
+            this.collabExpertises.sort(function (a, b) {
+              return (a.level > b.level) ? 1 : ((b.level > a.level) ? -1 : 0);
+            });
+            this.collabExpertises.splice(3, this.collabExpertises.length);
+
+            this.CollaboratorExpertises = {
+              collaborator: {},
+              expertisesChosen: [],
+              expertisesInduit: []
+            };
+            this.CollaboratorExpertises.collaborator = this.collabExpertises[0].collaborator;
+            for(var i = 0; i < this.collabExpertises.length; i++){
+                this.CollaboratorExpertises.expertisesChosen.push(this.collabExpertises[i]);
+            }
+          }, response => {
+            console.log(response);
+          }).then(response => {
+            axios.post(config.server + '/api/expertisebycollaborator', this.collabExpertises).then(response => {
+                this.inductedExpertiseCollab = response.data;
+
+                if(this.inductedExpertiseCollab.length > 3){
+                  this.inductedExpertiseCollab.splice(3,this.inductedExpertiseCollab.length-3);
+                }
+                for(var i = 0; i < this.inductedExpertiseCollab.length; i++){
+                  this.CollaboratorExpertises.expertisesInduit.push(this.inductedExpertiseCollab[i]);
+                }
+                this.listCollaboratorsExpertises = [];
+                this.listCollaboratorsExpertises.push(this.CollaboratorExpertises);
+              },
+              response => {
+                console.log(response);
+              })
+          }
+        );
       },
       isFound(name){
         for (var i in this.foundSkills) {
@@ -137,6 +207,7 @@
       },
 
       selectedSkills(name){
+        this.foundCollab = '';
         for (var i in this.foundSkills) {
           if (this.foundSkills[i].skill.label == name) {
             document.getElementById(this.foundSkills[i].skill.id).getElementsByTagName("circle")[0].removeAttribute("filter");
@@ -146,14 +217,24 @@
         }
         for (var index in this.expertises) {
           if (this.expertises[index].skill.label == name) {
+              this.expertises[index].level = this.levelSelected;
             this.foundSkills.push(this.expertises[index]);
             document.getElementById(this.expertises[index].skill.id).getElementsByTagName("circle")[0].setAttribute("filter", "url(#blurMe)");
           }
 
         }
-        this.value = "";
-        /*this.collaboratorsByExpertise.splice(0,this.collaboratorsByExpertise.length);
-        this.getCollaboratorsByExpertises(this.foundSkills);*/
+        this.collaboratorsByExpertise.splice(0, this.collaboratorsByExpertise.length);
+        for(var i in this.collabs){
+            if(this.value != null){
+              if(this.value.indexOf(this.collabs[i].lastName) != -1){
+                this.foundCollab =this.collabs[i];}}
+        }
+        if(this.foundCollab != ""){
+          this.getFoundCollabExpertises();
+        }
+        else
+        this.getCollaboratorsByExpertises(this.foundSkills);
+
       },
 
       positionX(integ){
@@ -237,15 +318,75 @@
       },
       getCollaboratorsByExpertises(listExpertises){
 
-        axios.post(config.server+'/api/collaboratorsexpertises',listExpertises).then(response => {
-            this.collaboratorsByExpertise=response.data;
+        axios.post(config.server + '/api/collaboratorsexpertises', listExpertises).then(response => {
+            this.collaboratorsByExpertise = response.data;
+
+            this.collaboratorsByExpertise.sort(function (a, b) {
+              return (a.collaborator.id > b.collaborator.id) ? 1 : ((b.collaborator.id > a.collaborator.id) ? -1 : 0);
+            });
+            this.listCollaboratorsExpertises = [];
+            this.CollabSkillChosenAndInduit = {
+              collaborator:{},
+              expertisesChosen:[],
+              expertisesInduit:[]
+            };
+            this.CollabSkillChosenAndInduit.collaborator = this.collaboratorsByExpertise[0].collaborator;
+            this.CollabSkillChosenAndInduit.expertisesChosen.push(this.collaboratorsByExpertise[0]);
+            if(this.collaboratorsByExpertise.length == 1){
+              this.listCollaboratorsExpertises.push(this.CollabSkillChosenAndInduit);
+            }
+            else{
+              for(var i = 1; i<this.collaboratorsByExpertise.length;i++){
+                if(this.CollabSkillChosenAndInduit.collaborator.id == this.collaboratorsByExpertise[i].collaborator.id){
+                    console.log("hello1");
+                  this.CollabSkillChosenAndInduit.expertisesChosen.push(this.collaboratorsByExpertise[i]);
+                  if(i == this.collaboratorsByExpertise.length -1){
+                    console.log("hello2");
+                    this.listCollaboratorsExpertises.push(this.CollabSkillChosenAndInduit);
+                  }
+                }
+                else{
+                  this.listCollaboratorsExpertises.push(this.CollabSkillChosenAndInduit);
+                  this.CollabSkillChosenAndInduit = {
+                    collaborator:{},
+                    expertisesChosen:[],
+                    expertisesInduit:[]
+                  };
+                  this.CollabSkillChosenAndInduit.collaborator = this.collaboratorsByExpertise[i].collaborator;
+                  this.CollabSkillChosenAndInduit.expertisesChosen.push(this.collaboratorsByExpertise[i]);
+                }
+              }
+            }
 
           },
-          response =>{
+          response => {
             console.log(response);
-          })
-      }
-      ,
+          }).then(response => {
+
+          axios.post(config.server + '/api/expertisebycollaborator', this.collaboratorsByExpertise).then(response => {
+              this.inductExpertiseByCollaborators = response.data;
+              for(var i = 0;i < this.inductExpertiseByCollaborators.length;i++){
+                  for(var j = 0;j < this.listCollaboratorsExpertises.length;j++){
+                      if(this.listCollaboratorsExpertises[j].collaborator.id == this.inductExpertiseByCollaborators[i].collaborator.id){
+                          this.listCollaboratorsExpertises[j].expertisesInduit.push(this.inductExpertiseByCollaborators[i]);
+                          break;
+                      }
+                  }
+              }
+              for(var m = 0;m < this.listCollaboratorsExpertises.length;m++){
+                  this.listCollaboratorsExpertises[m].expertisesInduit.sort(function (a, b) {
+                    return (a.level > b.level) ? 1 : ((b.level > a.level) ? -1 : 0);
+                  });
+                  if(this.listCollaboratorsExpertises[m].expertisesInduit.length > 3){
+                      this.listCollaboratorsExpertises[m].expertisesInduit.splice(3,this.listCollaboratorsExpertises[m].expertisesInduit.length-3);
+                  }
+              }
+            },
+            response => {
+              console.log(response);
+            })
+        })
+      },
 
       CollabExist(name){
         for (var i in this.collabs) {
