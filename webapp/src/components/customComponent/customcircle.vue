@@ -75,6 +75,8 @@
               this.updateExpertise(this.selectedExpertise,raiting);
           else
             this.$emit('clicked', raiting);
+            this.$emit('getExpertise', this.selectedExpertise);
+
 
       },
 

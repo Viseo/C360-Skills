@@ -29,8 +29,8 @@
 
       <g v-for="(expertise,i) in expertises">
         <customCircle :id="expertise.skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="expertise.skill.label"
-                      stroke="#E03559" fill="white" @click="selectedSkills(expertise.skill.label)"
-                      :showCircleBlur="isFound(expertise.skill.label)" :score="expertise.level" :expertise="expertise" @clicked="onClickChild"/>
+                      stroke="#E03559" fill="white" @click="selectedSkills(expertise)"
+                      :showCircleBlur="isFound(expertise.skill.label)" :score="expertise.level" :expertise="expertise" @clicked="onClickChild" @getExpertise="setExpertise"/>
       </g>
     </svg>
     <ShowCollab :expertises="listCollaboratorsExpertises"></ShowCollab>
@@ -97,7 +97,13 @@
 
     methods: {
       onClickChild (value) {
+        console.log(value);
         this.levelSelected=value;
+      },
+      setExpertise (value) {
+        console.log(value);
+        this.selectedExpertise=value;
+        this.selectedSkills();
       },
       getAllExpertise(){
         axios.get(config.server + '/api/getcollabexpertises/' + this.collabLogged.id).then(
@@ -203,23 +209,22 @@
 
       },
 
-      selectedSkills(name){
+      selectedSkills(){
         this.foundCollab = '';
         for (var i in this.foundSkills) {
-          if (this.foundSkills[i].skill.label == name) {
+          if (this.foundSkills[i].skill.id == this.selectedExpertise.skill.id) {
             document.getElementById(this.foundSkills[i].skill.id).getElementsByTagName("circle")[0].removeAttribute("filter");
             this.foundSkills.splice(i, 1);
-            return;
+            if(this.levelSelected==0){
+                //àcompléter
+                this.selectedExpertise.level =0;
+                return;
+            }
           }
         }
-        for (var index in this.expertises) {
-          if (this.expertises[index].skill.label == name) {
-              this.expertises[index].level = this.levelSelected;
-            this.foundSkills.push(this.expertises[index]);
-            document.getElementById(this.expertises[index].skill.id).getElementsByTagName("circle")[0].setAttribute("filter", "url(#blurMe)");
-          }
-
-        }
+              this.selectedExpertise.level = this.levelSelected;
+            this.foundSkills.push(this.selectedExpertise);
+            document.getElementById(this.selectedExpertise.skill.id).getElementsByTagName("circle")[0].setAttribute("filter", "url(#blurMe)");
         this.collaboratorsByExpertise.splice(0, this.collaboratorsByExpertise.length);
         for(var i in this.collabs){
             if(this.value != null){
@@ -231,7 +236,7 @@
         }
         else
         this.getCollaboratorsByExpertises(this.foundSkills);
-
+        this.levelSelected =0;
       },
 
       positionX(integ){
