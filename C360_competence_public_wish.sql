@@ -1,0 +1,11 @@
+INSERT INTO public.wish (id, version, label) VALUES (267, 0, 'REACT');
+INSERT INTO public.wish (id, version, label) VALUES (268, 0, 'Angular');
+INSERT INTO public.wish (id, version, label) VALUES (269, 0, 'spring');
+INSERT INTO public.wish (id, version, label) VALUES (270, 0, 'github');
+INSERT INTO public.wish (id, version, label) VALUES (271, 0, 'gitkraken');
+INSERT INTO public.wish (id, version, label) VALUES (272, 0, 'codeship');
+INSERT INTO public.wish (id, version, label) VALUES (273, 0, 'integration continue');
+INSERT INTO public.wish (id, version, label) VALUES (274, 0, 'jasmine');
+INSERT INTO public.wish (id, version, label) VALUES (275, 0, 'karma');
+INSERT INTO public.wish (id, version, label) VALUES (276, 0, 'test');
+INSERT INTO public.wish (id, version, label) VALUES (277, 0, 'junit');
