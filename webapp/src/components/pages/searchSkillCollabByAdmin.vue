@@ -158,14 +158,30 @@
                 this.listCollaboratorsExpertises = [];
                 this.listCollaboratorsExpertises.push(this.CollaboratorExpertises);
                 for(var i = 0; i< this.listCollaboratorsExpertises.length; i++){
+                  this.listCollaboratorsExpertises[i].expertisesChosen.sort(function (a, b) {
+                    return (a.skill.label > b.skill.label) ? 1 : ((b.skill.label > a.skill.label) ? -1 : 0);
+                  });
+                  var tmp = [this.listCollaboratorsExpertises[i].expertisesChosen[0]];
+                  for(var j=0;j<this.listCollaboratorsExpertises[i].expertisesChosen.length;j++){
+                    if(this.listCollaboratorsExpertises[i].expertisesChosen[j].skill.label != tmp[tmp.length-1].skill.label){
+                      tmp.push(this.listCollaboratorsExpertises[i].expertisesChosen[j]);
+                    }
+                  }
+                  this.listCollaboratorsExpertises[i].expertisesChosen = tmp;
+
+                  this.listCollaboratorsExpertises[i].expertisesInduit.sort(function (a, b) {
+                    return (a.skill.label > b.skill.label) ? 1 : ((b.skill.label > a.skill.label) ? -1 : 0);
+                  });
+                  tmp = [this.listCollaboratorsExpertises[i].expertisesInduit[0]];
+                  for(var j=0;j<this.listCollaboratorsExpertises[i].expertisesInduit.length;j++){
+                    if(this.listCollaboratorsExpertises[i].expertisesInduit[j].skill.label != tmp[tmp.length-1].skill.label){
+                      tmp.push(this.listCollaboratorsExpertises[i].expertisesInduit[j]);
+                    }
+                  }
+                  this.listCollaboratorsExpertises[i].expertisesInduit = tmp;
+
                   this.listCollaboratorsExpertises[i].expertisesChosen.reverse();
                   this.listCollaboratorsExpertises[i].expertisesInduit.reverse();
-                  this.listCollaboratorsExpertises[i].expertisesChosen = this.listCollaboratorsExpertises[i].expertisesChosen.filter(function(elem, index, self) {
-                    return index == self.indexOf(elem);
-                  });
-                  this.listCollaboratorsExpertises[i].expertisesInduit = this.listCollaboratorsExpertises[i].expertisesInduit.filter(function(elem, index, self) {
-                    return index == self.indexOf(elem);
-                  });
                 }
 
               },
@@ -393,14 +409,31 @@
                   }
               }
               for(var i = 0; i< this.listCollaboratorsExpertises.length; i++){
+                this.listCollaboratorsExpertises[i].expertisesChosen.sort(function (a, b) {
+                  return (a.skill.label > b.skill.label) ? 1 : ((b.skill.label > a.skill.label) ? -1 : 0);
+                });
+                var tmp = [this.listCollaboratorsExpertises[i].expertisesChosen[0]];
+                for(var j=0;j<this.listCollaboratorsExpertises[i].expertisesChosen.length;j++){
+                    if(this.listCollaboratorsExpertises[i].expertisesChosen[j].skill.label != tmp[tmp.length-1].skill.label){
+                        tmp.push(this.listCollaboratorsExpertises[i].expertisesChosen[j]);
+                    }
+                }
+                this.listCollaboratorsExpertises[i].expertisesChosen = tmp;
+
+                this.listCollaboratorsExpertises[i].expertisesInduit.sort(function (a, b) {
+                  return (a.skill.label > b.skill.label) ? 1 : ((b.skill.label > a.skill.label) ? -1 : 0);
+                });
+                tmp = [this.listCollaboratorsExpertises[i].expertisesInduit[0]];
+                for(var j=0;j<this.listCollaboratorsExpertises[i].expertisesInduit.length;j++){
+                  if(this.listCollaboratorsExpertises[i].expertisesInduit[j].skill.label != tmp[tmp.length-1].skill.label){
+                    tmp.push(this.listCollaboratorsExpertises[i].expertisesInduit[j]);
+                  }
+                }
+                this.listCollaboratorsExpertises[i].expertisesInduit = tmp;
+
                 this.listCollaboratorsExpertises[i].expertisesChosen.reverse();
                 this.listCollaboratorsExpertises[i].expertisesInduit.reverse();
-                this.listCollaboratorsExpertises[i].expertisesChosen = this.listCollaboratorsExpertises[i].expertisesChosen.filter(function(elem, index, self) {
-                  return index == self.indexOf(elem);
-                });
-                this.listCollaboratorsExpertises[i].expertisesInduit = this.listCollaboratorsExpertises[i].expertisesInduit.filter(function(elem, index, self) {
-                  return index == self.indexOf(elem);
-                });
+
               }
 
             },
