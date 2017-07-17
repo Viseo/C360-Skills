@@ -247,9 +247,9 @@
           if (this.foundSkills[i].skill.id == this.selectedExpertise.skill.id) {
             document.getElementById(this.foundSkills[i].skill.id).getElementsByTagName("circle")[0].removeAttribute("filter");
             this.foundSkills.splice(i, 1);
-            if (this.levelSelected == 0) {
-              //àcompléter
-              this.selectedExpertise.level = 0;
+            if(this.levelSelected==0){
+              this.listCollaboratorsExpertises.splice(0,this.listCollaboratorsExpertises.length)
+              this.getCollaboratorsByExpertises(this.foundSkills);
               return;
             }
           }
