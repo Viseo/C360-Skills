@@ -29,7 +29,7 @@
 
       <g v-for="(expertise,i) in expertises">
         <customCircle :id="expertise.skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="expertise.skill.label"
-                      stroke="#E03559" fill="white" @click="selectedSkills(expertise)"
+                      stroke="#E03559" fill="white" @click="selectedExpertise= expertise;selectedSkills()"
                       :showCircleBlur="isFound(expertise.skill.label)" :score="expertise.level" :expertise="expertise" @clicked="onClickChild" @getExpertise="setExpertise"/>
       </g>
     </svg>
@@ -58,6 +58,7 @@
         value: '',
         levelSelected:0,
         searchResult: [],
+        selectedExpertise:{},
         links: [],
         selectedSkill: {
           skill1: '',
@@ -106,6 +107,7 @@
       setExpertise (value) {
         console.log(value);
         this.selectedExpertise=value;
+        console.log(this.selectedExpertise.skill.label);
         this.selectedSkills();
       },
       getAllExpertise(){
@@ -246,9 +248,11 @@
             document.getElementById(this.foundSkills[i].skill.id).getElementsByTagName("circle")[0].removeAttribute("filter");
             this.foundSkills.splice(i, 1);
             if(this.levelSelected==0){
-                //àcompléter
-                this.selectedExpertise.level =0;
-                return;
+                this.listCollaboratorsExpertises.splice(0,this.listCollaboratorsExpertises.length)
+                if(this.foundSkills.length !=0)
+                this.getCollaboratorsByExpertises(this.foundSkills);
+
+              return;
             }
           }
         }
@@ -266,7 +270,7 @@
         }
         else
         this.getCollaboratorsByExpertises(this.foundSkills);
-        this.levelSelected =0;
+
       },
 
       positionX(integ){
