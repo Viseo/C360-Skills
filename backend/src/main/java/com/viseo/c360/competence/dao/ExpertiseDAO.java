@@ -131,6 +131,15 @@ public class ExpertiseDAO {
                 listExpertise.add(tmp.get(j));
             }
         }
+        for(int i = 0; i<listExpertise.size();i++){
+            for(int j = 0; j<list.size();j++){
+                if(listExpertise.get(i).getSkill().getId() == list.get(j).getSkill().getId()){
+                    listExpertise.remove(i);
+                    i--;
+                    break;
+                }
+            }
+        }
         return  listExpertise;
     }
 
