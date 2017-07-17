@@ -9,3 +9,4 @@ INSERT INTO public.wish (id, version, label) VALUES (274, 0, 'jasmine');
 INSERT INTO public.wish (id, version, label) VALUES (275, 0, 'karma');
 INSERT INTO public.wish (id, version, label) VALUES (276, 0, 'test');
 INSERT INTO public.wish (id, version, label) VALUES (277, 0, 'junit');
+INSERT INTO public.wish (id, version, label) VALUES (278, 0, 'git');

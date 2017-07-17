@@ -29,7 +29,7 @@
 
       <g v-for="(expertise,i) in expertises">
         <customCircle :id="expertise.skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="expertise.skill.label"
-                      stroke="#E03559" fill="white" @click="selectedExpertise=expertise;selectedSkills()"
+                      stroke="#E03559" fill="white" @click="selectedExpertise= expertise;selectedSkills()"
                       :showCircleBlur="isFound(expertise.skill.label)" :score="expertise.level" :expertise="expertise" @clicked="onClickChild" @getExpertise="setExpertise"/>
       </g>
     </svg>
@@ -58,6 +58,7 @@
         value: '',
         levelSelected:0,
         searchResult: [],
+        selectedExpertise:{},
         links: [],
         selectedSkill: {
           skill1: '',
@@ -86,8 +87,7 @@
           collaborator: {},
           expertisesChosen: [],
           expertisesInduit: []
-        },
-        selectedExpertise:{}
+        }
 
       }
     },
@@ -103,11 +103,11 @@
       onClickChild (value) {
         console.log(value);
         this.levelSelected=value;
-
-
       },
       setExpertise (value) {
+        console.log(value);
         this.selectedExpertise=value;
+        console.log(this.selectedExpertise.skill.label);
         this.selectedSkills();
       },
       getAllExpertise(){
@@ -248,39 +248,11 @@
             document.getElementById(this.foundSkills[i].skill.id).getElementsByTagName("circle")[0].removeAttribute("filter");
             this.foundSkills.splice(i, 1);
             if(this.levelSelected==0){
-                console.log("test0");
-                var tmpInduit = [];
-                for(var i = 0; i<this.links.length;i++){
-                    if(this.links[i].skill1.id == this.selectedExpertise.skill.id){
-                        tmpInduit.push(this.links[i].skill2);
-                    }
-                    else if(this.links[i].skill2.id == this.selectedExpertise.skill.id){
-                        tmpInduit.push(this.links[i].skill1);
-                    }
-                }
-                for(var i = 0; i<this.listCollaboratorsExpertises.length;i++){
+                this.listCollaboratorsExpertises.splice(0,this.listCollaboratorsExpertises.length)
+                if(this.foundSkills.length !=0)
+                this.getCollaboratorsByExpertises(this.foundSkills);
 
-                  for(var j = 0; j<this.listCollaboratorsExpertises[i].expertisesChosen.length;j++){
-                      console.log(this.listCollaboratorsExpertises[i].expertisesChosen[j]);
-                    if(this.listCollaboratorsExpertises[i].expertisesChosen[j].skill.id == this.selectedExpertise.skill.id){
-                      this.listCollaboratorsExpertises[i].expertisesChosen.splice(j,1);
-                      if(j != this.listCollaboratorsExpertises[i].expertisesChosen.length - 1) j--;
-                    }
-                  }
-
-                  for(var j = 0; j<this.listCollaboratorsExpertises[i].expertisesInduit.length;j++){
-                    for(var m = 0; m < tmpInduit.length; m++){
-                      if(this.listCollaboratorsExpertises[i].expertisesInduit[j].skill.id == tmpInduit[m].id){
-                        this.listCollaboratorsExpertises[i].expertisesInduit.splice(j,1);
-                      }
-                    }
-                  }
-
-                  if(this.listCollaboratorsExpertises[i].expertisesChosen.length == 0 && this.listCollaboratorsExpertises[i].expertisesInduit.length == 0){
-                      this.listCollaboratorsExpertises.splice(i,1);
-                  }
-                }
-                return;
+              return;
             }
           }
         }
@@ -298,6 +270,7 @@
         }
         else
         this.getCollaboratorsByExpertises(this.foundSkills);
+
       },
 
       positionX(integ){
