@@ -249,7 +249,8 @@
             this.foundSkills.splice(i, 1);
             if(this.levelSelected==0){
               this.listCollaboratorsExpertises.splice(0,this.listCollaboratorsExpertises.length)
-              this.getCollaboratorsByExpertises(this.foundSkills);
+              if(this.foundSkills.length != 0)
+                this.getCollaboratorsByExpertises(this.foundSkills);
               return;
             }
           }
@@ -432,13 +433,21 @@
                 this.listCollaboratorsExpertises[i].expertisesInduit.sort(function (a, b) {
                   return (a.skill.label > b.skill.label) ? 1 : ((b.skill.label > a.skill.label) ? -1 : 0);
                 });
-                tmp = [this.listCollaboratorsExpertises[i].expertisesInduit[0]];
+                tmp = [];
+                if(this.listCollaboratorsExpertises[i].expertisesInduit.length >= 1){
+                  tmp = [this.listCollaboratorsExpertises[i].expertisesInduit[0]];
+                }
                 for (var j = 0; j < this.listCollaboratorsExpertises[i].expertisesInduit.length; j++) {
                   if (this.listCollaboratorsExpertises[i].expertisesInduit[j].skill.label != tmp[tmp.length - 1].skill.label) {
                     tmp.push(this.listCollaboratorsExpertises[i].expertisesInduit[j]);
                   }
                 }
-                this.listCollaboratorsExpertises[i].expertisesInduit = tmp;
+                if(tmp.length >= 1){
+                  this.listCollaboratorsExpertises[i].expertisesInduit = tmp;
+                }else {
+                  this.listCollaboratorsExpertises[i].expertisesInduit = [];
+                }
+
 
                 this.listCollaboratorsExpertises[i].expertisesChosen.reverse();
                 this.listCollaboratorsExpertises[i].expertisesInduit.reverse();
