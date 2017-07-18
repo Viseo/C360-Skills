@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class=" col-lg-4 col-lg-offset-4 col-lg-4 searchField typeaheadSkills">
-      <span class="glyphicon glyphicon-search" ref="searchSkill " @click="selectedSkills(value)"></span>
+      <span class="glyphicon glyphicon-search" ref="searchSkill " @click="typeAheadSearch()"></span>
       <typeahead
         class="inputForm "
         v-model="value"
@@ -29,7 +29,7 @@
 
       <g v-for="(expertise,i) in expertises">
         <customCircle :id="expertise.skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="expertise.skill.label"
-                      stroke="#E03559" fill="white" @click="selectedSkills(expertise)"
+                      stroke="#E03559" fill="white" @click="selectedExpertise = expertise; selectedSkills();"
                       :showCircleBlur="isFound(expertise.skill.label)" :score="expertise.level" :expertise="expertise"
                       @clicked="onClickChild" @getExpertise="setExpertise"/>
       </g>
@@ -101,6 +101,15 @@
     },
 
     methods: {
+        typeAheadSearch(){
+            for(var i in this.expertises){
+                if(this.expertises[i].skill.label == this.value) {
+                  this.selectedExpertise = this.expertises[i];
+                  this.selectedSkills();
+                }
+            }
+        },
+
       onClickChild (value) {
         console.log(value);
         this.levelSelected = value;

@@ -102,15 +102,15 @@ public class ExpertiseDAO {
     @Transactional
     public List<Expertise> getCollabsByExpertise (List<Expertise> list){
 
-        daoFacade.getList("select e from Expertise e left outer join fetch e.skill where e.skill= :skill and e.level = :level",
+        daoFacade.getList("select e from Expertise e left outer join fetch e.skill where e.skill= :skill and e.level >= :level",
                 param("skill", list.get(0).getSkill()), param("level", list.get(0).getLevel()));
-        List<Expertise> result = daoFacade.getList("select e from Expertise e left outer join fetch e.collaborator where e.skill= :skill and e.level = :level",
+        List<Expertise> result = daoFacade.getList("select e from Expertise e left outer join fetch e.collaborator where e.skill= :skill and e.level >= :level",
                 param("skill", list.get(0).getSkill()), param("level", list.get(0).getLevel()));
         if(list.size()>1){
             for(int i=1; i<list.size(); i++){
-                daoFacade.getList("select e from Expertise e left outer join fetch e.skill where e.skill= :skill and e.level = :level",
+                daoFacade.getList("select e from Expertise e left outer join fetch e.skill where e.skill= :skill and e.level >= :level",
                         param("skill", list.get(i).getSkill()), param("level", list.get(i).getLevel()));
-                List<Expertise> tmp = daoFacade.getList("select e from Expertise e left outer join fetch e.collaborator where e.skill= :skill and e.level = :level",
+                List<Expertise> tmp = daoFacade.getList("select e from Expertise e left outer join fetch e.collaborator where e.skill= :skill and e.level >= :level",
                         param("skill", list.get(i).getSkill()), param("level", list.get(i).getLevel()));
                 result = this.intersectionExpertises(result, tmp);
             }
