@@ -123,7 +123,6 @@
           let levelTooltip = $(this).closest('p').find(".level");
           levelTooltip.css("visibility", "hidden");
         });
-        console.log("hello");
       },
 
       setRating: function (raiting) {

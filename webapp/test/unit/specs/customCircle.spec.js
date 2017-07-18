@@ -177,42 +177,6 @@ describe('test customcircle.vue', function() {
     },0);
   });
 
- it('should check ',function () {
-   var value = $('div.star-rating span.pointer:first-child polygon');
-   console.log("value " +value.html());
-   //let containerSVG = vmCustomCircle.$el.querySelector('g').toBeTruthy();
-     //document.getElementById = jasmine.createSpy('HTML Element').and.returnValue(containerSVG);
-
-   //expect($('div.star-rating span.pointer:first-child polygon')).not.toEqual(/other/);
-  // var elementDiv = document.createElement('div');
-   //$("div.star-rating span.pointer:first-child polygon").hover();
-  /* elementDiv.setAttribute("id", ".star-rating");
-   document.getElementById = jasmine.createSpy('HTML Element').and.returnValue(elementDiv);*/
-   //$('#star-rating').trigger("change");
-
-   //$(vmCustomCircle.$el.querySelector('div.star-rating span.pointer:first-child polygon')).hover();
-   //vmCustomCircle.showTooltip();
-
-    /*setTimeout(function () {
-      // vmCustomCircle.setRating(4);
-      // expect(vmCustomCircle.selectedExpertise.level).toEqual(4);
-      done();
-    },0);*/
-
-     /*var spyEvent = spyOnEvent('#star-rating', 'hover');
-     $('#star-rating').hover();
-   //vmCustomCircle.showTooltip();
-   setTimeout(function () {
-    // vmCustomCircle.setRating(4);
-    // expect(vmCustomCircle.selectedExpertise.level).toEqual(4);
-     expect('hover').toHaveBeenTriggeredOn('#star-rating');
-     expect(spyEvent).toHaveBeenTriggered();
-    done();
-    },15);*/
-
-
-  });
-
   it('should check the position balise "div" ',function () {
     var cx = 250;
     var cy = 150;
