@@ -14,7 +14,8 @@
           <line :x1="getPositionXById(link.skill1.id)"
                 :y1="getPositionYById(link.skill1.id)"
                 :x2="getPositionXById(link.skill2.id)"
-                :y2="getPositionYById(link.skill2.id)" style="stroke:rgba(0,0,0,0.52);stroke-width:3"/>
+                :y2="getPositionYById(link.skill2.id)"
+                style="stroke:rgba(0,0,0,0.52);stroke-width:3"/>
         </g>
         <g v-for="(expertise,i) in expertises">
           <customCircle @refresh="updateAll" :id="expertise.skill.id" :cx="positionX(i)" :cy="positionY(i)"
@@ -159,11 +160,9 @@
       }
     }
   }
-
 </script>
 
 <style>
-
   .svg-container {
     display: inline-block;
     position: relative;
