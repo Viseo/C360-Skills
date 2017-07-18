@@ -17,6 +17,7 @@ public class IdentityToCollaborator {
         domain.setFirstName(dto.getFirstName());
         domain.setLastName(dto.getLastName());
         domain.setDefaultPicture(dto.getDefaultPicture());
+        domain.setEmail(dto.getEmail());
         return domain;
     }
 

@@ -110,6 +110,7 @@
 
   .row-fluid .col-lg-2 {
     display: inline-block;
+    vertical-align: top;
     float: none;
   }
 

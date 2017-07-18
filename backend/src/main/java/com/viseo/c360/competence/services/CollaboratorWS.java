@@ -148,9 +148,9 @@ public class CollaboratorWS {
     @CrossOrigin
     @RequestMapping(value = "${endpoint.updatecollaborator}", method = RequestMethod.PUT)
     @ResponseBody
-    public CollaboratorDescription updateCollaborator(@RequestBody CollaboratorDescription collaborator) {
+    public CollaboratorDescription updateCollaborator(@RequestBody CollaboratorIdentity collaborator) {
         try {
-            Collaborator collaboratorToUpdate = collaboratorDAO.updateCollaborator(new DescriptionToCollaborator().convert(collaborator));
+            Collaborator collaboratorToUpdate = collaboratorDAO.updateCollaborator(new IdentityToCollaborator().convert(collaborator));
             return new CollaboratorToDescription().convert(collaboratorToUpdate);
         } catch (PersistenceException pe) {
             UniqueFieldErrors uniqueFieldErrors = exceptionUtil.getUniqueFieldError(pe);
