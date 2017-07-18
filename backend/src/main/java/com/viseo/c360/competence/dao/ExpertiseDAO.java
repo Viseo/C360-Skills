@@ -102,15 +102,15 @@ public class ExpertiseDAO {
     @Transactional
     public List<Expertise> getCollabsByExpertise (List<Expertise> list){
 
-        daoFacade.getList("select e from Expertise e left outer join fetch e.skill where e.skill= :skill and e.level = :level",
+        daoFacade.getList("select e from Expertise e left outer join fetch e.skill where e.skill= :skill and e.level >= :level",
                 param("skill", list.get(0).getSkill()), param("level", list.get(0).getLevel()));
-        List<Expertise> result = daoFacade.getList("select e from Expertise e left outer join fetch e.collaborator where e.skill= :skill and e.level = :level",
+        List<Expertise> result = daoFacade.getList("select e from Expertise e left outer join fetch e.collaborator where e.skill= :skill and e.level >= :level",
                 param("skill", list.get(0).getSkill()), param("level", list.get(0).getLevel()));
         if(list.size()>1){
             for(int i=1; i<list.size(); i++){
-                daoFacade.getList("select e from Expertise e left outer join fetch e.skill where e.skill= :skill and e.level = :level",
+                daoFacade.getList("select e from Expertise e left outer join fetch e.skill where e.skill= :skill and e.level >= :level",
                         param("skill", list.get(i).getSkill()), param("level", list.get(i).getLevel()));
-                List<Expertise> tmp = daoFacade.getList("select e from Expertise e left outer join fetch e.collaborator where e.skill= :skill and e.level = :level",
+                List<Expertise> tmp = daoFacade.getList("select e from Expertise e left outer join fetch e.collaborator where e.skill= :skill and e.level >= :level",
                         param("skill", list.get(i).getSkill()), param("level", list.get(i).getLevel()));
                 result = this.intersectionExpertises(result, tmp);
             }
@@ -141,6 +141,39 @@ public class ExpertiseDAO {
             }
         }
         return  listExpertise;
+    }
+
+    @Transactional
+    public boolean updateLink (Link link){
+        System.out.println("LINK = " + link.getSkill1().getLabel() +link.getSkill2().getLabel());
+        this.updateSkillLevel(link.getSkill1());
+        this.updateSkillLevel(link.getSkill2());
+        return true;
+    }
+
+    @Transactional
+    public boolean updateSkillLevel (Skill skill){
+        System.out.println("SKILL = " + skill.getLabel());
+        List<Collaborator> listCollab = daoFacade.getList("select c from Collaborator c");
+        System.out.println("Collab = " + listCollab);
+        for(int i = 0; i<listCollab.size(); i++){
+            List<Integer> maxScore = daoFacade.getList("select max(e.level) from Expertise e,Link l where e.collaborator.id = :collaborator and e.isNoted = true and ((l.skill1.id = :skill and e.skill.id = l.skill2.id) or (l.skill2.id = :skill and e.skill.id = l.skill1.id))",param("collaborator",listCollab.get(i).getId()),param("skill",skill.getId()));
+            System.out.println("MAXSCORE = " + maxScore);
+            if(maxScore.get(0) != null && maxScore.get(0) > 2){
+                daoFacade.getList("select e from Expertise e left outer join fetch e.skill where e.collaborator.id = :collaborator and e.skill.id = :skill and e.isNoted = false",param("collaborator",listCollab.get(i).getId()),param("skill",skill.getId()));
+                List<Expertise> tmp = daoFacade.getList("select e from Expertise e left outer join fetch e.collaborator where e.collaborator.id = :collaborator and e.skill.id = :skill and e.isNoted = false",param("collaborator",listCollab.get(i).getId()),param("skill",skill.getId()));
+                System.out.println("tmp = " + tmp);
+                if(tmp.size() != 0){
+                    Expertise expertiseToUpdate = tmp.get(0);
+                    if(expertiseToUpdate != null){
+                        expertiseToUpdate = daoFacade.merge(expertiseToUpdate);
+                        expertiseToUpdate.setLevel(maxScore.get(0) - 2);
+                        daoFacade.flush();
+                    }
+                }
+            }
+        }
+        return  true;
     }
 
 

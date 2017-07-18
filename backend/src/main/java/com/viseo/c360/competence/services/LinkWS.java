@@ -3,7 +3,9 @@ package com.viseo.c360.competence.services;
 
 import com.viseo.c360.competence.converters.skill.DescriptionToLink;
 import com.viseo.c360.competence.converters.skill.LinkToDescription;
+import com.viseo.c360.competence.dao.ExpertiseDAO;
 import com.viseo.c360.competence.dao.LinkDAO;
+import com.viseo.c360.competence.domain.collaborator.Expertise;
 import com.viseo.c360.competence.domain.skill.Link;
 import com.viseo.c360.competence.dto.skill.LinkDescription;
 import com.viseo.c360.competence.exceptions.C360Exception;
@@ -17,11 +19,16 @@ import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 import java.util.List;
 
+import static com.viseo.c360.competence.dao.db.DAOFacade.Parameter.param;
+
 @RestController
 public class LinkWS {
 
     @Inject
     LinkDAO linkDAO;
+
+    @Inject
+    ExpertiseDAO expertiseDAO;
 
     @Inject
     ExceptionUtil exceptionUtil;
@@ -38,6 +45,7 @@ public class LinkWS {
                 }
             }
             linkDAO.addLink(new DescriptionToLink().convert(linkDescription));
+            expertiseDAO.updateLink(new DescriptionToLink().convert(linkDescription));
             return true;
         } catch (PersistenceException pe) {
             UniqueFieldErrors uniqueFieldErrors = exceptionUtil.getUniqueFieldError(pe);

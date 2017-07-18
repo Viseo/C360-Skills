@@ -4,6 +4,8 @@ package com.viseo.c360.competence.file;
  * Created by BBA3616 on 22/05/2017.
  */
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -13,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.IOException;
 import java.net.URL;
-
+@CrossOrigin
 @WebServlet("/fileUpload")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
         maxFileSize = 1024 * 1024 * 5, // 5 MB

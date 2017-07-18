@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class=" col-lg-4 col-lg-offset-4 col-lg-4 searchField typeaheadSkills">
-      <span class="glyphicon glyphicon-search" ref="searchSkill " @click="selectedSkills(value)"></span>
+      <span class="glyphicon glyphicon-search" ref="searchSkill " @click="typeAheadSearch()"></span>
       <typeahead
         class="inputForm "
         v-model="value"
@@ -29,7 +29,7 @@
 
       <g v-for="(expertise,i) in expertises">
         <customCircle :id="expertise.skill.id" :cx="positionX(i)" :cy="positionY(i)" :content="expertise.skill.label"
-                      stroke="#E03559" fill="white" @click="selectedSkills(expertise)"
+                      stroke="#E03559" fill="white" @click="selectedExpertise = expertise; selectedSkills();"
                       :showCircleBlur="isFound(expertise.skill.label)" :score="expertise.level" :expertise="expertise"
                       @clicked="onClickChild" @getExpertise="setExpertise"/>
       </g>
@@ -101,6 +101,15 @@
     },
 
     methods: {
+        typeAheadSearch(){
+            for(var i in this.expertises){
+                if(this.expertises[i].skill.label == this.value) {
+                  this.selectedExpertise = this.expertises[i];
+                  this.selectedSkills();
+                }
+            }
+        },
+
       onClickChild (value) {
         console.log(value);
         this.levelSelected = value;
@@ -247,9 +256,10 @@
           if (this.foundSkills[i].skill.id == this.selectedExpertise.skill.id) {
             document.getElementById(this.foundSkills[i].skill.id).getElementsByTagName("circle")[0].removeAttribute("filter");
             this.foundSkills.splice(i, 1);
-            if (this.levelSelected == 0) {
-              //àcompléter
-              this.selectedExpertise.level = 0;
+            if(this.levelSelected==0){
+              this.listCollaboratorsExpertises.splice(0,this.listCollaboratorsExpertises.length)
+              if(this.foundSkills.length != 0)
+                this.getCollaboratorsByExpertises(this.foundSkills);
               return;
             }
           }
@@ -432,13 +442,21 @@
                 this.listCollaboratorsExpertises[i].expertisesInduit.sort(function (a, b) {
                   return (a.skill.label > b.skill.label) ? 1 : ((b.skill.label > a.skill.label) ? -1 : 0);
                 });
-                tmp = [this.listCollaboratorsExpertises[i].expertisesInduit[0]];
+                tmp = [];
+                if(this.listCollaboratorsExpertises[i].expertisesInduit.length >= 1){
+                  tmp = [this.listCollaboratorsExpertises[i].expertisesInduit[0]];
+                }
                 for (var j = 0; j < this.listCollaboratorsExpertises[i].expertisesInduit.length; j++) {
                   if (this.listCollaboratorsExpertises[i].expertisesInduit[j].skill.label != tmp[tmp.length - 1].skill.label) {
                     tmp.push(this.listCollaboratorsExpertises[i].expertisesInduit[j]);
                   }
                 }
-                this.listCollaboratorsExpertises[i].expertisesInduit = tmp;
+                if(tmp.length >= 1){
+                  this.listCollaboratorsExpertises[i].expertisesInduit = tmp;
+                }else {
+                  this.listCollaboratorsExpertises[i].expertisesInduit = [];
+                }
+
 
                 this.listCollaboratorsExpertises[i].expertisesChosen.reverse();
                 this.listCollaboratorsExpertises[i].expertisesInduit.reverse();
