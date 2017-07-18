@@ -102,15 +102,15 @@ public class ExpertiseDAO {
     @Transactional
     public List<Expertise> getCollabsByExpertise (List<Expertise> list){
 
-        daoFacade.getList("select e from Expertise e left outer join fetch e.skill where e.skill= :skill and e.level >= :level",
+        daoFacade.getList("select e from Expertise e left outer join fetch e.skill where e.skill= :skill and e.level >= :level and e.level > 0",
                 param("skill", list.get(0).getSkill()), param("level", list.get(0).getLevel()));
-        List<Expertise> result = daoFacade.getList("select e from Expertise e left outer join fetch e.collaborator where e.skill= :skill and e.level >= :level",
+        List<Expertise> result = daoFacade.getList("select e from Expertise e left outer join fetch e.collaborator where e.skill= :skill and e.level >= :level and e.level > 0",
                 param("skill", list.get(0).getSkill()), param("level", list.get(0).getLevel()));
         if(list.size()>1){
             for(int i=1; i<list.size(); i++){
-                daoFacade.getList("select e from Expertise e left outer join fetch e.skill where e.skill= :skill and e.level >= :level",
+                daoFacade.getList("select e from Expertise e left outer join fetch e.skill where e.skill= :skill and e.level >= :level and e.level > 0",
                         param("skill", list.get(i).getSkill()), param("level", list.get(i).getLevel()));
-                List<Expertise> tmp = daoFacade.getList("select e from Expertise e left outer join fetch e.collaborator where e.skill= :skill and e.level >= :level",
+                List<Expertise> tmp = daoFacade.getList("select e from Expertise e left outer join fetch e.collaborator where e.skill= :skill and e.level >= :level and e.level > 0",
                         param("skill", list.get(i).getSkill()), param("level", list.get(i).getLevel()));
                 result = this.intersectionExpertises(result, tmp);
             }
@@ -123,10 +123,10 @@ public class ExpertiseDAO {
     public List<Expertise> getInductedExpertisesByCollaborators (List<Expertise> list){
         List<Expertise> listExpertise = new ArrayList();
         for(int i = 0; i<list.size(); i++){
-            daoFacade.getList("select e from Expertise e, Link l left outer join fetch e.skill where (l.skill1 = :skill and l.skill2 = e.skill and e.collaborator = :collaborator and e.isNoted = false and e.level >0)" +
-                    "or (l.skill2 = :skill and l.skill1 = e.skill and e.collaborator = :collaborator and e.isNoted = false and e.level >0)", param("skill", list.get(i).getSkill()),param("collaborator", list.get(i).getCollaborator()));
-            List<Expertise> tmp = daoFacade.getList("select e from Expertise e, Link l left outer join fetch e.collaborator where (l.skill1 = :skill and l.skill2 = e.skill and e.collaborator = :collaborator and e.isNoted = false and e.level >0)" +
-                            "or (l.skill2 = :skill and l.skill1 = e.skill and e.collaborator = :collaborator and e.isNoted = false and e.level >0)", param("skill", list.get(i).getSkill()),param("collaborator", list.get(i).getCollaborator()));
+            daoFacade.getList("select e from Expertise e, Link l left outer join fetch e.skill where (l.skill1 = :skill and l.skill2 = e.skill and e.collaborator = :collaborator and e.level >0)" +
+                    "or (l.skill2 = :skill and l.skill1 = e.skill and e.collaborator = :collaborator and e.level >0)", param("skill", list.get(i).getSkill()),param("collaborator", list.get(i).getCollaborator()));
+            List<Expertise> tmp = daoFacade.getList("select e from Expertise e, Link l left outer join fetch e.collaborator where (l.skill1 = :skill and l.skill2 = e.skill and e.collaborator = :collaborator and e.level >0)" +
+                            "or (l.skill2 = :skill and l.skill1 = e.skill and e.collaborator = :collaborator and e.level >0)", param("skill", list.get(i).getSkill()),param("collaborator", list.get(i).getCollaborator()));
             for(int j = 0; j<tmp.size();j++){
                 listExpertise.add(tmp.get(j));
             }
