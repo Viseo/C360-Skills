@@ -34,6 +34,7 @@
                       @clicked="onClickChild" @getExpertise="setExpertise"/>
       </g>
     </svg>
+    <p id="noResult" v-show="noCollabFound">Aucun résultat ne correspond à votre recherche.</p>
     <ShowCollab :expertises="listCollaboratorsExpertises"></ShowCollab>
   </div>
 </template>
@@ -82,6 +83,7 @@
           expertisesChosen: [],
           expertisesInduit: []
         },
+        noCollabFound: false,
         inductedExpertiseCollab: [],
         listCollaboratorsExpertises: [], //variable pour recherche par compétence
         CollaboratorExpertises: { //variable pour typeheader
@@ -248,11 +250,13 @@
             document.getElementById(this.foundSkills[i].skill.id).getElementsByTagName("circle")[0].removeAttribute("filter");
             this.foundSkills.splice(i, 1);
             if(this.levelSelected==0){
+              this.selectedExpertise.level = 0;
               this.listCollaboratorsExpertises.splice(0,this.listCollaboratorsExpertises.length)
               if(this.foundSkills.length != 0)
                 this.getCollaboratorsByExpertises(this.foundSkills);
               return;
             }
+
           }
         }
         this.selectedExpertise.level = this.levelSelected;
@@ -357,21 +361,23 @@
               expertisesChosen: [],
               expertisesInduit: []
             };
-            this.CollabSkillChosenAndInduit.collaborator = this.collaboratorsByExpertise[0].collaborator;
+            if (this.collaboratorsByExpertise.length != 0) {
+              this.noCollabFound = false;
+              this.CollabSkillChosenAndInduit.collaborator = this.collaboratorsByExpertise[0].collaborator;
+            } else {
+              this.noCollabFound = true;
+            }
             this.CollabSkillChosenAndInduit.expertisesChosen.push(this.collaboratorsByExpertise[0]);
             if (this.collaboratorsByExpertise.length == 1) {
               this.listCollaboratorsExpertises.push(this.CollabSkillChosenAndInduit);
             }
             else {
-              console.log("hello0");
-
               for (var i = 1; i < this.collaboratorsByExpertise.length; i++) {
 
                 if (this.CollabSkillChosenAndInduit.collaborator.id == this.collaboratorsByExpertise[i].collaborator.id) {
                   this.CollabSkillChosenAndInduit.expertisesChosen.push(this.collaboratorsByExpertise[i]);
                 }
                 else {
-                  console.log("hello1");
                   this.listCollaboratorsExpertises.push(this.CollabSkillChosenAndInduit);
                   this.CollabSkillChosenAndInduit = {
                     collaborator: {},
@@ -559,6 +565,11 @@
     left: 95%;
     font-size: 20px;
     color: tan;
+  }
+  p#noResult {
+    text-align: center;
+    color: #e03559;
+    font-size: 1.2em;
   }
 
 
