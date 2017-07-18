@@ -154,6 +154,8 @@
       },
       isAdminOrCollabPath(){
         if (this.$store.getters.isAuthenticated && this.$store.getters.collaboratorLoggedIn.isAdmin) {
+          console.log("coucicucucucucu "+this.$router.path);
+
           if (this.$route.path == '/searchSkillCollabByAdmin') {
             this.$router.push('/addSkills');
           }

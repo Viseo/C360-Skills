@@ -51,7 +51,7 @@ fdescribe('Test searchSkillCollabByAdmin', function () {
     storeVuex.commit('resetStore');
   });
 
-  fit('should check if typeahead is initialize with all skills and all collaborators when page is loaded', function (done) {
+  it('should check if typeahead is initialize with all skills and all collaborators when page is loaded', function (done) {
       let allSkillsAndCollabName = ['Android','C++','CSS','Java','HTML','Hamza Bourakkadi','Lhote Caroline'];
       setTimeout(function(){
           expect(vmSearchSkillCollabByAdmin.searchResult).toEqual(allSkillsAndCollabName);
@@ -59,7 +59,7 @@ fdescribe('Test searchSkillCollabByAdmin', function () {
       }, 0);
   });
 
-  fit('should check if specific collaborator and skills are displayed when administrator is typing some specifics letter in the typeahead', function (done) {
+  it('should check if specific collaborator and skills are displayed when administrator is typing some specifics letter in the typeahead', function (done) {
       vmSearchSkillCollabByAdmin.value = "J";
       setTimeout(function(){
 
@@ -103,5 +103,16 @@ fdescribe('Test searchSkillCollabByAdmin', function () {
   it('should check if error message is displayed when administrator is searching a specific skill and there is no skill matching', function () {
 
   });
+
+  it('should check if  we get all expertises ', function () {
+    let expertises = [{id:1,label:'JAVA',version:0},{id:2,label:'C++',version:0},{id:3,label:'JAVASCRIPT',version:0}]
+    mock.onGet(config.server + "api/getcollabexpertises/").replay(400, expertises);
+    vmSearchSkillCollabByAdmin.getAllExpertise();
+    setTimeout(function () {
+      expect(vmSearchSkillCollabByAdmin.expertises.length).toBe(3);
+
+      done();
+    }, 0)
+  })
 
   });
