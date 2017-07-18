@@ -10,7 +10,7 @@ var mock = new MockAdapter(axios);
 var vmSearchSkillCollabByAdmin;
 
 
-fdescribe('Test searchSkillCollabByAdmin', function () {
+describe('Test searchSkillCollabByAdmin', function () {
 
   const vm = new Vue({
     template: '<div><searchSkillCollabByAdmin></searchSkillCollabByAdmin></div>',
@@ -51,7 +51,7 @@ fdescribe('Test searchSkillCollabByAdmin', function () {
     storeVuex.commit('resetStore');
   });
 
-  fit('should check if typeahead is initialize with all skills and all collaborators when page is loaded', function (done) {
+  it('should check if typeahead is initialize with all skills and all collaborators when page is loaded', function (done) {
       let allSkillsAndCollabName = ['Android','C++','CSS','Java','HTML','Hamza Bourakkadi','Lhote Caroline'];
       setTimeout(function(){
           expect(vmSearchSkillCollabByAdmin.searchResult).toEqual(allSkillsAndCollabName);
@@ -59,7 +59,7 @@ fdescribe('Test searchSkillCollabByAdmin', function () {
       }, 0);
   });
 
-  fit('should check if specific collaborator and skills are displayed when administrator is typing some specifics letter in the typeahead', function (done) {
+  it('should check if specific collaborator and skills are displayed when administrator is typing some specifics letter in the typeahead', function (done) {
       vmSearchSkillCollabByAdmin.value = "J";
       setTimeout(function(){
 
