@@ -146,6 +146,25 @@ describe('test addSkillsPage.vue', function() {
       skill1: {id:1,label:'JAVA',version:0},
       skill2: {id:2,label:'JAVA',version:0}
     };
+    vmAddSkillsPage.links = [{
+      "id": 28,
+      "version": 0,
+      "skill1": {"id": 1, "version": 0, "label": "Karma"},
+      "skill2": {"id": 24, "version": 0, "label": "TDD"}
+    }, {
+      "id": 27,
+      "version": 0,
+      "skill1": {"id": 21, "version": 0, "label": "HTML"},
+      "skill2": {"id": 20, "version": 0, "label": "CSS"}
+    }, {
+      "id": 26,
+      "version": 0,
+      "skill1": {"id": 23, "version": 0, "label": "Tests"},
+      "skill2": {"id": 24, "version": 0, "label": "TDD"}
+    }];
+
+    let containerSVG = vmAddSkillsPage.$el.querySelector('g');
+    document.getElementById = jasmine.createSpy('HTML Element').and.returnValue(containerSVG);
     vmAddSkillsPage.cancelUpdate();
 
     expect(vmAddSkillsPage.selectedSkill.skill1).toEqual('');
@@ -267,18 +286,37 @@ describe('test addSkillsPage.vue', function() {
 
   });
 
-  it('should check if one skill is not selected',function () {
+  it('should check if one skill is not selected',function (done) {
     vmAddSkillsPage.selectedSkill = {
       skill1: '',
       skill2: ''
     };
     var skill = {id:1,label:'JAVA',version:0};
+    vmAddSkillsPage.links = [{
+      "id": 28,
+      "version": 0,
+      "skill1": {"id": 1, "version": 0, "label": "Karma"},
+      "skill2": {"id": 24, "version": 0, "label": "TDD"}
+    }, {
+      "id": 27,
+      "version": 0,
+      "skill1": {"id": 21, "version": 0, "label": "HTML"},
+      "skill2": {"id": 20, "version": 0, "label": "CSS"}
+    }, {
+      "id": 26,
+      "version": 0,
+      "skill1": {"id": 23, "version": 0, "label": "Tests"},
+      "skill2": {"id": 24, "version": 0, "label": "TDD"}
+    }];
 
     let containerSVG = vmAddSkillsPage.$el.querySelector('g');
     document.getElementById = jasmine.createSpy('HTML Element').and.returnValue(containerSVG);
 
     vmAddSkillsPage.selectSkill(skill);
-    expect(vmAddSkillsPage.selectedSkill.skill1).toEqual(skill);
+    setTimeout(function () {
+      expect(vmAddSkillsPage.selectedSkill.skill1).toEqual(skill);
+      done();
+    },0);
   });
 
   it('should check if one skill is selected and add in database with response success',function () {
@@ -287,6 +325,23 @@ describe('test addSkillsPage.vue', function() {
       skill2: ''
     };
     var skill = {id:2,label:'JAVA',version:0};
+
+    vmAddSkillsPage.links = [{
+      "id": 28,
+      "version": 0,
+      "skill1": {"id": 1, "version": 0, "label": "Karma"},
+      "skill2": {"id": 24, "version": 0, "label": "TDD"}
+    }, {
+      "id": 27,
+      "version": 0,
+      "skill1": {"id": 21, "version": 0, "label": "HTML"},
+      "skill2": {"id": 20, "version": 0, "label": "CSS"}
+    }, {
+      "id": 26,
+      "version": 0,
+      "skill1": {"id": 23, "version": 0, "label": "Tests"},
+      "skill2": {"id": 24, "version": 0, "label": "TDD"}
+    }];
 
     let containerSVG = vmAddSkillsPage.$el.querySelector('g');
     document.getElementById = jasmine.createSpy('HTML Element').and.returnValue(containerSVG);

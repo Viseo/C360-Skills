@@ -55,4 +55,25 @@ describe('test logInPage.vue', function() {
     vmSkillsHeader.disconnectUser();
   });
 
+
+  it('should check if is an admin', function () {
+    vmSkillsHeader.$store.state.collaboratorLoggedIn.isAdmin = true;
+    vmSkillsHeader.$store.state.token = "eyJhbGciOiJIUzUxMiJ9.eyJmaXJzdE5hbWUiOiJDYXJvbGluZSIsImxhc3ROYW1lIjoiTGhvdGUiLCJpc0FkbWluIjp0cnVlLCJpZCI6MSwiZW1haWwiOiJsaG90ZUB2aXNlby5jb20iLCJ2ZXJzaW9uIjowLCJkZWZhdWx0cGljdHVyZSI6dHJ1ZX0.HEnnSMlLVao1ARGD66uh281OG3ggXLxqdVv5K5wFS8w";
+    vmSkillsHeader.isAdminOrCollabPath();
+    expect(vmSkillsHeader.$store.getters.isAuthenticated).not.toBeNull();
+  });
+
+  it('should check admin path', function(){
+    vmSkillsHeader.$router = { path: '/searchSkillCollabByAdmin'}
+    vmSkillsHeader.isAdminOrCollabPath();
+
+  });
+
+  it('should check if is a collaborator', function () {
+    storeVuex.state.collaboratorLoggedIn.isAdmin = false;
+    storeVuex.state.token = "eyJhbGciOiJIUzUxMiJ9.eyJmaXJzdE5hbWUiOiJDYXJvbGluZSIsImxhc3ROYW1lIjoiTGhvdGUiLCJpc0FkbWluIjpmYWxzZSwiaWQiOjEsImVtYWlsIjoibGhvdGVAdmlzZW8uY29tIiwidmVyc2lvbiI6MCwiZGVmYXVsdHBpY3R1cmUiOnRydWV9.eguO54P8MHmWrwSREJu5-vCHkhA2Tj995efuHc4twdw";
+    vmSkillsHeader.isAdminOrCollabPath();
+    expect(vmSkillsHeader.$store.getters.isAuthenticated).not.toBeNull();
+  })
+
 });
