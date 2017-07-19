@@ -104,13 +104,13 @@ describe('Test searchSkillCollabByAdmin', function () {
 
   });
 
-  it('should check if  we get all expertises ', function () {
-    let expertises = [{id:1,label:'JAVA',version:0},{id:2,label:'C++',version:0},{id:3,label:'JAVASCRIPT',version:0}]
-    mock.onGet(config.server + "api/getcollabexpertises/").replay(400, expertises);
+  it('should check if  we get all expertises ', function (done) {
+    let expertises = [{id:1,label:'JAVA',version:0},{id:2,label:'C++',version:0},{id:3,label:'JAVASCRIPT',version:0}];
+    vmSearchSkillCollabByAdmin.collabLogged.id = 1;
+    mock.onGet(config.server + "/api/getcollabexpertises/1").reply(200, expertises);
     vmSearchSkillCollabByAdmin.getAllExpertise();
     setTimeout(function () {
       expect(vmSearchSkillCollabByAdmin.expertises.length).toBe(3);
-
       done();
     }, 0)
   })

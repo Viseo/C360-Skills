@@ -5,14 +5,14 @@ import SkillsHeader from '@/components/layout/skillsHeader'
 import MockAdapter from 'axios-mock-adapter'
 import storeVuex from '@/vuex/store'
 import routerConfig from '@/config/router'
-
+import Router from 'vue-router'
 var $ = window.jQuery = require('jquery');
 
 var mock = new MockAdapter(axios);
 var vmSkillsHeader;
+Vue.use(Router)
 
-
-describe('test logInPage.vue', function() {
+describe('test skillsHeader.vue', function() {
   let Token = "eyJhbGciOiJIUzUxMiJ9.eyJmaXJzdE5hbWUiOiJDYXJvbGluZSIsImxhc3ROYW1lIjoiTGhvdGUiLCJpc0FkbWluIjpmYWxzZSwiaWQiOjEsImVtYWlsIjoibGhvdGVAdmlzZW8uY29tIiwidmVyc2lvbiI6MCwiZGVmYXVsdHBpY3R1cmUiOnRydWV9.eguO54P8MHmWrwSREJu5-vCHkhA2Tj995efuHc4twdw";
   localStorage.setItem('token', Token);
   const vm = new Vue({
@@ -62,9 +62,20 @@ describe('test logInPage.vue', function() {
     expect(vmSkillsHeader.$store.getters.isAuthenticated).not.toBeNull();
   });
 
-  it('should check admin path', function(){
-    vmSkillsHeader.$router = { path: '/searchSkillCollabByAdmin'}
+  it('should check admin path', function(done){
+    vmSkillsHeader.$store.state.collaboratorLoggedIn.isAdmin = true;
+    vmSkillsHeader.$store.state.token = "eyJhbGciOiJIUzUxMiJ9.eyJmaXJzdE5hbWUiOiJDYXJvbGluZSIsImxhc3ROYW1lIjoiTGhvdGUiLCJpc0FkbWluIjp0cnVlLCJpZCI6MSwiZW1haWwiOiJsaG90ZUB2aXNlby5jb20iLCJ2ZXJzaW9uIjowLCJkZWZhdWx0cGljdHVyZSI6dHJ1ZX0.HEnnSMlLVao1ARGD66uh281OG3ggXLxqdVv5K5wFS8w";
+    //vmSkillsHeader.$router.push('/searchSkillCollabByAdmin');
+    //routerConfig.push({path :'/searchSkillCollabByAdmin'});
+    //vmSkillsHeader.$router.currentRoute.push('/searchSkillCollabByAdmin');
+    //this.$route.path = '/searchSkillCollabByAdmin';
+    vmSkillsHeader.$router.push('/searchSkillCollabByAdmin');
+    console.log("vmSkillsHeader.$router: " +vmSkillsHeader.$route.path);
     vmSkillsHeader.isAdminOrCollabPath();
+    console.log("vmSkillsHeader.$router:2  " +vmSkillsHeader.$route.path);
+    setTimeout(function () {
+      done();
+    },0);
 
   });
 
