@@ -90,7 +90,7 @@ describe('Test findSkill', function () {
       expect(vmfindSkill.savedValue).toEqual("");
       expect(vmfindSkill.wishSent).toBe(false);
       done();
-    },3001);
+    },3005);
   });
 
   it("should fail to send wish to database",function (done) {

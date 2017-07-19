@@ -192,7 +192,7 @@ describe('test addSkillsPage.vue', function() {
     },0)
   });
 
-  it('should get all collabs', function(done){
+  /*it('should get all collabs', function(done){
     let allCollabs =
       [{"id":1,"version":0,"lastName":"Bourakkadi","firstName":"Hamza","email":"hamza.bourakkadi@gmail.com","defaultPicture":true},
         {"id":2,"version":0,"lastName":"Caroline","firstName":"Lhote","email":"caroline.lhote@gmail.com","defaultPicture":true}];
@@ -216,7 +216,7 @@ describe('test addSkillsPage.vue', function() {
 
       done();
     },0)
-  });
+  });*/
 
   it('should fail to get all skills and links', function() {
     mock.onGet(config.server + "/api/skills/").reply(500);

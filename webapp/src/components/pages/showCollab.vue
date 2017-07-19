@@ -74,7 +74,7 @@
 
     computed: {
         skillInducedExists() {
-            return this.expertises[0].expertisesInduit.length!=0;
+            return this.expertises[0].expertisesInduit.length != 0;
         }
     },
 

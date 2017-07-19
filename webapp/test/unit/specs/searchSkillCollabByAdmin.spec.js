@@ -10,7 +10,7 @@ var mock = new MockAdapter(axios);
 var vmSearchSkillCollabByAdmin;
 
 
-fdescribe('Test searchSkillCollabByAdmin', function () {
+describe('Test searchSkillCollabByAdmin', function () {
 
   const vm = new Vue({
     template: '<div><searchSkillCollabByAdmin></searchSkillCollabByAdmin></div>',

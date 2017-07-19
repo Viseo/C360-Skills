@@ -102,6 +102,15 @@
 
     methods: {
         typeAheadSearch(){
+          for(var i in this.collabs){
+                if(this.value.indexOf(this.collabs[i].lastName) !=-1 || this.value.indexOf(this.collabs[i].firstName) !=-1){
+                  this.foundCollab = this.collabs[i];
+                  for(var i in this.foundSkills){
+                      this.foundSkills=[];
+                  }
+                  this.getFoundCollabExpertises();
+                }
+            }
             for(var i in this.expertises){
                 if(this.expertises[i].skill.label == this.value) {
                   this.selectedExpertise = this.expertises[i];
@@ -137,20 +146,18 @@
         axios.get(config.server + '/api/getcollabexpertises/' + this.foundCollab.id).then(
           response => {
             this.collabExpertises = response.data;
-            var length = this.collabExpertises.length;
-            for (var index = 0; index < length; index++) {
+            for (var index = 0; index < this.collabExpertises.length; index++) {
               if (this.collabExpertises[index].noted == false) {
-                console.log("in");
                 this.collabExpertises.splice(index, 1);
-                length = this.collabExpertises.length;
                 index--;
               }
             }
             this.collabExpertises.sort(function (a, b) {
-              return (a.level > b.level) ? 1 : ((b.level > a.level) ? -1 : 0);
+              return (a.level < b.level) ? 1 : ((b.level < a.level) ? -1 : 0);
             });
-            this.collabExpertises.splice(3, this.collabExpertises.length);
-
+            if(this.collabExpertises.length > 3){
+              this.collabExpertises.splice(3, this.collabExpertises.length - 3);
+            }
             this.CollaboratorExpertises = {
               collaborator: {},
               expertisesChosen: [],
@@ -165,7 +172,18 @@
           }).then(response => {
             axios.post(config.server + '/api/expertisebycollaborator', this.collabExpertises).then(response => {
                 this.inductedExpertiseCollab = response.data;
-
+                this.inductedExpertiseCollab.sort(function (a, b) {
+                  return (a.level < b.level) ? 1 : ((b.level < a.level) ? -1 : 0);
+                });
+                for (var i = 0; i < this.inductedExpertiseCollab.length; i++) {
+                  for (var j = 0; j < this.collabExpertises.length; j++) {
+                      if(this.collabExpertises[j].id == this.inductedExpertiseCollab[i].id){
+                          this.inductedExpertiseCollab.splice(i,1);
+                          i--;
+                          break;
+                      }
+                  }
+                }
                 if (this.inductedExpertiseCollab.length > 3) {
                   this.inductedExpertiseCollab.splice(3, this.inductedExpertiseCollab.length - 3);
                 }
@@ -174,33 +192,6 @@
                 }
                 this.listCollaboratorsExpertises = [];
                 this.listCollaboratorsExpertises.push(this.CollaboratorExpertises);
-                for (var i = 0; i < this.listCollaboratorsExpertises.length; i++) {
-                  this.listCollaboratorsExpertises[i].expertisesChosen.sort(function (a, b) {
-                    return (a.skill.label > b.skill.label) ? 1 : ((b.skill.label > a.skill.label) ? -1 : 0);
-                  });
-                  var tmp = [this.listCollaboratorsExpertises[i].expertisesChosen[0]];
-                  for (var j = 0; j < this.listCollaboratorsExpertises[i].expertisesChosen.length; j++) {
-                    if (this.listCollaboratorsExpertises[i].expertisesChosen[j].skill.label != tmp[tmp.length - 1].skill.label) {
-                      tmp.push(this.listCollaboratorsExpertises[i].expertisesChosen[j]);
-                    }
-                  }
-                  this.listCollaboratorsExpertises[i].expertisesChosen = tmp;
-
-                  this.listCollaboratorsExpertises[i].expertisesInduit.sort(function (a, b) {
-                    return (a.skill.label > b.skill.label) ? 1 : ((b.skill.label > a.skill.label) ? -1 : 0);
-                  });
-                  tmp = [this.listCollaboratorsExpertises[i].expertisesInduit[0]];
-                  for (var j = 0; j < this.listCollaboratorsExpertises[i].expertisesInduit.length; j++) {
-                    if (this.listCollaboratorsExpertises[i].expertisesInduit[j].skill.label != tmp[tmp.length - 1].skill.label) {
-                      tmp.push(this.listCollaboratorsExpertises[i].expertisesInduit[j]);
-                    }
-                  }
-                  this.listCollaboratorsExpertises[i].expertisesInduit = tmp;
-
-                  this.listCollaboratorsExpertises[i].expertisesChosen.reverse();
-                  this.listCollaboratorsExpertises[i].expertisesInduit.reverse();
-                }
-
               },
               response => {
                 console.log(response);
@@ -268,17 +259,7 @@
         this.foundSkills.push(this.selectedExpertise);
         document.getElementById(this.selectedExpertise.skill.id).getElementsByTagName("circle")[0].setAttribute("filter", "url(#blurMe)");
         this.collaboratorsByExpertise.splice(0, this.collaboratorsByExpertise.length);
-        for (var i in this.collabs) {
-          if (this.value != null) {
-            if (this.value.indexOf(this.collabs[i].lastName) != -1) {
-              this.foundCollab = this.collabs[i];
-            }
-          }
-        }
-        if (this.foundCollab != "") {
-          this.getFoundCollabExpertises();
-        }
-        else
+        if (this.foundCollab == "")
           this.getCollaboratorsByExpertises(this.foundSkills);
         this.levelSelected = 0;
       },
@@ -421,7 +402,7 @@
               }
               for (var m = 0; m < this.listCollaboratorsExpertises.length; m++) {
                 this.listCollaboratorsExpertises[m].expertisesInduit.sort(function (a, b) {
-                  return (a.level > b.level) ? 1 : ((b.level > a.level) ? -1 : 0);
+                  return (a.level < b.level) ? 1 : ((b.level < a.level) ? -1 : 0);
                 });
                 if (this.listCollaboratorsExpertises[m].expertisesInduit.length > 3) {
                   this.listCollaboratorsExpertises[m].expertisesInduit.splice(3, this.listCollaboratorsExpertises[m].expertisesInduit.length - 3);
@@ -472,7 +453,7 @@
 
       CollabExist(name){
         for (var i in this.collabs) {
-          if (name.indexOf(this.collabs[i].lastName) != -1) {
+          if (name.indexOf(this.collabs[i].firstName) != -1) {
             return true;
           }
           else
