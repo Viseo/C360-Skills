@@ -104,104 +104,302 @@ describe('Test searchSkillCollabByAdmin', function () {
 
   });
 
-  it('should check all expertises from database', function(){
+  it('should check all expertises from database', function(done){
     let expertises = [{collaborator: [{defaultPicture: true, email:"nihel.bengamra@viseo.com",firstName:"Nihel", id:"2",lastName:"Ben Gamra", version:0}],id:1,level:0,noted: false, skill:[{id: 3, label:"coucou", version:0}],version:0},
       {collaborator: [{defaultPicture: true, email:"benjamin.batista@viseo.com",firstName:"Benjamin", id:"4",lastName:"Batista", version:0}], id:99,level:5,noted: false, skill:[{id: 6, label:"vuejs", version:0}],version:0},
       {collaborator: [{defaultPicture: true, email:"caroline.lhote@viseo.com",firstName:"Caroline", id:"8",lastName:"Lhote", version:0}],id:78,level:2, noted: false, skill:[{id: 9, label:"React", version:0}],version:0}];
     vmSearchSkillCollabByAdmin.collabLogged = {defaultPicture: true, email:"benjamin.batista@viseo.com",firstName:"Benjamin", id:"4",lastName:"Batista", version:0};
     mock.onGet(config.server + '/api/getcollabexpertises/4').reply(200, expertises);
     vmSearchSkillCollabByAdmin.getAllExpertise();
+    setTimeout(function () {
+      done();
+    },0)
   });
 
-  it('should check all expertises found from database', function(){
+  it('should check all expertises found from database success with noted = false', function(done){
     let expertises = [{collaborator: [{defaultPicture: true, email:"nihel.bengamra@viseo.com",firstName:"Nihel", id:"2",lastName:"Ben Gamra", version:0}],id:1,level:0,noted: false, skill:[{id: 3, label:"coucou", version:0}],version:0},
       {collaborator: [{defaultPicture: true, email:"benjamin.batista@viseo.com",firstName:"Benjamin", id:"4",lastName:"Batista", version:0}], id:99,level:5,noted: false, skill:[{id: 6, label:"vuejs", version:0}],version:0},
       {collaborator: [{defaultPicture: true, email:"caroline.lhote@viseo.com",firstName:"Caroline", id:"8",lastName:"Lhote", version:0}],id:78,level:2, noted: false, skill:[{id: 9, label:"React", version:0}],version:0}];
     vmSearchSkillCollabByAdmin.foundCollab = {defaultPicture: true, email:"nihel.bengamra@viseo.com",firstName:"Nihel", id:"2",lastName:"Ben Gamra", version:0};
     mock.onGet(config.server + '/api/getcollabexpertises/2').reply(200, expertises);
     vmSearchSkillCollabByAdmin.getFoundCollabExpertises();
+    setTimeout(function () {
+      done();
+    },0)
   });
 
-  it('should check if expertisebycollaborator is posted on database', function(){
-    let expertises = [{collaborator: [{defaultPicture: true, email:"nihel.bengamra@viseo.com",firstName:"Nihel", id:"2",lastName:"Ben Gamra", version:0}],id:1,level:0,noted: false, skill:[{id: 3, label:"coucou", version:0}],version:0},
-      {collaborator: [{defaultPicture: true, email:"benjamin.batista@viseo.com",firstName:"Benjamin", id:"4",lastName:"Batista", version:0}], id:99,level:5,noted: false, skill:[{id: 6, label:"vuejs", version:0}],version:0},
-      {collaborator: [{defaultPicture: true, email:"caroline.lhote@viseo.com",firstName:"Caroline", id:"8",lastName:"Lhote", version:0}],id:78,level:2, noted: false, skill:[{id: 9, label:"React", version:0}],version:0}];
-    // vmSearchSkillCollabByAdmin.collabExpertises =
-    //   [ {collaborator: [{defaultPicture: true, email:"hamza.bourakadi@viseo.com",firstName:"Hamza", id:"12",lastName:"ourakadi", version:0}],id:78,level:2, noted: false, skill:[{id: 9, label:"React", version:0}],version:0},
-    //     {collaborator: [{defaultPicture: true, email:"soline.john@viseo.com",firstName:"Soline", id:"10",lastName:"John", version:0}], id:99,level:5,noted: false, skill:[{id: 6, label:"vuejs", version:0}],version:0},
-    //     {collaborator: [{defaultPicture: true, email:"ouahib.adli@viseo.com",firstName:"Ouahib", id:"65",lastName:"Adli", version:0}], id:99,level:4,noted: false, skill:[{id: 6, label:"vuejs", version:0}],version:0},];
-
-    mock.onPost(config.server + '/api/expertisebycollaborator').reply(200, expertises);
+  it('should check all expertises found from database success with noted = true', function(done){
+    let expertises = [{collaborator: [{defaultPicture: true, email:"nihel.bengamra@viseo.com",firstName:"Nihel", id:"2",lastName:"Ben Gamra", version:0}],id:1,level:3,noted: true, skill:[{id: 3, label:"coucou", version:0}],version:0},
+      {collaborator: [{defaultPicture: true, email:"soline.john",firstName:"Soline", id:"71",lastName:"John", version:0}], id:8,level:3,noted: true, skill:[{id: 6, label:"vuejs", version:0}],version:0},
+      {collaborator: [{defaultPicture: true, email:"benjamin.batista@viseo.com",firstName:"Benjamin", id:"4",lastName:"Batista", version:0}], id:99,level:1,noted: true, skill:[{id: 6, label:"vuejs", version:0}],version:0},
+      {collaborator: [{defaultPicture: true, email:"caroline.lhote@viseo.com",firstName:"Caroline", id:"8",lastName:"Lhote", version:0}],id:78,level:2, noted: true, skill:[{id: 9, label:"React", version:0}],version:0}];
+    vmSearchSkillCollabByAdmin.foundCollab = {defaultPicture: true, email:"nihel.bengamra@viseo.com",firstName:"Nihel", id:"2",lastName:"Ben Gamra", version:0};
+    mock.onGet(config.server + '/api/getcollabexpertises/2').reply(200, expertises);
     vmSearchSkillCollabByAdmin.getFoundCollabExpertises();
+    setTimeout(function () {
+      done();
+    },0)
+  });
+  it('should check if expertisebycollaborator is posted on database error', function(done){
+    let expertises = [{collaborator: [{defaultPicture: true, email:"nihel.bengamra@viseo.com",firstName:"Nihel", id:"2",lastName:"Ben Gamra", version:0}],id:1,level:3,noted: true, skill:[{id: 3, label:"coucou", version:0}],version:0},
+      {collaborator: [{defaultPicture: true, email:"soline.john",firstName:"Soline", id:"71",lastName:"John", version:0}], id:8,level:3,noted: true, skill:[{id: 6, label:"vuejs", version:0}],version:0},
+      {collaborator: [{defaultPicture: true, email:"benjamin.batista@viseo.com",firstName:"Benjamin", id:"4",lastName:"Batista", version:0}], id:99,level:1,noted: true, skill:[{id: 6, label:"vuejs", version:0}],version:0},
+      {collaborator: [{defaultPicture: true, email:"caroline.lhote@viseo.com",firstName:"Caroline", id:"8",lastName:"Lhote", version:0}],id:78,level:2, noted: true, skill:[{id: 9, label:"React", version:0}],version:0}];
+
+    vmSearchSkillCollabByAdmin.collabExpertises = [{collaborator: [{defaultPicture: true, email:"soline.john",firstName:"Soline", id:"71",lastName:"John", version:0}], id:8,level:3,noted: true, skill:[{id: 6, label:"vuejs", version:0}],version:0}];
+    mock.onGet(config.server + '/api/getcollabexpertises/2').reply(200, expertises);
+    mock.onPost(config.server + '/api/expertisebycollaborator').reply(200, expertises);
+
+    vmSearchSkillCollabByAdmin.getFoundCollabExpertises();
+    setTimeout(function () {
+      done();
+    },0)
   });
 
-  it('it should check if expertises are choses from collaborator expertises', function () {
+  it('should check if expertisebycollaborator is posted on database error', function(done){
+    let expertises = [{collaborator: [{defaultPicture: true, email:"nihel.bengamra@viseo.com",firstName:"Nihel", id:"2",lastName:"Ben Gamra", version:0}],id:1,level:3,noted: true, skill:[{id: 3, label:"coucou", version:0}],version:0},
+      {collaborator: [{defaultPicture: true, email:"soline.john",firstName:"Soline", id:"71",lastName:"John", version:0}], id:8,level:3,noted: true, skill:[{id: 6, label:"vuejs", version:0}],version:0},
+      {collaborator: [{defaultPicture: true, email:"benjamin.batista@viseo.com",firstName:"Benjamin", id:"4",lastName:"Batista", version:0}], id:99,level:1,noted: true, skill:[{id: 6, label:"vuejs", version:0}],version:0},
+      {collaborator: [{defaultPicture: true, email:"caroline.lhote@viseo.com",firstName:"Caroline", id:"8",lastName:"Lhote", version:0}],id:78,level:2, noted: true, skill:[{id: 9, label:"React", version:0}],version:0}];
+
+    mock.onGet(config.server + '/api/getcollabexpertises/2').reply(200, expertises);
+    mock.onPost(config.server + '/api/expertisebycollaborator').reply(200, expertises);
+
+    vmSearchSkillCollabByAdmin.getFoundCollabExpertises();
+    setTimeout(function () {
+      done();
+    },0)
+  });
+
+  it('it should check if expertises are choses from collaborator expertises', function (done) {
     vmSearchSkillCollabByAdmin.collabExpertises =
       [ {collaborator: [{defaultPicture: true, email:"hamza.bourakadi@viseo.com",firstName:"Hamza", id:"12",lastName:"ourakadi", version:0}],id:78,level:2, noted: false, skill:[{id: 9, label:"React", version:0}],version:0},
         {collaborator: [{defaultPicture: true, email:"soline.john@viseo.com",firstName:"Soline", id:"10",lastName:"John", version:0}], id:99,level:5,noted: false, skill:[{id: 6, label:"vuejs", version:0}],version:0},
         {collaborator: [{defaultPicture: true, email:"ouahib.adli@viseo.com",firstName:"Ouahib", id:"65",lastName:"Adli", version:0}], id:99,level:4,noted: false, skill:[{id: 6, label:"vuejs", version:0}],version:0},];
     vmSearchSkillCollabByAdmin.getFoundCollabExpertises();
+    setTimeout(function () {
+      done();
+    },0)
   });
-
-  it('should check if only collaborators are displayed with profile picture when administrator is typing some specifics collaborator firstname/lastname in the typeahead', function () {
-
-  });
-
-  it('should check if only skills are displayed without profile picture when administrator is typing some specifics skills in the typeahead', function () {
-
-  });
-
-  it('should check if specific skill is highlighted when administrator click on a specifics skills in the typeahead', function () {
-
-  });
-
-  it('should check if specific skill and previous selected skills are highlighted when administrator click on a specifics skills in the typeahead', function () {
-
-  });
-
-  it('should check if specific collaborator is displayed in the panel with all his skills when administrator click on a specifics collaborator in the typeahead', function () {
-
-  });
-
-  it('should check if error message is displayed when administrator is searching a specific collaborator/skills and there is no matching', function () {
-
-  });
-
-  it('should check if error message is displayed when administrator is searching a specific collaborator and there is no collaborator matching', function () {
-
-  });
-
-  it('should check if error message is displayed when administrator is searching a specific skill and there is no skill matching', function () {
-
-  });
-
-  it('should check collaborator Expertise from database', function () {
+  
+  it('should check if collaborator Expertise from database success with one collaborator', function (done) {
     vmSearchSkillCollabByAdmin.collaboratorsByExpertise =
-      [{collaborator: [{defaultPicture: true, email:"benjamin.batista@viseo.com",firstName:"Benjamin", id:"4",lastName:"Batista", version:0}],
+      [{collaborator: {defaultPicture: true, email:"benjamin.batista@viseo.com",firstName:"Benjamin", id:"4",lastName:"Batista", version:0},
         id:99,
         level:5,
         noted: false,
         skill:[{id: 6, label:"vuejs", version:0}],
         version:0}
-    ];
+      ];
     mock.onPost(config.server + '/api/collaboratorsexpertises').reply(200, vmSearchSkillCollabByAdmin.collaboratorsByExpertise);
     vmSearchSkillCollabByAdmin.getCollaboratorsByExpertises();
-
+    setTimeout(function () {
+      done();
+    },0)
   });
 
-  it('should check collaborator Expertise from database', function () {
-    vmSearchSkillCollabByAdmin.inductExpertiseByCollaborators  =
-      [{collaborator: [{defaultPicture: true, email:"ouaib.adli@viseo.com",firstName:"Ouahib", id:"45",lastName:"Adli", version:0}],
+
+  it('should check if collaborator Expertise from database success with all collaborators ', function (done) {
+      let test =
+        [{collaborator: {defaultPicture: true, email:"benjamin.batista@viseo.com",firstName:"Benjamin", id:"4",lastName:"Batista", version:0},
+          id:99,
+          level:5,
+          noted: false,
+          skill:[{id: 6, label:"vuejs", version:0}],
+          version:0},
+          {collaborator: {defaultPicture: true, email:"ouaib.adli@viseo.com",firstName:"Ouahib", id:"4",lastName:"Adli", version:0},
+            id:73,
+            level:5,
+            noted: false,
+            skill:[{id: 4, label:"javascript", version:0}],
+            version:0},
+          {collaborator: {defaultPicture: true, email:"soline.john",firstName:"soline", id:"85",lastName:"john", version:0},
+            id:52,
+            level:5,
+            noted: false,
+            skill:[{id: 4, label:"react", version:0}],
+            version:0}
+        ];
+      mock.onPost(config.server + '/api/collaboratorsexpertises').reply(200, test);
+      vmSearchSkillCollabByAdmin.getCollaboratorsByExpertises(test);
+      setTimeout(function () {
+        done();
+      },0)
+  });
+
+  it('sr', function (done) {
+    let test =
+      [{collaborator: {defaultPicture: true, email:"benjamin.batista@viseo.com",firstName:"Benjamin", id:"4",lastName:"Batista", version:0},
+        id:99,
+        level:5,
+        noted: false,
+        skill:[{id: 6, label:"vuejs", version:0}],
+        version:0},
+        {collaborator: {defaultPicture: true, email:"ouaib.adli@viseo.com",firstName:"Ouahib", id:"45",lastName:"Adli", version:0},
+          id:73,
+          level:5,
+          noted: false,
+          skill:[{id: 4, label:"javascript", version:0}],
+          version:0},
+        {collaborator: {defaultPicture: true, email:"soline.john",firstName:"soline", id:"85",lastName:"john", version:0},
+          id:52,
+          level:5,
+          noted: false,
+          skill:[{id: 4, label:"react", version:0}],
+          version:0}
+      ];
+
+    // vmSearchSkillCollabByAdmin.CollabSkillChosenAndInduit.expertisesChosen =
+    //   [{collaborator: [{defaultPicture: true, email:"ouaib.adli@viseo.com",firstName:"Ouahib", id:"85",lastName:"Adli", version:0}],
+    //     id:73,
+    //     level:5,
+    //     noted: false,
+    //     skill:[{id: 4, label:"javascript", version:0}],
+    //     version:0}];
+    mock.onPost(config.server + '/api/collaboratorsexpertises').reply(200, test);
+    vmSearchSkillCollabByAdmin.getCollaboratorsByExpertises(test);
+    setTimeout(function () {
+      expect(vmSearchSkillCollabByAdmin.collaboratorsByExpertise).toEqual(test);
+      done();
+    },0)
+  });
+
+
+  it('should check collaborator Expertise from database', function (done) {
+    let test2  =
+      [{collaborator: {defaultPicture: true, email:"ouaib.adli@viseo.com",firstName:"Ouahib", id:"45",lastName:"Adli", version:0},
         id:73,
         level:5,
         noted: false,
-        skill:[{id: 4, label:"javascrit", version:0}],
-        version:0}
+        skill:[{id: 4, label:"javascript", version:0}],
+        version:0},
+        {collaborator: {defaultPicture: true, email:"soline.john@viseo.com",firstName:"Soline", id:"98",lastName:"John", version:0},
+          id:65,
+          level:5,
+          noted: false,
+          skill:[{id: 74, label:"java", version:0}],
+          version:0},
+        {collaborator: {defaultPicture: true, email:"nihel.bengamra",firstName:"Nihel", id:"32",lastName:"Ben Gamra", version:0},
+          id:74,
+          level:5,
+          noted: false,
+          skill:[{id: 10, label:"hibernate", version:0}],
+          version:0},
       ];
-    mock.onPost(config.server + '/api/expertisebycollaborator').reply(200,  vmSearchSkillCollabByAdmin.inductExpertiseByCollaborators);
-    vmSearchSkillCollabByAdmin.getCollaboratorsByExpertises();
+
+    vmSearchSkillCollabByAdmin.listCollaboratorsExpertises = [{
+      collaborator: {defaultPicture: true, email:"ouaib.adli@viseo.com",firstName:"Ouahib", id:"45",lastName:"Adli", version:0},
+      expertisesChosen: [{collaborator: {defaultPicture: true, email:"ouaib.adli@viseo.com",firstName:"Ouahib", id:"45",lastName:"Adli", version:0},
+        id:74,
+        level:5,
+        noted: false,
+        skill:{id: 10, label:"hibernate", version:0},
+        version:0},
+        {collaborator: {defaultPicture: true, email:"xiangzhe.mang@viseo.com",firstName:"xiangzhe", id:"66",lastName:"Mang", version:0},
+          id:89,
+          level:5,
+          noted: false,
+          skill:{id: 10, label:"ajax", version:0},
+          version:0}
+      ],
+      expertisesInduit: [{collaborator: {defaultPicture: true, email:"nihel.bengamra@viseo.com",firstName:"Nihel", id:"32",lastName:"Ben Gamra", version:0},
+        id:74,
+        level:5,
+        noted: false,
+        skill:{id: 10, label:"hibernate", version:0},
+        version:0},
+        {collaborator: {defaultPicture: true, email:"caroline.lhote@viseo.com",firstName:"Caroline", id:"79",lastName:"Lhote", version:0},
+          id:14,
+          level:5,
+          noted: false,
+          skill:{id: 20, label:"Spring", version:0},
+          version:0},
+        {collaborator: {defaultPicture: true, email:"hamza.bourakadi@viseo.com",firstName:"Hamza", id:"22",lastName:"Bourakadi", version:0},
+          id:16,
+          level:5,
+          noted: false,
+          skill:{id: 82, label:"eclipse link", version:0},
+          version:0},
+        {collaborator: {defaultPicture: true, email:"benjamin.batista@viseo.com",firstName:"Binjamin", id:"22",lastName:"Batista", version:0},
+          id:16,
+          level:5,
+          noted: false,
+          skill:{id: 77, label:"Top link", version:0},
+          version:0}
+      ],
+
+
+    }];
+    mock.onPost(config.server + '/api/expertisebycollaborator').reply(200,  test2);
+    vmSearchSkillCollabByAdmin.getCollaboratorsByExpertises(test2);
+    setTimeout(function () {
+      done();
+    },0)
   });
 
-  
+  it('should check collaborator Expertise from database', function (done) {
+
+    vmSearchSkillCollabByAdmin.links = [{
+      id: 30,
+      skill1: {id: 3, label: "javascript", version:0},
+      skill2: {id: 27, lable: "vuejs"},
+      version:0,
+    },
+      {id: 30,
+        skill1: {id: 3, label: "javascript", version:0},
+        skill2: {id: 6, lable: "React"},
+        version:0,}
+    ];
+
+    mock.onGet(config.server + '/api/links/').reply(200, vmSearchSkillCollabByAdmin.links);
+    vmSearchSkillCollabByAdmin.getAllLinks();
+    setTimeout(function () {
+      done();
+    },0)
+  });
+
+  it('should link PositionX when selected link is not empty',function () {
+
+    vmSearchSkillCollabByAdmin.selectedlink = {
+      id:10,
+      skill1: {id:1,label:'JAVA',version:0},
+      skill2: {id:2,label:'J2EE',version:0},
+      version:0
+    };
+
+    let containerSVG = vmSearchSkillCollabByAdmin.$el.querySelector('g');
+    document.getElementById = jasmine.createSpy('HTML Element').and.returnValue(containerSVG);
+
+    expect(vmSearchSkillCollabByAdmin.linkPositionX()).not.toEqual(0);
+  });
+
+  it('should link PositionX when selected link is empty',function () {
+    vmSearchSkillCollabByAdmin.selectedlink = '';
+    expect(vmSearchSkillCollabByAdmin.linkPositionX()).toEqual(0);
+  });
+
+  it('should link PositionX when selected link is not empty',function () {
+
+    vmSearchSkillCollabByAdmin.selectedlink = {
+      id:10,
+      skill1: {id:1,label:'JAVA',version:0},
+      skill2: {id:2,label:'J2EE',version:0},
+      version:0
+    };
+
+    let containerSVG = vmSearchSkillCollabByAdmin.$el.querySelector('g');
+    document.getElementById = jasmine.createSpy('HTML Element').and.returnValue(containerSVG);
+
+    expect(vmSearchSkillCollabByAdmin.linkPositionY()).not.toEqual(0);
+  });
+
+  it('should link PositionX when selected link is empty',function () {
+    vmSearchSkillCollabByAdmin.selectedlink = '';
+    expect(vmSearchSkillCollabByAdmin.linkPositionY()).toEqual(0);
+  });
+
+
+
+
 
   });
