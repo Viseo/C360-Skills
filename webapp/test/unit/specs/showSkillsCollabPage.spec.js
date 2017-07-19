@@ -159,6 +159,8 @@ describe('Test showSkillCollab', function () {
   });
 
   it('should check wait for element to display', function (done) {
+    let containerSVG = vmShowSkillsCollab.$el.querySelector('g');
+    document.getElementById = jasmine.createSpy('HTML Element').and.returnValue(containerSVG);
     var id = 1;
     console.log(vmShowSkillsCollab.waitForElementToDisplay(id, 0, "cx"));
     //expect(vmShowSkillsCollab.showIcon(skillId)).toBe(false);
@@ -175,6 +177,10 @@ describe('Test showSkillCollab', function () {
   });
 
   it('should check if find skill', function () {
+    let containerSVG = vmShowSkillsCollab.$el.querySelector('customCircle');
+    //containerSVG.setAttribute("id", "url(#blurMe)");
+    document.getElementById = jasmine.createSpy('HTML Element').and.returnValue(containerSVG);
+
     var findSkill = [{id: 1, label: 'JAVA', version: 0}];
     storeVuex.commit('setFoundedSkillsLabel',findSkill);
     var id = 1;
