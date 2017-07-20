@@ -44,7 +44,6 @@ function redirectIfAlreadyAuthenticated(to, from, next) {
     next('/addSkills');
   }
   else if (isAlreadyAuthenticated() && !isAdministratorAuthenticated()) {
-    console.log("collab");
     next('/showSkillsCollab');
   }
   else {

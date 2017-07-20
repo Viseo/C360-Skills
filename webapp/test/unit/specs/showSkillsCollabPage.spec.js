@@ -11,7 +11,7 @@ var mock = new MockAdapter(axios);
 
 var vmShowSkillsCollab;
 
-fdescribe('Test showSkillCollab', function () {
+describe('Test showSkillCollab', function () {
 
   const vm = new Vue({
     template: '<div><showSkillsCollab></showSkillsCollab></div>',
