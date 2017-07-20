@@ -467,14 +467,7 @@ it('should check if collab exist success', function () {
 
 it('should check if skills are selected', function () {
 
-  vmSearchSkillCollabByAdmin.selectedExpertise= [{id:1,level:0,noted: false, skill:{id: 6, label:"vuejs", version:0},version:0}];
-  vmSearchSkillCollabByAdmin.foundSkills = {collaborator: {defaultPicture: true, email:"benjamin.batista@viseo.com",firstName:"Benjamin", id:"4",lastName:"Batista", version:0},
-    id:99,
-    level:5,
-    noted: false,
-    skill:[{id: 6, label:"vuejs", version:0}],
-    version:0};
-
+  vmSearchSkillCollabByAdmin.selectedExpertise= {id:1,level:0,noted: false, skill:{id: 6, label:"vuejs", version:0},version:0};
   let containerSVG = vmSearchSkillCollabByAdmin.$el.querySelector('g');
   document.getElementById = jasmine.createSpy('HTML Element').and.returnValue(containerSVG);
     vmSearchSkillCollabByAdmin.selectedSkills();
