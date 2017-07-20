@@ -149,6 +149,7 @@
         if (this.foundedSkillsTypeahead) {
           if (this.foundedSkillsTypeahead[0]) {
             if (this.foundedSkillsTypeahead[0].id == id) {
+                //console.log("document.getElementById("+id+").getElementsByTagName(\"circle\")[0].setAttribute(\"filter\", \"url(#blurMe)\"): " +document.getElementById(id));
               document.getElementById(id).getElementsByTagName("circle")[0].setAttribute("filter", "url(#blurMe)");
               return true;
             }
