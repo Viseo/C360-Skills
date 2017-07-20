@@ -283,13 +283,13 @@
       getPositionYById(id){
         return this.waitForElementToDisplay(id, 0, "cy");
       },
-
-      showCircleBlurOrNot(id){
-        if (this.selectedSkill.skill1.id == id) {
-          return true
-        }
-        return false;
-      },
+//
+//      showCircleBlurOrNot(id){
+//        if (this.selectedSkill.skill1.id == id) {
+//          return true
+//        }
+//        return false;
+//      },
 
       linkPositionX(){
         if (this.selectedlink != '') {
@@ -324,13 +324,13 @@
         else
           return 0;
       },
-
-      showCircleBlurOrNot(id){
-        if (this.selectedSkill.skill1.id == id) {
-          return true
-        }
-        return false;
-      },
+//
+//      showCircleBlurOrNot(id){
+//        if (this.selectedSkill.skill1.id == id) {
+//          return true
+//        }
+//        return false;
+//      },
 
       getCollabs(){
         this.searchResult.splice(0, this.searchResult.length);
