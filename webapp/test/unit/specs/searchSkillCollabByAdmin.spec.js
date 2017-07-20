@@ -109,7 +109,7 @@ describe('Test searchSkillCollabByAdmin', function () {
   });
 
   it('should check if ', function(){
-    vmSearchSkillCollabByAdmin.value = [{id:1,level:0,noted: false, skill:{id: 3, label:"coucou", version:0},version:0}]
+    vmSearchSkillCollabByAdmin.value = {id:1,level:0,noted: false, skill:{id: 3, label:"coucou", version:0},version:0}
     vmSearchSkillCollabByAdmin.setExpertise(vmSearchSkillCollabByAdmin.value);
     expect(vmSearchSkillCollabByAdmin.selectedExpertise ).toBe(vmSearchSkillCollabByAdmin.value)
 
