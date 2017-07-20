@@ -74,9 +74,6 @@
       },
 
       getCollabLogged(){
-        console.log('this');
-        console.log(this);
-
         this.collabLogged.id = this.$store.getters.collaboratorLoggedIn.id;
         this.collabLogged.version = this.$store.getters.collaboratorLoggedIn.version;
         this.collabLogged.lastName = this.$store.getters.collaboratorLoggedIn.lastName;
