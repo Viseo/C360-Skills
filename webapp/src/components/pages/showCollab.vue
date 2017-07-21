@@ -16,18 +16,15 @@
       <div class="row">
         <div class="col-lg-12">
           <div v-for="skill in expertise.expertisesChosen">
-            <span class="col-lg-7">
               <div class="levelCircle" :class="'level'+skill.level+'Circle'">{{ showLevel (skill.level) }}</div>
               <span>{{skill.skill.label }}</span>
-            </span>
-            <span class="col-lg-5 stars">
+
               <span v-for="levelStar in skill.level" style="margin-left: 2px; padding: 0px; color:#eedd31;">
                 <i class="glyphicon glyphicon-star"></i>
               </span>
               <span v-for="levelStarEmpty in 5-skill.level" style="margin-right: 2px; padding: 0px;color:#eedd31;">
                 <i class="glyphicon glyphicon-star-empty"></i>
               </span>
-            </span>
           </div>
         </div>
       </div>
