@@ -104,12 +104,12 @@ describe('Test searchSkillCollabByAdmin', function () {
   it('should check if level is selected', function(){
     vmSearchSkillCollabByAdmin.value = 5;
     vmSearchSkillCollabByAdmin.onClickChild(vmSearchSkillCollabByAdmin.value);
-    expect(vmSearchSkillCollabByAdmin.levelSelected).toBe(vmSearchSkillCollabByAdmin.value)
+    expect(vmSearchSkillCollabByAdmin.levelSelected).toBe(vmSearchSkillCollabByAdmin.value);
 
   });
 
   it('should check if ', function(){
-    vmSearchSkillCollabByAdmin.value = {id:1,level:0,noted: false, skill:{id: 3, label:"coucou", version:0},version:0}
+    vmSearchSkillCollabByAdmin.value = {id:1,level:0,noted: false, skill:{id: 3, label:"coucou", version:0},version:0};
     vmSearchSkillCollabByAdmin.setExpertise(vmSearchSkillCollabByAdmin.value);
     expect(vmSearchSkillCollabByAdmin.selectedExpertise ).toBe(vmSearchSkillCollabByAdmin.value)
 
