@@ -10,15 +10,15 @@ var vmShowCollab;
 describe('test showCollab.vue', function () {
 
   beforeEach(function(){
-
     vmShowCollab = new Constructor().$mount();
   });
 
   afterEach(function(){});
 
   it('should function skillInducedExists', function () {
-    vmShowCollab.skillInducedExists();
-  })
+    vmShowCollab.expertises = [{collaborator: {},expertisesChosen: [],expertisesInduit: []}];
+    expect(vmShowCollab.expertises[0].expertisesInduit.length != 0).toBe(false);
+  });
 
   it('should check function showLevel, rating = 5 ', function () {
     var rating = 5;
@@ -47,8 +47,8 @@ describe('test showCollab.vue', function () {
 
   it('should check function showLevel rating = 0', function () {
     var rating = 0;
-    expect(vmShowCollab.showLevel(rating)).toEqual('E');
-  })
+    expect(vmShowCollab.showLevel(rating)).not.toEqual('E');
+  });
 
 
-})
+});
