@@ -13,7 +13,7 @@
                         <img id="profilImageToChange" class="image" v-if="defaultPicture"
                              src="../../assets/profile.jpg">
                         <img id="profilImageToChange" class="image" v-else
-                             :src="'img/'+collaborator_id+'.jpg'">
+                             :src="'http://localhost:8083/images/'+collaborator_id">
                         <p class="text">
                             <input ref="loadProfilImage"
                                    id="loadProfilImage"
@@ -251,6 +251,7 @@
         components: {customInput: customInput, customPasswordInput: passwordInput},
         data: function () {
             return {
+                collabDescription:'',
                 firstName: '',
                 fonction: '',
                 lastName: '',
@@ -553,6 +554,7 @@
                         this.email = this.infoCollab.email;
                         this.fonction = this.infoCollab.function;
                         this.businessUnit = this.infoCollab.businessUnit;
+                        this.getCollabDescription();
                     }).then(response => {
                         console.log("Error: ", response);
                         console.error(response);
@@ -571,6 +573,14 @@
                 });
             },
 
+            getCollabDescription(){
+              axios.get(config.server+"/api/collabdescriptionbyid/"+ this.collaborator_id).then(
+                response => {
+                      this.collabDescription = response.data;
+                });
+            },
+
+
             saveUpdateCollaborator(){
                 axios.put(config.server+"/api/updatecollaborator", this.CollabToUpdate).then(
                     response => {
@@ -582,10 +592,10 @@
             },
 
             updateCollaboratorInfo(){
-                this.isFirstNameEmpty();
+              this.isFirstNameEmpty();
                 this.isLastNameEmpty();
                 this.isEmailEmpty();
-                this.CollabToUpdate = this.infoCollab;
+                this.CollabToUpdate = this.collabDescription;
                 this.CollabToUpdate.firstName = this.firstName;
                 this.CollabToUpdate.lastName = this.lastName;
                 this.CollabToUpdate.email = this.email;
