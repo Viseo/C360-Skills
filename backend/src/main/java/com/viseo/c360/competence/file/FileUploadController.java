@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 @CrossOrigin
 @WebServlet("/fileUpload")
@@ -25,7 +24,7 @@ import java.net.URL;
 public class FileUploadController extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    @CrossOrigin
+
     protected void setServerResponse(HttpServletResponse response,String successMessage) throws IOException {
         try {
         response.getWriter().print(successMessage);
@@ -34,7 +33,7 @@ public class FileUploadController extends HttpServlet {
             e.printStackTrace();
         }
     }
-    @CrossOrigin
+
     protected void createImage(Part image, String Path) throws IOException {
         try {
             image.write(Path);
@@ -42,30 +41,22 @@ public class FileUploadController extends HttpServlet {
             e.printStackTrace();
         }
     }
-    @CrossOrigin
-    protected String getCurrentPath(){
-        URL resource = null;
-        try {
-            resource = new URL("/"+System.getProperty("catalina.base").replaceAll("\\\\", "/"));
-            System.out.println("AAAAAAAAAAAAAA");
 
-        } catch (MalformedURLException e) {
-            System.out.println("OOOOOOOOOOOOOOO");
-            e.printStackTrace();
-        }
+    protected String getCurrentPath(){
+        URL resource = getClass().getResource("/");
         return resource.getPath();
     }
-    @CrossOrigin
+
     protected boolean isMimeTypeImage(Part image){
         String mimeType = image.getContentType().split("/")[0];
         return mimeType.equals("image");
     }
-    @CrossOrigin
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Part imageCollaborator = request.getPart("file");
         String idCollaborator = request.getParameter("idCollaborator");
-        System.out.println(getCurrentPath());
-        String imgPath = getCurrentPath();
+        String imgPath = getCurrentPath().replace("backend/target/C360_competence/WEB-INF/classes/", "webapp/static/");
+        System.out.println("OAOAOAOAOA" +imgPath);
         String imageName = idCollaborator + ".jpg";
 
         if(isMimeTypeImage(imageCollaborator)) {

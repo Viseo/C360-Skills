@@ -19,9 +19,9 @@
             >
               <div v-show="showPicture()" class="col-lg-2 col-md-5 col-sm-5 col-xs-5">
                 <img style="cursor:default;" class="image-min" v-if="$store.getters.collaboratorLoggedIn.defaultPicture"
-                     src="../../assets/profile.jpg">
+                     src="../../../static/profile.jpg">
                 <img style="cursor:default;" class="image-min" v-else-if="$store.getters.collaboratorLoggedIn.id!=null"
-                     :src="'../../../../backend/target/C360_competence/WEB-INF/classes/'+$store.getters.collaboratorLoggedIn.id + '.jpg'">
+                     :src="'../../../static/'+$store.getters.collaboratorLoggedIn.id+'.jpg'">
               </div>
               <span class="text-left col-lg-8 col-lg-offset-2 col-md-5 col-sm-5 col-xs-5" style="margin-top:10px"
                     @mouseover="setDisconnectedToTrue()" v-show="showName()">{{ lastName }} {{ firstName }}</span>
