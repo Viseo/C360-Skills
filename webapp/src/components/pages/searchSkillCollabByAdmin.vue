@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class=" col-lg-4 col-lg-offset-4 col-lg-4 searchField typeaheadSkills">
+    <div class="col-lg-offset-4 col-lg-4 searchField typeaheadSkills">
       <span class="glyphicon glyphicon-search" ref="searchSkill " @click="typeAheadSearch()"></span>
       <typeahead
         class="inputForm "
