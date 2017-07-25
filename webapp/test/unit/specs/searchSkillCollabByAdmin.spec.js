@@ -473,7 +473,4 @@ it('should check if skills are selected', function () {
     vmSearchSkillCollabByAdmin.selectedSkills();
 });
 
-
-
-
-  });
+});
