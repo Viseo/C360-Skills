@@ -148,9 +148,9 @@ public class CollaboratorWS {
     @CrossOrigin
     @RequestMapping(value = "${endpoint.updatecollaborator}", method = RequestMethod.PUT)
     @ResponseBody
-    public CollaboratorDescription updateCollaborator(@RequestBody CollaboratorIdentity collaborator) {
+    public CollaboratorDescription updateCollaborator(@RequestBody CollaboratorDescription collaborator) {
         try {
-            Collaborator collaboratorToUpdate = collaboratorDAO.updateCollaborator(new IdentityToCollaborator().convert(collaborator));
+            Collaborator collaboratorToUpdate = collaboratorDAO.updateCollaborator(new DescriptionToCollaborator().convert(collaborator));
             return new CollaboratorToDescription().convert(collaboratorToUpdate);
         } catch (PersistenceException pe) {
             UniqueFieldErrors uniqueFieldErrors = exceptionUtil.getUniqueFieldError(pe);
@@ -177,6 +177,18 @@ public class CollaboratorWS {
     public CollaboratorIdentity getCollaboratorById(@PathVariable Long collab_id) {
         try {
             return new CollaboratorToIdentity().convert(collaboratorDAO.getCollaboratorById(collab_id));
+        } catch (ConversionException e) {
+            e.printStackTrace();
+            throw new C360Exception(e);
+        }
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "${endpoint.collabdescriptionbyid}", method = RequestMethod.GET)
+    @ResponseBody
+    public CollaboratorDescription getCollabDescriptionById(@PathVariable Long collab_id) {
+        try {
+            return new CollaboratorToDescription().convert(collaboratorDAO.getCollaboratorById(collab_id));
         } catch (ConversionException e) {
             e.printStackTrace();
             throw new C360Exception(e);
