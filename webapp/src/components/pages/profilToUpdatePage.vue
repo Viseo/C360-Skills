@@ -11,9 +11,9 @@
                 </span>
                     <div class="boxon">
                         <img id="profilImageToChange" class="image" v-if="defaultPicture"
-                             src="../../assets/profile.jpg">
+                             src="../../../static/profile.jpg">
                         <img id="profilImageToChange" class="image" v-else
-                             :src="'http://localhost:8083/images/'+collaborator_id">
+                             :src="'../../../static/'+collaborator_id+'.jpg'">
                         <p class="text">
                             <input ref="loadProfilImage"
                                    id="loadProfilImage"
@@ -334,7 +334,7 @@
             this.initializeCollaboratorInformation();
             this.getInfoCollaborator();
             this.checkIfProfilImageHasBeenChanged("#loadProfilImage");
-            this.imagePath = "img/" + this.collaborator_id + ".jpg";
+            this.imagePath = "../../assets/" + this.collaborator_id + ".jpg";
         },
 
         methods: {
@@ -549,12 +549,7 @@
                     response => {
                         console.log("success to get user information");
                         this.infoCollab = response.data;
-                        this.firstName = this.infoCollab.firstName;
-                        this.lastName = this.infoCollab.lastName;
-                        this.email = this.infoCollab.email;
-                        this.fonction = this.infoCollab.function;
-                        this.businessUnit = this.infoCollab.businessUnit;
-                        this.getCollabDescription();
+                      this.getCollabDescription();
                     }).then(response => {
                         console.log("Error: ", response);
                         console.error(response);
@@ -577,6 +572,11 @@
               axios.get(config.server+"/api/collabdescriptionbyid/"+ this.collaborator_id).then(
                 response => {
                       this.collabDescription = response.data;
+                  this.firstName = this.collabDescription.firstName;
+                  this.lastName = this.collabDescription.lastName;
+                  this.email = this.collabDescription.email;
+                  this.fonction = this.collabDescription.function;
+                  this.businessUnit = this.collabDescription.businessUnit;
                 });
             },
 
@@ -613,11 +613,11 @@
                     }
                     this.saveUpdateCollaborator();
                 } else {
-                    if (this.infoCollab.password == this.password) {
+                    if (this.collabDescription.password == this.password) {
                         this.isRightOldPassword = true;
                         this.oldPasswordEmpty = false;
                         this.passwordEmpty = false;
-                        if (this.infoCollab.password != this.newPassword) {
+                        if (this.collabDescription.password != this.newPassword) {
                             if (this.newPassword == this.confirmPassword) {
                                 this.CollabToUpdate.password = this.newPassword;
                                 if (this.imageHasBeenChanged === true) {
@@ -629,13 +629,13 @@
                                 this.saveUpdateCollaborator();
                             }
                         } else {
-                            console.log("mot de passe" + this.infoCollab.password);
+                            console.log("mot de passe" + this.collabDescription.password);
                             this.isRightOldPassword = false;
                             this.errorMessageOnSubmit = "Votre nouveau mot de passe doit être différent de votre ancien mot de passe."
                         }
 
                     } else {
-                        console.log(this.infoCollab.password);
+                        console.log(this.collabDescription.password);
                         this.isRightOldPassword = false;
                         this.errorMessageOnSubmit = "Ancien mot de passe incorrect."
                     }
