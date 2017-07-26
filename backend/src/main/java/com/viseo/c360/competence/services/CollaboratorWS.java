@@ -84,6 +84,7 @@ public class CollaboratorWS {
     private void putUserInCache(String token, CollaboratorDescription user) {
         mapUserCache.put(token, user);
     }
+
     @CrossOrigin
     @RequestMapping(value = "${endpoint.getuserrole}", method = RequestMethod.POST)
     @ResponseBody
@@ -148,10 +149,25 @@ public class CollaboratorWS {
     @CrossOrigin
     @RequestMapping(value = "${endpoint.updatecollaborator}", method = RequestMethod.PUT)
     @ResponseBody
-    public CollaboratorDescription updateCollaborator(@RequestBody CollaboratorDescription collaborator) {
+    public Map<String, CollaboratorDescription> updateCollaborator(@RequestBody CollaboratorDescription collaborator) {
         try {
             Collaborator collaboratorToUpdate = collaboratorDAO.updateCollaborator(new DescriptionToCollaborator().convert(collaborator));
-            return new CollaboratorToDescription().convert(collaboratorToUpdate);
+            InitializeMap();
+            Key key = MacProvider.generateKey();
+            String compactJws = Jwts.builder()
+                    .claim("firstName", collaborator.getFirstName())
+                    .claim("lastName", collaborator.getLastName())
+                    .claim("isAdmin", collaborator.getIsAdmin())
+                    .claim("email", collaborator.getEmail())
+                    .claim("version", collaborator.getVersion())
+                    .claim("id", collaborator.getId())
+                    .claim("defaultPicture", collaborator.getDefaultPicture())
+                    .signWith(SignatureAlgorithm.HS512, key)
+                    .compact();
+            Map currentUserMap = new HashMap<>();
+            putUserInCache(compactJws, collaborator);
+            currentUserMap.put("userConnected", compactJws);
+            return currentUserMap;
         } catch (PersistenceException pe) {
             UniqueFieldErrors uniqueFieldErrors = exceptionUtil.getUniqueFieldError(pe);
             if (uniqueFieldErrors == null) throw new C360Exception(pe);
