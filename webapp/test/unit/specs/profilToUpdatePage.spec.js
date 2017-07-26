@@ -15,19 +15,20 @@ var $ = window.jQuery = require('jquery');
 var vmProfilToUpdate;
 var mock;
 
-fdescribe('test profilToUpdatePage.vue', function () {
+describe('test profilToUpdatePage.vue', function () {
   let Token = "eyJhbGciOiJIUzUxMiJ9.eyJmaXJzdE5hbWUiOiJlcmljIiwibGFzdE5hbWUiOiJEVVBPTlQiLCJpc0FkbWluIjpmYWxzZSwiaWQiOjEsImVtYWlsIjoiZXJpYy5kdXBvbnRAdmlzZW8uY29tIiwidmVyc2lvbiI6MCwiZGVmYXVsdHBpY3R1cmUiOnRydWV9.e_Shd2hw3VYpECxxbiptCEu-z5fM815wpcxtdDqkhL0";
   localStorage.setItem('token', Token);
+  const vm = new Vue({
+    template: '<div><profil-to-update></profil-to-update></div>',
+    components: {
+      'profil-to-update': ProfilToUpdate
+    },
+    store: storeVuex,
+    router: routerConfig.$children
+  }).$mount();
 
   beforeEach(function () {
-    const vm = new Vue({
-      template: '<div><profil-to-update></profil-to-update></div>',
-      components: {
-        'profil-to-update': ProfilToUpdate
-      },
-      store: storeVuex,
-      router: routerConfig
-    }).$mount();
+
     vmProfilToUpdate = vm.$children[0];
     mock = new MockAdapter(axios);
   });
@@ -233,6 +234,7 @@ fdescribe('test profilToUpdatePage.vue', function () {
   });
 
   it('it should test saveUpdateCollaborator()', function (done) {
+
     var response = {userConnected: Token};
     vmProfilToUpdate.CollabToUpdate = {
       email: "eric.dupont@viseo.com",
@@ -247,16 +249,17 @@ fdescribe('test profilToUpdatePage.vue', function () {
       personnalIdNumber: "AAB1234",
       version: 0
     };
-    //mock.onPut(config.server + "/api/updatecollaborator", vmProfilToUpdate.CollabToUpdate).reply(200,response);
+    mock.onPut(config.server + "/api/updatecollaborator", vmProfilToUpdate.CollabToUpdate).reply(200,response);
+
     vmProfilToUpdate.saveUpdateCollaborator();
 
     setTimeout(function () {
       done();
-    }, 0);
+    }, 100);
   });
 
   it('it should collect all information of collaborator in database with success response', function (done) {
-    var response = {
+    var response = [{
       email: "eric.dupont@viseo.com",
       admin: false,
       businessUnit: null,
@@ -268,7 +271,8 @@ fdescribe('test profilToUpdatePage.vue', function () {
       password: "987654",
       personnalIdNumber: "AAB1234",
       version: 0
-    };
+    }];
+    vmProfilToUpdate.collaborator_id = 1;
     mock.onGet(config.server + "/api/collabdescriptionbyid/1").reply(200, response);
     vmProfilToUpdate.getCollabDescription();
     setTimeout(function () {
@@ -353,7 +357,7 @@ fdescribe('test profilToUpdatePage.vue', function () {
     vmProfilToUpdate.password = '123456';
     vmProfilToUpdate.imageHasBeenChanged = false;
 
-   // mock.onPut(config.server + "/api/updatecollaborator",CollabToUpdate).reply(200,response);
+    //mock.onPut(config.server + "/api/updatecollaborator",CollabToUpdate).reply(200,response);
 
     vmProfilToUpdate.updateCollaboratorInfo();
     setTimeout(function () {

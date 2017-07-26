@@ -573,7 +573,7 @@
             console.log("success to update user information");
             this.imageHasBeenChanged = false;
             this.$store.commit('setToken', response.data['userConnected']);
-            this.$router.go(this.$router.currentRoute);
+            this.$router.go(this.$router.currentRoute.path);
           });
       },
 
@@ -626,11 +626,6 @@
           }
         }
       },
-
-      imageLoadOnError () {
-        let defaultImagePath = "img/profile.jpg";
-        this.imagePath = defaultImagePath;
-      }
     }
   }
 </script>
