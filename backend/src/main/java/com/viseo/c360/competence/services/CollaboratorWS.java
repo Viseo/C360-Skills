@@ -1,5 +1,6 @@
 package com.viseo.c360.competence.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.viseo.c360.competence.converters.collaborator.*;
 
 import com.viseo.c360.competence.dao.CollaboratorDAO;
@@ -32,6 +33,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.AMQP.BasicProperties;
+
 
 @RestController
 public class CollaboratorWS {
@@ -48,7 +54,7 @@ public class CollaboratorWS {
     @CrossOrigin
     @RequestMapping(value = "${endpoint.user}", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, CollaboratorDescription> getUserByLoginPassword(@RequestBody CollaboratorDescription myCollaboratorDescription) {
+    public Map<String, CollaboratorDescription> getUserByLoginPassword(@RequestBody CollaboratorDescription myCollaboratorDescription) throws Exception {
         try {
             InitializeMap();
             Collaborator c = collaboratorDAO.getCollaboratorByLoginPassword(myCollaboratorDescription.getEmail(), myCollaboratorDescription.getPassword());
@@ -67,11 +73,26 @@ public class CollaboratorWS {
             Map currentUserMap = new HashMap<>();
             putUserInCache(compactJws, user);
             currentUserMap.put("userConnected", compactJws);
+            ObjectMapper mapperObj = new ObjectMapper();
+
+            Send(mapperObj.writeValueAsString(user));
             return currentUserMap;
         } catch (ConversionException e) {
             e.printStackTrace();
             throw new C360Exception(e);
         }
+    }
+
+    private void Send(String message) throws Exception {
+        ConnectionFactory var1 = new ConnectionFactory();
+        var1.setHost("localhost");
+        Connection var2 = var1.newConnection();
+        Channel var3 = var2.createChannel();
+        var3.queueDeclare("hello", false, false, false, (Map)null);
+        var3.basicPublish("", "hello", (BasicProperties)null, message.getBytes("UTF-8"));
+        System.out.println(" [x] Sent \'" + message + "\'");
+        var3.close();
+        var2.close();
     }
 
     private static ConcurrentHashMap<String, CollaboratorDescription> mapUserCache;
