@@ -56,7 +56,6 @@ public class FileUploadController extends HttpServlet {
         Part imageCollaborator = request.getPart("file");
         String idCollaborator = request.getParameter("idCollaborator");
         String imgPath = getCurrentPath().replace("backend/target/C360_competence/WEB-INF/classes/", "webapp/static/");
-        System.out.println("OAOAOAOAOA" +imgPath);
         String imageName = idCollaborator + ".jpg";
 
         if(isMimeTypeImage(imageCollaborator)) {

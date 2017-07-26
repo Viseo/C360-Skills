@@ -587,6 +587,8 @@
                         console.log("success to update user information");
                                 this.imageHasBeenChanged = false;
                                 this.$store.commit('setToken', response.data['userConnected']);
+                                console.log(response.data['userConnected']);
+                                console.log(response);
                                 this.$router.go(this.$router.currentRoute);
                     });
             },
