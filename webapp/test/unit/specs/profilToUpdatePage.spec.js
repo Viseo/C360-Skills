@@ -15,8 +15,8 @@ var $ = window.jQuery = require('jquery');
 var vmProfilToUpdate;
 var mock;
 
-describe('test profilToUpdatePage.vue', function () {
-  let Token = "eyJhbGciOiJIUzUxMiJ9.eyJmaXJzdE5hbWUiOiJDYXJvbGluZSIsImxhc3ROYW1lIjoiTGhvdGUiLCJpc0FkbWluIjpmYWxzZSwiaWQiOjEsImVtYWlsIjoibGhvdGVAdmlzZW8uY29tIiwidmVyc2lvbiI6MCwiZGVmYXVsdHBpY3R1cmUiOnRydWV9.eguO54P8MHmWrwSREJu5-vCHkhA2Tj995efuHc4twdw";
+fdescribe('test profilToUpdatePage.vue', function () {
+  let Token = "eyJhbGciOiJIUzUxMiJ9.eyJmaXJzdE5hbWUiOiJlcmljIiwibGFzdE5hbWUiOiJEVVBPTlQiLCJpc0FkbWluIjpmYWxzZSwiaWQiOjEsImVtYWlsIjoiZXJpYy5kdXBvbnRAdmlzZW8uY29tIiwidmVyc2lvbiI6MCwiZGVmYXVsdHBpY3R1cmUiOnRydWV9.e_Shd2hw3VYpECxxbiptCEu-z5fM815wpcxtdDqkhL0";
   localStorage.setItem('token', Token);
 
   beforeEach(function () {
@@ -232,4 +232,295 @@ describe('test profilToUpdatePage.vue', function () {
     expect(vmProfilToUpdate.showPass).toBe(true);
   });
 
+  it('it should test saveUpdateCollaborator()', function (done) {
+    var response = {userConnected: Token};
+    vmProfilToUpdate.CollabToUpdate = {
+      email: "eric.dupont@viseo.com",
+      admin: false,
+      businessUnit: null,
+      firstName: "Eric",
+      function: null,
+      id: 1,
+      isAdmin: false,
+      lastName: "DUPONT",
+      password: "987654",
+      personnalIdNumber: "AAB1234",
+      version: 0
+    };
+    //mock.onPut(config.server + "/api/updatecollaborator", vmProfilToUpdate.CollabToUpdate).reply(200,response);
+    vmProfilToUpdate.saveUpdateCollaborator();
+
+    setTimeout(function () {
+      done();
+    }, 0);
+  });
+
+  it('it should collect all information of collaborator in database with success response', function (done) {
+    var response = {
+      email: "eric.dupont@viseo.com",
+      admin: false,
+      businessUnit: null,
+      firstName: "Eric",
+      function: null,
+      id: 1,
+      isAdmin: false,
+      lastName: "DUPONT",
+      password: "987654",
+      personnalIdNumber: "AAB1234",
+      version: 0
+    };
+    mock.onGet(config.server + "/api/collabdescriptionbyid/1").reply(200, response);
+    vmProfilToUpdate.getCollabDescription();
+    setTimeout(function () {
+      expect(vmProfilToUpdate.collabDescription).toEqual(response);
+
+      expect(vmProfilToUpdate.firstName).toEqual(vmProfilToUpdate.collabDescription.firstName);
+      expect(vmProfilToUpdate.lastName).toEqual(vmProfilToUpdate.collabDescription.lastName);
+      expect(vmProfilToUpdate.email).toEqual(vmProfilToUpdate.collabDescription.email);
+      expect(vmProfilToUpdate.fonction).toEqual(vmProfilToUpdate.collabDescription.function);
+      done();
+    }, 0);
+  });
+
+    it('it should update collaborator password when collaborator changed his password with the picture profil not changed and click on the save button', function (done) {
+
+      vmProfilToUpdate.collabDescription = {
+        email: "eric.dupont@viseo.com",
+        admin: false,
+        businessUnit: null,
+        firstName: "Eric",
+        function: null,
+        id: 1,
+        isAdmin: false,
+        lastName: "DUPONT",
+        password: "123456",
+        personnalIdNumber: "AAB1234",
+        defaultPicture: true,
+        version: 0
+      };
+
+      vmProfilToUpdate.newPassword = '987654';
+      vmProfilToUpdate.confirmPassword = '987654';
+      vmProfilToUpdate.password = '123456';
+      vmProfilToUpdate.imageHasBeenChanged = true;
+
+      mock.onPost(config.server + '/fileUpload').reply(200);
+
+      vmProfilToUpdate.updateCollaboratorInfo();
+
+      setTimeout(function () {
+        expect(vmProfilToUpdate.CollabToUpdate.defaultPicture).toBe(false);
+        expect(vmProfilToUpdate.oldPasswordEmpty).toBe(false);
+        expect(vmProfilToUpdate.isRightOldPassword).toBe(true);
+        expect(vmProfilToUpdate.passwordEmpty).toBe(false);
+        done();
+      }, 0);
+    });
+
+  it('it should update collaborator password when collaborator changed his password with a new picture profil and click on the save button', function (done) {
+    var response = [{userConnected: Token}];
+    vmProfilToUpdate.collabDescription = {
+      email: "eric.dupont@viseo.com",
+      admin: false,
+      businessUnit: null,
+      firstName: "Eric",
+      function: null,
+      id: 1,
+      isAdmin: false,
+      lastName: "DUPONT",
+      password: "123456",
+      personnalIdNumber: "AAB1234",
+      defaultPicture: true,
+      version: 0
+    };
+    var CollabToUpdate = {
+      email: "eric.dupont@viseo.com",
+      admin: false,
+      businessUnit: null,
+      firstName: "Eric",
+      function: null,
+      id: 1,
+      isAdmin: false,
+      lastName: "DUPONT",
+      password: "123456",
+      personnalIdNumber: "AAB1234",
+      defaultPicture: true,
+      version: 0
+    };
+
+    vmProfilToUpdate.newPassword = '987654';
+    vmProfilToUpdate.confirmPassword = '987654';
+    vmProfilToUpdate.password = '123456';
+    vmProfilToUpdate.imageHasBeenChanged = false;
+
+   // mock.onPut(config.server + "/api/updatecollaborator",CollabToUpdate).reply(200,response);
+
+    vmProfilToUpdate.updateCollaboratorInfo();
+    setTimeout(function () {
+      expect(vmProfilToUpdate.oldPasswordEmpty).toBe(false);
+      expect(vmProfilToUpdate.isRightOldPassword).toBe(true);
+      expect(vmProfilToUpdate.passwordEmpty).toBe(false);
+      done();
+    }, 0);
+  });
+
+  it('it should update collaborator password when collaborator changed his password but the newPassword is diffrente confirmPassword and click on the save button', function (done) {
+
+    vmProfilToUpdate.collabDescription = {
+      email: "eric.dupont@viseo.com",
+      admin: false,
+      businessUnit: null,
+      firstName: "Eric",
+      function: null,
+      id: 1,
+      isAdmin: false,
+      lastName: "DUPONT",
+      password: "123456",
+      personnalIdNumber: "AAB1234",
+      defaultPicture: true,
+      version: 0
+    };
+
+    vmProfilToUpdate.newPassword = '987654';
+    vmProfilToUpdate.confirmPassword = '987674';
+    vmProfilToUpdate.password = '123456';
+    vmProfilToUpdate.imageHasBeenChanged = false;
+
+    vmProfilToUpdate.updateCollaboratorInfo();
+    setTimeout(function () {
+      expect(vmProfilToUpdate.oldPasswordEmpty).toBe(false);
+      expect(vmProfilToUpdate.isRightOldPassword).toBe(true);
+      expect(vmProfilToUpdate.passwordEmpty).toBe(false);
+      done();
+    }, 0);
+  });
+
+  it('it should update collaborator password when collaborator changed his password with the newPassword is not different and click on the save button', function (done) {
+
+    vmProfilToUpdate.collabDescription = {
+      email: "eric.dupont@viseo.com",
+      admin: false,
+      businessUnit: null,
+      firstName: "Eric",
+      function: null,
+      id: 1,
+      isAdmin: false,
+      lastName: "DUPONT",
+      password: "123456",
+      personnalIdNumber: "AAB1234",
+      defaultPicture: true,
+      version: 0
+    };
+
+    vmProfilToUpdate.newPassword = '123456';
+    vmProfilToUpdate.confirmPassword = '';
+    vmProfilToUpdate.password = '123456';
+    vmProfilToUpdate.imageHasBeenChanged = false;
+
+    vmProfilToUpdate.updateCollaboratorInfo();
+    setTimeout(function () {
+      expect(vmProfilToUpdate.oldPasswordEmpty).toBe(false);
+      expect(vmProfilToUpdate.isRightOldPassword).toBe(false);
+      expect(vmProfilToUpdate.passwordEmpty).toBe(false);
+      expect(vmProfilToUpdate.errorMessageOnSubmit).toEqual("Votre nouveau mot de passe doit être différent de votre ancien mot de passe.");
+      done();
+    }, 0);
+  });
+
+  it('it should update collaborator password when collaborator changed his password with the password is different and click on the save button', function (done) {
+
+    vmProfilToUpdate.collabDescription = {
+      email: "eric.dupont@viseo.com",
+      admin: false,
+      businessUnit: null,
+      firstName: "Eric",
+      function: null,
+      id: 1,
+      isAdmin: false,
+      lastName: "DUPONT",
+      password: "123456",
+      personnalIdNumber: "AAB1234",
+      defaultPicture: true,
+      version: 0
+    };
+
+    vmProfilToUpdate.newPassword = '';
+    vmProfilToUpdate.confirmPassword = '';
+    vmProfilToUpdate.password = '123459';
+    vmProfilToUpdate.imageHasBeenChanged = false;
+
+    vmProfilToUpdate.updateCollaboratorInfo();
+    setTimeout(function () {
+      expect(vmProfilToUpdate.oldPasswordEmpty).toBe(false);
+      expect(vmProfilToUpdate.isRightOldPassword).toBe(false);
+      expect(vmProfilToUpdate.passwordEmpty).toBe(false);
+      expect(vmProfilToUpdate.errorMessageOnSubmit).toEqual("Ancien mot de passe incorrect.");
+      done();
+    }, 0);
+  });
+
+  it('it should update collaborator password when collaborator changed his password but fields empty with the picture profil not changed and click on the save button', function (done) {
+
+    vmProfilToUpdate.collabDescription = {
+      email: "eric.dupont@viseo.com",
+      admin: false,
+      businessUnit: null,
+      firstName: "Eric",
+      function: null,
+      id: 1,
+      isAdmin: false,
+      lastName: "DUPONT",
+      password: "123456",
+      personnalIdNumber: "AAB1234",
+      defaultPicture: true,
+      version: 0
+    };
+
+    vmProfilToUpdate.newPassword = '';
+    vmProfilToUpdate.confirmPassword = '';
+    vmProfilToUpdate.password = '';
+    vmProfilToUpdate.imageHasBeenChanged = true;
+
+    vmProfilToUpdate.updateCollaboratorInfo();
+    setTimeout(function () {
+      expect(vmProfilToUpdate.oldPasswordEmpty).toBe(false);
+      expect(vmProfilToUpdate.passwordEmpty).toBe(false);
+      expect(vmProfilToUpdate.confirmPasswordEmpty).toBe(false);
+      expect(vmProfilToUpdate.isRightOldPassword).toBe(true);
+      expect(vmProfilToUpdate.CollabToUpdate.defaultPicture).toBe(false);
+      done();
+    }, 0);
+  });
+
+  it('it should update collaborator password when collaborator changed his password but fields empty with the picture change ', function (done) {
+
+    vmProfilToUpdate.collabDescription = {
+      email: "eric.dupont@viseo.com",
+      admin: false,
+      businessUnit: null,
+      firstName: "Eric",
+      function: null,
+      id: 1,
+      isAdmin: false,
+      lastName: "DUPONT",
+      password: "123456",
+      personnalIdNumber: "AAB1234",
+      defaultPicture: true,
+      version: 0
+    };
+
+    vmProfilToUpdate.newPassword = '';
+    vmProfilToUpdate.confirmPassword = '';
+    vmProfilToUpdate.password = '';
+    vmProfilToUpdate.imageHasBeenChanged = false;
+
+    vmProfilToUpdate.updateCollaboratorInfo();
+    setTimeout(function () {
+      expect(vmProfilToUpdate.oldPasswordEmpty).toBe(false);
+      expect(vmProfilToUpdate.passwordEmpty).toBe(false);
+      expect(vmProfilToUpdate.confirmPasswordEmpty).toBe(false);
+      expect(vmProfilToUpdate.isRightOldPassword).toBe(true);
+      done();
+    }, 0);
+  });
 });
