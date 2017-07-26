@@ -3,7 +3,9 @@
     <div v-for="expertise in  expertises" class="col-lg-2">
       <div class="row">
         <div class="col-lg-12">
-          <img class=" img-responsive center-block" src="../../../static/lion.jpg"
+          <img  v-if="!expertise.collaborator.defaultPicture" class="img-responsive center-block" :src='"../../../static/"+expertise.collaborator.id + ".jpg"'
+               style="width:130px; height:130px; border-radius:50%;">
+          <img v-else class="img-responsive center-block" src='../../../static/lion.jpg'
                style="width:130px; border-radius:50%;">
         </div>
       </div>

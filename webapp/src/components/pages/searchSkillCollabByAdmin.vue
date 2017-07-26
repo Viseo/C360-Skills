@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container-fluid">
     <div class="col-lg-offset-4 col-lg-4 searchField typeaheadSkills">
       <span class="glyphicon glyphicon-search" ref="searchSkill " @click="typeAheadSearch()"></span>
       <typeahead
@@ -517,8 +517,6 @@
   }
 
   .typeaheadSkills {
-    width: 800px;
-    margin-left: 400px;
     height: 90px;
     box-sizing: border-box;
   }
@@ -564,7 +562,7 @@
   .glyphicon-search {
     top: 12px;
     z-index: 6;
-    left: 95%;
+    left: 94%;
     font-size: 20px;
     color: tan;
   }

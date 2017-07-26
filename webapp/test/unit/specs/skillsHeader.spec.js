@@ -10,7 +10,7 @@ var $ = window.jQuery = require('jquery');
 
 var mock = new MockAdapter(axios);
 var vmSkillsHeader;
-Vue.use(Router)
+Vue.use(Router);
 
 describe('test skillsHeader.vue', function() {
   let Token = "eyJhbGciOiJIUzUxMiJ9.eyJmaXJzdE5hbWUiOiJDYXJvbGluZSIsImxhc3ROYW1lIjoiTGhvdGUiLCJpc0FkbWluIjpmYWxzZSwiaWQiOjEsImVtYWlsIjoibGhvdGVAdmlzZW8uY29tIiwidmVyc2lvbiI6MCwiZGVmYXVsdHBpY3R1cmUiOnRydWV9.eguO54P8MHmWrwSREJu5-vCHkhA2Tj995efuHc4twdw";
