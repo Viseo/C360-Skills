@@ -1,7 +1,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
         http://www.springframework.org/schema/context
@@ -20,14 +21,14 @@
 		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
 		<property name="messageConverters">
 			<list>
-				<ref bean="jsonMessageConverter" />
+				<ref bean="jsonMessageConverter1" />
 			</list>
 		</property>
 	</bean>
 
 	<!-- Configure bean to convert JSON to POJO and vice versa -->
 		<!-- <bean id="jacksonObjectMapper" class="com.viseo.c360.json.JSONMapper" />-->
-    <bean id="jsonMessageConverter"
+    <bean id="jsonMessageConverter1"
 		class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
 	    <!-- <property name="objectMapper" ref="jacksonObjectMapper" /> -->
 	</bean>
@@ -65,5 +66,6 @@
 	<tx:annotation-driven transaction-manager="transactionManager" />
 
    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+
 
 </beans>

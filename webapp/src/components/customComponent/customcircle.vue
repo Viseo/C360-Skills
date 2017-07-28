@@ -1,14 +1,20 @@
 <template>
-  <g>
-    <circle v-show="showCircleBlur" @click="handleClick()" class="circleSkill" :id="cx+''+cy" :cx="cx" :cy="cy" r="50" :fill="fill" :stroke="stroke" stroke-width="10"></circle>
-    <circle @click="handleClick()" class="circleSkill" :cx="cx" :cy="cy" r="53" :fill="fill" :stroke="stroke" stroke-width="2"></circle>
-    <text @click="handleClick()" class="textSkill" text-anchor="middle" :x="cx" :y="cy" style="fill: rgba(0,0,0,0.52);">{{content}}</text>
+  <g :id="id">
+    <circle v-show="showCircleBlur" @click="handleClick()" class="circleSkill" :id="cx+''+cy" :cx="cx" :cy="cy" r="50"
+            :fill="fill" :stroke="stroke" stroke-width="10"></circle>
+    <circle @click="handleClick()" class="circleSkill" :cx="cx" :cy="cy" r="53" :fill="fill" :stroke="stroke"
+            stroke-width="2"></circle>
+    <text @click="handleClick()" class="textSkill" text-anchor="middle" :x="cx" :y="cy" style="fill: rgba(0,0,0,0.52);">
+      {{content}}
+    </text>
     <foreignObject :x="cx-45" :y="cy+5" class="myclass" width="100%" height="100%">
-      <div v-show="!admin">
+      <div v-show="!star">
         <p><span v-tooltip.bottom="currentLevel">
-        <star-rating @rating-selected="setRating" @current-rating="showCurrentRating" v-model="rating" :show-rating="false"
+        <star-rating @rating-selected="setRating" @current-rating="showCurrentRating" v-model="rating"
+                     :show-rating="false"
                      :star-size="18">
-        </star-rating>
+          </star-rating>
+        <p class="level"></p>
         </span></p>
       </div>
     </foreignObject>
@@ -24,15 +30,15 @@
 
   export default {
 
-
     components: {
       StarRating
     },
-    props:["admin","cx","cy", "content","fill","stroke","showCircleBlur","score","expertise"],
+    props: ["star", "cx", "cy", "content", "fill", "stroke", "showCircleBlur", "score", "expertise", "id"],
     data () {
       return {
-        selectedExpertise:this.expertise,
+        selectedExpertise: this.expertise,
         rating: this.score,
+        ratingSaved: 0,
         currentRating: 0,
         currentLevel: null,
         cx1: "",
@@ -41,70 +47,104 @@
         cy2: "",
         cx3: "",
         cy3: "",
-        cyLine1:"",
-        cxLine1:"",
-        cyLine2:"",
-        cxLine2:"",
-        cyLine3:"",
-        cxLine3:"",
+        cyLine1: "",
+        cxLine1: "",
+        cyLine2: "",
+        cxLine2: "",
+        cyLine3: "",
+        cxLine3: "",
       }
     },
+
     mounted: function () {
-      $('foreignObject').ready(function(){
-        $('foreignObject').find('div').mousemove(function(e){
-          window.mouseXPos = e.pageX;
-          window.mouseYPos = e.pageY;
-          $(".tooltip-inner").css("position", "absolute !important");
-          $(".tooltip-inner").css("left", window.mouseXPos +5);
-          $(".tooltip-inner").css("top",window.mouseYPos);
-          $(".tooltip").css("transform","none");
-        });
-      });
+      this.showTooltip();
     },
-    watch:{
-      score: function(newValue){
+
+    watch: {
+      score: function (newValue) {
         this.rating = newValue;
       },
-      expertise:function(newValue){
+
+      expertise: function (newValue) {
         this.selectedExpertise = newValue;
       }
     },
+
     methods: {
-      setRating: function(raiting){
-        this.updateExpertise(this.selectedExpertise,raiting);
+      showTooltip(){
+        $("div.star-rating span.pointer:first-child polygon").hover(function () {
+          let levelTooltip = $(this).closest('p').find(".level");
+          levelTooltip.css("visibility", "visible");
+          levelTooltip.css("background-color", "#97253d");
+          levelTooltip.css("margin-left", "6px");
+          levelTooltip.text('Elémentaire');
+        }, function () {
+          let levelTooltip = $(this).closest('p').find(".level");
+          levelTooltip.css("visibility", "hidden");
+        });
+
+        $("div.star-rating span.pointer:nth-child(2) polygon").hover(function () {
+          let levelTooltip = $(this).closest('p').find(".level");
+          levelTooltip.css("background-color", "orange");
+          levelTooltip.css("visibility", "visible");
+          levelTooltip.css("margin-left", "25px");
+          levelTooltip.text('Débutant');
+        }, function () {
+          let levelTooltip = $(this).closest('p').find(".level");
+          levelTooltip.css("visibility", "hidden");
+        });
+        $("div.star-rating span.pointer:nth-child(3) polygon").hover(function () {
+          let levelTooltip = $(this).closest('p').find(".level");
+          levelTooltip.css("background-color", "#e17155");
+          levelTooltip.css("visibility", "visible");
+          levelTooltip.css("margin-left", "43px");
+          levelTooltip.text('Confirmé');
+        }, function () {
+          let levelTooltip = $(this).closest('p').find(".level");
+          levelTooltip.css("visibility", "hidden");
+        });
+        $("div.star-rating span.pointer:nth-child(4) polygon").hover(function () {
+          let levelTooltip = $(this).closest('p').find(".level");
+          levelTooltip.css("background-color", "#00d466");
+          levelTooltip.css("visibility", "visible");
+          levelTooltip.css("margin-left", "60px");
+          levelTooltip.text('Avancé');
+        }, function () {
+          let levelTooltip = $(this).closest('p').find(".level");
+          levelTooltip.css("visibility", "hidden");
+        });
+        $("div.star-rating span.pointer:nth-child(5) polygon").hover(function () {
+          let levelTooltip = $(this).closest('p').find(".level");
+          levelTooltip.css("background-color", "#0c8700");
+          levelTooltip.css("visibility", "visible");
+          levelTooltip.css("margin-left", "79px");
+          levelTooltip.text('Expert');
+        }, function () {
+          let levelTooltip = $(this).closest('p').find(".level");
+          levelTooltip.css("visibility", "hidden");
+        });
       },
 
-      showCurrentRating: function(rating) {
+      setRating: function (raiting) {
+        if (this.ratingSaved == this.rating) {
+          raiting = 0;
+          this.rating = 0;
+        }
+        this.ratingSaved = raiting;
+        if (!this.$store.getters.collaboratorLoggedIn.isAdmin)
+          this.updateExpertise(this.selectedExpertise, raiting);
+        else
+          this.$emit('clicked', raiting);
+        this.$emit('getExpertise', this.selectedExpertise);
+      },
+
+      showCurrentRating: function (rating) {
         this.currentRating = rating;
-        if(rating==5){
-          this.currentLevel = "Expert";
-          $(".tooltip-inner").css("background","#0c8700");
-        }
-        if(rating==4){
-          this.currentLevel = "Avancé";
-          $(".tooltip-inner").css("background","#00d466");
-        }
-        if(rating==3){
-          this.currentLevel = "Confirmé";
-          $(".tooltip-inner").css("background","#d66d25");
-
-        }
-        if(rating==2){
-          this.currentLevel = "Débutant";
-          $(".tooltip-inner").css("background","#e1879a");
-
-        }
-        if(rating==1){
-          this.currentLevel = "Élémentaire";
-          $(".tooltip-inner").css("background","#97253d");
-
-        }
       },
 
-      updateExpertise(expertise,value){
+      updateExpertise(expertise, value){
         this.selectedExpertise.level = value;
         axios.put(config.server + '/api/expertise', expertise).then(
-
           response => {
             this.$emit('refresh');
             console.log(response);
@@ -112,11 +152,13 @@
             console.log(response);
           });
       },
+
       handleClick(){
         this.$emit('click');
       },
-      divPosition(cx,cy){
-        return 'z-index:1;position:relative;left:'+cx+'px;top:'+cy+'px;'
+
+      divPosition(cx, cy){
+        return 'z-index:1;position:relative;left:' + cx + 'px;top:' + cy + 'px;'
       }
     }
   }
@@ -127,7 +169,22 @@
     cursor: pointer;
   }
 
+  p.level {
+    font-size: 12px;
+    color: white;
+    display: inline-block;
+    margin: 15px 0px 0px 25px;
+    border-radius: 50px;
+    padding: 0px 5px;
+  }
+
   /* Star rating */
+  div.star-rating {
+    width: 0px;
+    height: 0px;
+    padding-top: 7px;
+  }
+
   .stars {
     cursor: pointer;
     width: 90px;
@@ -174,7 +231,7 @@
   }
 
   .tooltip {
-    position:absolute;
+    position: absolute;
     display: block !important;
     pointer-events: none;
     padding: 4px;
@@ -185,14 +242,14 @@
   /*margin-top: -3em;*/
 
   .tooltip .tooltip-inner {
-    position:absolute;
+    position: absolute;
     background: #00CD63;
     color: white;
     border-radius: 16px;
     padding: 5px 10px 4px;
   }
 
-  .tooltip tooltip-arrow{
+  .tooltip tooltip-arrow {
     display: none;
   }
 

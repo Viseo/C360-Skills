@@ -4,8 +4,8 @@ import config from '@/config/config'
 import ShowSkillsCollab from '@/components/pages/showSkillsCollabPage'
 import MockAdapter from 'axios-mock-adapter'
 import storeVuex from '@/vuex/store'
-
-//var Constructor = Vue.extend(ShowSkillsCollab);
+import CustomCircle from '@/components/customComponent/customcircle'
+var Constructor = Vue.extend(CustomCircle);
 //var vmShowSkillsCollab;
 var mock = new MockAdapter(axios);
 
@@ -16,16 +16,19 @@ describe('Test showSkillCollab', function () {
   const vm = new Vue({
     template: '<div><showSkillsCollab></showSkillsCollab></div>',
     components: {
-      'showSkillsCollab': ShowSkillsCollab
+      'showSkillsCollab': ShowSkillsCollab,
     },
     store: storeVuex
   }).$mount();
   let collaboratorToken = "eyJhbGciOiJIUzUxMiJ9.eyJmaXJzdE5hbWUiOiJDYXJvbGluZSIsImxhc3ROYW1lIjoiTGhvdGUiLCJpc0FkbWluIjpmYWxzZSwiaWQiOjEsImVtYWlsIjoibGhvdGVAdmlzZW8uY29tIiwidmVyc2lvbiI6MCwiZGVmYXVsdHBpY3R1cmUiOnRydWV9.eguO54P8MHmWrwSREJu5-vCHkhA2Tj995efuHc4twdw";
 
   beforeEach(function () {
+
     vmShowSkillsCollab = vm.$children[0];
+    vmShowSkillsCollab.$children[1] = new Constructor().$mount();
 
     mock = new MockAdapter(axios);
+
 
   });
 
@@ -159,6 +162,8 @@ describe('Test showSkillCollab', function () {
   });
 
   it('should check wait for element to display', function (done) {
+    let containerSVG = vmShowSkillsCollab.$el.querySelector('g');
+    document.getElementById = jasmine.createSpy('HTML Element').and.returnValue(containerSVG);
     var id = 1;
     console.log(vmShowSkillsCollab.waitForElementToDisplay(id, 0, "cx"));
     //expect(vmShowSkillsCollab.showIcon(skillId)).toBe(false);
@@ -175,9 +180,18 @@ describe('Test showSkillCollab', function () {
   });
 
   it('should check if find skill', function () {
+    vmShowSkillsCollab.skills = [{
+      skill1: {id: 1, label: 'JAVA', version: 0},
+      skill2: {id: 2, label: 'J2EE', version: 0}
+    }];
     var findSkill = [{id: 1, label: 'JAVA', version: 0}];
     storeVuex.commit('setFoundedSkillsLabel',findSkill);
     var id = 1;
+    console.log(" vmShowSkillsCollab.$children.length : " + vmShowSkillsCollab.$children[1].$el);
+    let containerSVG = vmShowSkillsCollab.$el.querySelector('div#svg-container.svg-container.collab');
+
+    document.getElementById = jasmine.createSpy('HTML Element').and.returnValue(containerSVG);
+
     expect(vmShowSkillsCollab.showFocusOnSearch(id)).toBe(true);
   });
 

@@ -4,8 +4,8 @@ import mainPage from '../components/mainPage.vue'
 import collabSVG from '../components/pages/showSkillsCollabPage.vue'
 import containerSVG from '../components/pages/addSkillsPage.vue'
 import navigationMenu from '../components/layout/signInUpMenu.vue'
-import findSkill from '../components/pages/findSkill.vue'
-import wishrequest from '../components/pages/wishRequest.vue'
+import searchSkillCollabByAdmin from '../components/pages/searchSkillCollabByAdmin.vue'
+import profilToUpdate from '../components/pages/profilToUpdatePage.vue'
 import error404Page from '../components/pages/error404Page.vue'
 
 var jwtDecode = require('jwt-decode');
@@ -44,7 +44,6 @@ function redirectIfAlreadyAuthenticated(to, from, next) {
     next('/addSkills');
   }
   else if (isAlreadyAuthenticated() && !isAdministratorAuthenticated()) {
-    console.log("collab");
     next('/showSkillsCollab');
   }
   else {
@@ -92,16 +91,37 @@ const router = new Router({
         component: collabSVG,
       }]
     },
-    // {
-    //   path: '/showSkillsCollab',
-    //   name: 'showSkillsCollab',
-    //   component: mainPage,
-    //   children: [{
-    //     name: 'mainPage',
-    //     path: "/findSkill",
-    //     component: findSkill
-    //   }]
-    // }
+    {
+      path: '/searchSkillCollabByAdmin',
+      name: 'searchSkillCollabByAdmin',
+      component: mainPage,
+      beforeEnter: requireAdministratorAuthentification,
+      children: [{
+        name: 'mainPage',
+        path: "/searchSkillCollabByAdmin",
+        component: searchSkillCollabByAdmin
+      }]
+    },
+      {
+          path: '/profiltoupdate',
+          name: 'profiltoupdate',
+          component: mainPage,
+          beforeEnter: requireCollaboratorAuthentification,
+          children: [{
+            name: 'mainPage',
+              path: "/profiltoupdate",
+              component: profilToUpdate
+          }]
+      },
+      {
+          path: '*',
+          name: '*',
+          component: mainPage,
+          children: [{
+            path: '*',
+              component: error404Page
+          }]
+      }
   ]
 });
 

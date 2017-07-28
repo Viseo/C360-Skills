@@ -10,6 +10,7 @@ import router from './config/router.js'
 import VueStrap from 'vue-strap'
 
 require('../node_modules/bootstrap/dist/css/bootstrap.css');
+require('../node_modules/bootstrap/dist/css/bootstrap.css');
 require('../node_modules/simplebar/dist/simplebar.css');
 require('../node_modules/simplebar/dist/simplebar.js');
 
@@ -19,6 +20,7 @@ Vue.use(VTooltip);
 Vue.config.productionTip = false;
 Vue.component('dropdown', VueStrap.dropdown);
 Vue.component('typeahead', VueStrap.typeahead);
+Vue.component('tooltip', VueStrap.tooltip);
 
 
 // Vue.config.productionTip = false;

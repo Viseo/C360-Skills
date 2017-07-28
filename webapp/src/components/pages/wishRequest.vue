@@ -8,7 +8,7 @@
       <div>
         <svg :viewBox="myViewBox"  height="300">
         <g id="wishSVG" v-for="(wish,i) in wishes">
-        <customCircle :admin="true" :id="wish.id" :cx="positionX(i)" :cy="55" :content="wish.label" stroke="#ccc" fill="#eee"/>
+        <customCircle :star="true" :id="wish.id" :cx="positionX(i)" :cy="55" :content="wish.label" stroke="#ccc" fill="#eee"/>
           <circle @click="validWish(wish)" style="cursor: pointer" r="10" :cx="positionX(i) + 25" cy="120" fill="#09aa76"></circle>
           <text @click="validWish(wish)" text-anchor="middle" :x="positionX(i) + 25"  y="125" style="fill: white;cursor: pointer">✔</text>
           <circle @click="rejectWish(wish)" style="cursor: pointer" r="10" :cx="positionX(i) - 25" cy="120" fill="#a90909"></circle>

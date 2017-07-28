@@ -8,7 +8,7 @@ import PasswordInput from '@/components/customComponent/passwordInput'
 var Constructor = Vue.extend(PasswordInput);
 var vmPasswordInput;
 
-describe('test customInput.vue', function() {
+describe('test passwordInput.vue', function() {
   beforeEach(function () {
 
     vmPasswordInput = new Constructor().$mount();
