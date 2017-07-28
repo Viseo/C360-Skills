@@ -1,7 +1,7 @@
 package com.viseo.c360.competence.services;
 
 /**
- * Created by SJO3662 on 27/07/2017.
+ * Created by SJO3662  on 27/07/2017.
  */
 import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.Queue;
