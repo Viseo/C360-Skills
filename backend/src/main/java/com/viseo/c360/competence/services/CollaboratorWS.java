@@ -2,15 +2,12 @@ package com.viseo.c360.competence.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.viseo.c360.competence.converters.collaborator.*;
-
 import com.viseo.c360.competence.dao.CollaboratorDAO;
 import com.viseo.c360.competence.dao.ExpertiseDAO;
 import com.viseo.c360.competence.domain.collaborator.Collaborator;
-
 import com.viseo.c360.competence.domain.collaborator.Expertise;
 import com.viseo.c360.competence.dto.collaborator.CollaboratorDescription;
 import com.viseo.c360.competence.dto.collaborator.CollaboratorIdentity;
-
 import com.viseo.c360.competence.dto.collaborator.ExpertiseDescription;
 import com.viseo.c360.competence.email.sendMessage;
 import com.viseo.c360.competence.exceptions.C360Exception;
@@ -21,6 +18,9 @@ import com.viseo.c360.competence.exceptions.dao.util.UniqueFieldErrors;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.crypto.MacProvider;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.convert.ConversionException;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,13 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.AMQP.BasicProperties;
-
-
+import java.util.concurrent.atomic.AtomicInteger;
 @RestController
 public class CollaboratorWS {
 
@@ -75,7 +69,15 @@ public class CollaboratorWS {
             currentUserMap.put("userConnected", compactJws);
             ObjectMapper mapperObj = new ObjectMapper();
 
-            Send(mapperObj.writeValueAsString(user));
+            ApplicationContext ctx = new AnnotationConfigApplicationContext(RabbitMqConfig.class);
+            RabbitTemplate rabbitTemplate = ctx.getBean(RabbitTemplate.class);
+
+            AtomicInteger counter = new AtomicInteger();
+            for (int i = 0; i < 5; i++){
+                System.out.println("sending new custom message..");
+                rabbitTemplate.convertAndSend(new CustomMessage(counter.incrementAndGet(), "RabbitMQ Spring JSON Example"));
+            }
+
             return currentUserMap;
         } catch (ConversionException e) {
             e.printStackTrace();
@@ -83,8 +85,8 @@ public class CollaboratorWS {
         }
     }
 
-    private void Send(String message) throws Exception {
-        ConnectionFactory var1 = new ConnectionFactory();
+    /*private void Send(String message) throws Exception {
+        *//*ConnectionFactory var1 = new ConnectionFactory();
         var1.setHost("localhost");
         Connection var2 = var1.newConnection();
         Channel var3 = var2.createChannel();
@@ -92,8 +94,8 @@ public class CollaboratorWS {
         var3.basicPublish("", "hello", (BasicProperties)null, message.getBytes("UTF-8"));
         System.out.println(" [x] Sent \'" + message + "\'");
         var3.close();
-        var2.close();
-    }
+        var2.close();*//*
+    }*/
 
     private static ConcurrentHashMap<String, CollaboratorDescription> mapUserCache;
 
