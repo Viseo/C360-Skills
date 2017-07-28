@@ -74,11 +74,11 @@ public class CollaboratorWS {
             RabbitTemplate rabbitTemplate = ctx.getBean(RabbitTemplate.class);
 
             AtomicInteger counter = new AtomicInteger();
-            for (int i = 0; i < 5; i++){
-                System.out.println("sending new custom message..");
+//            for (int i = 0; i < 5; i++){
+//                System.out.println("sending new custom message..");
                 //rabbitTemplate.convertAndSend(new CustomMessage(counter.incrementAndGet(), "RabbitMQ Spring JSON Example"));
-                rabbitTemplate.convertSendAndReceive("Coucou");
-            }
+                rabbitTemplate.convertSendAndReceive("Coucou de C360_Skill");
+//            }
 
             return currentUserMap;
         } catch (ConversionException e) {

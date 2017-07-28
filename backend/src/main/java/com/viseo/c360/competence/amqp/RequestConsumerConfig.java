@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
 public class RequestConsumerConfig {
 
     private static final String SIMPLE_MESSAGE_QUEUE = "simple.queue.name";
-    protected final String replyQueueName = "reply.queue";
+    protected final String replyQueueName = "reply.queue.skill";
 
     @Bean
     public ConnectionFactory connectionFactory() {
