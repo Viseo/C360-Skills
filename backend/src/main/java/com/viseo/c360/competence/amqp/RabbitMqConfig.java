@@ -1,4 +1,4 @@
-package com.viseo.c360.competence.services;
+package com.viseo.c360.competence.amqp;
 
 /**
  * Created by SJO3662  on 27/07/2017.
