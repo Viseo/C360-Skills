@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMqConfig {
 
     private static final String SIMPLE_MESSAGE_QUEUE = "simple.queue.name";
+    protected final String replyQueueName = "reply.queue";
 
     @Bean
     public ConnectionFactory connectionFactory() {
@@ -42,16 +43,23 @@ public class RabbitMqConfig {
         RabbitTemplate template = new RabbitTemplate(connectionFactory());
         template.setRoutingKey(SIMPLE_MESSAGE_QUEUE);
         template.setMessageConverter(jsonMessageConverter());
+        template.setReplyQueue(replyQueue());
+        template.setReplyTimeout(1000);
         return template;
+    }
+
+    @Bean
+    public Queue replyQueue() {
+        return new Queue(this.replyQueueName);
     }
 
     @Bean
     public SimpleMessageListenerContainer listenerContainer() {
         SimpleMessageListenerContainer listenerContainer = new SimpleMessageListenerContainer();
         listenerContainer.setConnectionFactory(connectionFactory());
-        listenerContainer.setQueues(simpleQueue());
+        listenerContainer.setQueues(replyQueue());
         listenerContainer.setMessageConverter(jsonMessageConverter());
-        listenerContainer.setMessageListener(new Consumer());
+        listenerContainer.setMessageListener(rabbitTemplate());
         listenerContainer.setAcknowledgeMode(AcknowledgeMode.AUTO);
         return listenerContainer;
     }

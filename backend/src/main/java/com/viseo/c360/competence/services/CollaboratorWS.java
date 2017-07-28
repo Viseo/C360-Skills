@@ -75,7 +75,8 @@ public class CollaboratorWS {
             AtomicInteger counter = new AtomicInteger();
             for (int i = 0; i < 5; i++){
                 System.out.println("sending new custom message..");
-                rabbitTemplate.convertAndSend(new CustomMessage(counter.incrementAndGet(), "RabbitMQ Spring JSON Example"));
+                //rabbitTemplate.convertAndSend(new CustomMessage(counter.incrementAndGet(), "RabbitMQ Spring JSON Example"));
+                rabbitTemplate.convertSendAndReceive("Coucou");
             }
 
             return currentUserMap;
