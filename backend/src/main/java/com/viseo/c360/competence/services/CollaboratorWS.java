@@ -1,7 +1,7 @@
 package com.viseo.c360.competence.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.viseo.c360.competence.amqp.RabbitMqConfig;
+import com.viseo.c360.competence.amqp.ResponseConsumerConfig;
 import com.viseo.c360.competence.converters.collaborator.*;
 import com.viseo.c360.competence.dao.CollaboratorDAO;
 import com.viseo.c360.competence.dao.ExpertiseDAO;
@@ -70,7 +70,7 @@ public class CollaboratorWS {
             currentUserMap.put("userConnected", compactJws);
             ObjectMapper mapperObj = new ObjectMapper();
 
-            ApplicationContext ctx = new AnnotationConfigApplicationContext(RabbitMqConfig.class);
+            ApplicationContext ctx = new AnnotationConfigApplicationContext(ResponseConsumerConfig.class);
             RabbitTemplate rabbitTemplate = ctx.getBean(RabbitTemplate.class);
 
             AtomicInteger counter = new AtomicInteger();

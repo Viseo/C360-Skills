@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class RabbitMqConfig {
+public class ResponseConsumerConfig {
 
     private static final String SIMPLE_MESSAGE_QUEUE = "simple.queue.name";
     protected final String replyQueueName = "reply.queue";
