@@ -19,7 +19,9 @@ import com.viseo.c360.competence.exceptions.dao.util.UniqueFieldErrors;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.crypto.MacProvider;
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.JsonMessageConverter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.convert.ConversionException;
@@ -77,7 +79,8 @@ public class CollaboratorWS {
 //            for (int i = 0; i < 5; i++){
 //                System.out.println("sending new custom message..");
                 //rabbitTemplate.convertAndSend(new CustomMessage(counter.incrementAndGet(), "RabbitMQ Spring JSON Example"));
-                rabbitTemplate.convertSendAndReceive("Coucou de C360_Skill");
+            Object reponse = rabbitTemplate.convertSendAndReceive(mapperObj.writeValueAsString(user));
+                System.out.println("VOICI LA REPONSE"+reponse);
 //            }
 
             return currentUserMap;
