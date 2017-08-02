@@ -1,8 +1,11 @@
+/*
 package com.viseo.c360.competence.amqp;
 
+*/
 /**
  * Created by SJO3662  on 27/07/2017.
- */
+ *//*
+
 import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
@@ -44,7 +47,7 @@ public class RequestProducerConfig {
         template.setRoutingKey(SIMPLE_MESSAGE_QUEUE);
         template.setMessageConverter(jsonMessageConverter());
         template.setReplyQueue(replyQueue());
-        template.setReplyTimeout(1000);
+        template.setReplyTimeout(10000);
         return template;
     }
 
@@ -60,8 +63,9 @@ public class RequestProducerConfig {
         listenerContainer.setQueues(replyQueue());
         listenerContainer.setMessageConverter(jsonMessageConverter());
         listenerContainer.setMessageListener(rabbitTemplate());
-        listenerContainer.setAcknowledgeMode(AcknowledgeMode.AUTO);
+        listenerContainer.setAcknowledgeMode(AcknowledgeMode.NONE);
         return listenerContainer;
     }
 
 }
+*/

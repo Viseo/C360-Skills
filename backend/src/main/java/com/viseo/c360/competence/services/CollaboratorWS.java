@@ -1,7 +1,7 @@
 package com.viseo.c360.competence.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.viseo.c360.competence.amqp.RequestProducerConfig;
+//import com.viseo.c360.competence.amqp.RequestProducerConfig;
 import com.viseo.c360.competence.converters.collaborator.*;
 import com.viseo.c360.competence.dao.CollaboratorDAO;
 import com.viseo.c360.competence.dao.ExpertiseDAO;
@@ -73,15 +73,15 @@ public class CollaboratorWS {
             currentUserMap.put("userConnected", compactJws);
             ObjectMapper mapperObj = new ObjectMapper();
 
-            ApplicationContext ctx = new AnnotationConfigApplicationContext(RequestProducerConfig.class);
-            RabbitTemplate rabbitTemplate = ctx.getBean(RabbitTemplate.class);
+            //ApplicationContext ctx = new AnnotationConfigApplicationContext(RequestProducerConfig.class);
+            //RabbitTemplate rabbitTemplate = ctx.getBean(RabbitTemplate.class);
 
             AtomicInteger counter = new AtomicInteger();
 //            for (int i = 0; i < 5; i++){
 //                System.out.println("sending new custom message..");
                 //rabbitTemplate.convertAndSend(new CustomMessage(counter.incrementAndGet(), "RabbitMQ Spring JSON Example"));
-            Object reponse = rabbitTemplate.convertSendAndReceive(mapperObj.writeValueAsString(user.getEmail()));
-                System.out.println("VOICI LA REPONSE"+reponse);
+            //Object reponse = rabbitTemplate.convertSendAndReceive(mapperObj.writeValueAsString(user.getEmail()));
+                //System.out.println("VOICI LA REPONSE"+reponse);
 //            }
 
             return currentUserMap;
