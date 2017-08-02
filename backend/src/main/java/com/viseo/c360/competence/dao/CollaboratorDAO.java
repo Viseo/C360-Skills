@@ -65,11 +65,10 @@ public class CollaboratorDAO {
 
     public Collaborator getCollaboratorByLogin(String personnalEmail) {
         daoFacade.setFlushMode(FlushModeType.COMMIT);
-        Collaborator registredUser =
-                (Collaborator) daoFacade.getSingle(
+       List<Collaborator> registredUser = daoFacade.getList(
                         "select c from Collaborator c where c.email = :personnalEmail",
                         param("personnalEmail", personnalEmail));
-        return registredUser;
+        return registredUser.get(0);
     }
 
     public Collaborator getCollaboratorById(Long collab_id) {

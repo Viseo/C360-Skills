@@ -1,8 +1,5 @@
 package com.viseo.c360.competence.amqp;
 
-/**
- * Created by BBA3616 on 28/07/2017.
- */
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;

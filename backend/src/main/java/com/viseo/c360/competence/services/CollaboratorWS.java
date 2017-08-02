@@ -53,6 +53,7 @@ public class CollaboratorWS {
     @ResponseBody
     public Map<String, CollaboratorDescription> getUserByLoginPassword(@RequestBody CollaboratorDescription myCollaboratorDescription) throws Exception {
         try {
+            System.out.println("THIS IS DAO : "+collaboratorDAO);
             InitializeMap();
             Collaborator c = collaboratorDAO.getCollaboratorByLoginPassword(myCollaboratorDescription.getEmail(), myCollaboratorDescription.getPassword());
             CollaboratorDescription user = new CollaboratorToDescription().convert(c);
@@ -79,7 +80,7 @@ public class CollaboratorWS {
 //            for (int i = 0; i < 5; i++){
 //                System.out.println("sending new custom message..");
                 //rabbitTemplate.convertAndSend(new CustomMessage(counter.incrementAndGet(), "RabbitMQ Spring JSON Example"));
-            Object reponse = rabbitTemplate.convertSendAndReceive(mapperObj.writeValueAsString(user));
+            Object reponse = rabbitTemplate.convertSendAndReceive(mapperObj.writeValueAsString(user.getEmail()));
                 System.out.println("VOICI LA REPONSE"+reponse);
 //            }
 
