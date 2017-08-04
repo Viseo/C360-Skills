@@ -32,6 +32,7 @@ public class ConsumerMessageHandler {
             System.out.println("Message Received at consumer end  : " + request);
             Collaborator c = ws.getCollaboratorByLogin(collaborator.getEmail());
             System.out.println("Le voila = " + c.getFirstName());
+            if(c != null)
             return  mapperObj.writeValueAsString(c);
         } catch (IOException e) {
             e.printStackTrace();

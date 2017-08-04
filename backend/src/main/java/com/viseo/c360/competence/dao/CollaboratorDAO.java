@@ -68,7 +68,9 @@ public class CollaboratorDAO {
        List<Collaborator> registredUser = daoFacade.getList(
                         "select c from Collaborator c where c.email = :personnalEmail",
                         param("personnalEmail", personnalEmail));
+        if(registredUser.size() > 0)
         return registredUser.get(0);
+        return null;
     }
 
     public Collaborator getCollaboratorById(Long collab_id) {
