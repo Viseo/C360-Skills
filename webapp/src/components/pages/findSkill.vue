@@ -85,6 +85,7 @@
         if(this.noSkillsFound)
           this.valueStock=this.value;
         this.$store.commit('setFoundedSkillsLabel', this.skillsFound);
+        this.value='';
       },
       sendWish(){
         if(!this.valueStock) this.valueStock = this.savedValue;
