@@ -1,8 +1,11 @@
-package com.viseo.c360.competence.services;
+/*
+package com.viseo.c360.competence.amqp;
 
+*/
 /**
- * Created by SJO3662 on 27/07/2017.
- */
+ * Created by SJO3662  on 27/07/2017.
+ *//*
+
 import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
@@ -15,10 +18,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class RabbitMqConfig {
+public class RequestProducerConfig {
 
     private static final String SIMPLE_MESSAGE_QUEUE = "simple.queue.name";
-    protected final String replyQueueName = "reply.queue";
+    protected final String replyQueueName = "reply.queue.skill";
 
     @Bean
     public ConnectionFactory connectionFactory() {
@@ -44,7 +47,7 @@ public class RabbitMqConfig {
         template.setRoutingKey(SIMPLE_MESSAGE_QUEUE);
         template.setMessageConverter(jsonMessageConverter());
         template.setReplyQueue(replyQueue());
-        template.setReplyTimeout(1000);
+        template.setReplyTimeout(10000);
         return template;
     }
 
@@ -60,8 +63,9 @@ public class RabbitMqConfig {
         listenerContainer.setQueues(replyQueue());
         listenerContainer.setMessageConverter(jsonMessageConverter());
         listenerContainer.setMessageListener(rabbitTemplate());
-        listenerContainer.setAcknowledgeMode(AcknowledgeMode.AUTO);
+        listenerContainer.setAcknowledgeMode(AcknowledgeMode.NONE);
         return listenerContainer;
     }
 
 }
+*/

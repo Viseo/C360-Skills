@@ -1,15 +1,14 @@
 package com.viseo.c360.competence.domain;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Version;
+import javax.persistence.*;
 import java.io.Serializable;
+
+import static javax.persistence.GenerationType.AUTO;
 
 @MappedSuperclass
 public abstract class BaseEntity implements Serializable {
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = AUTO)
     long id;
 
     @Version
