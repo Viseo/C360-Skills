@@ -527,4 +527,16 @@ describe('test profilToUpdatePage.vue', function () {
       done();
     }, 0);
   });
+
+  it('it should check if the collaborator profil picture has been changed when the collaborator choose a specific picture', function () {
+    var modifyPictureElement = document.createElement('input');
+    modifyPictureElement.setAttribute("id", "loadProfilImage");
+    document.getElementById = jasmine.createSpy('HTML Element').and.returnValue(modifyPictureElement);
+    var currentImageElement = document.createElement('img');
+    currentImageElement.setAttribute("id", "profilImageToChange");
+    document.getElementById = jasmine.createSpy('HTML Element').and.returnValue(currentImageElement);
+    $('#loadprofilImage').trigger("change");
+    vmProfilToUpdate.checkIfProfilImageHasBeenChanged("#loadProfilImage");
+  });
+
 });

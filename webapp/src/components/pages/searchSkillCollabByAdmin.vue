@@ -37,7 +37,7 @@
       </g>
     </svg>
     <p id="noResult" v-show="noCollabFound">Aucun résultat ne correspond à votre recherche.</p>
-    <ShowCollab :expertises="listCollaboratorsExpertises"></ShowCollab>
+    <ShowCollab id="resultCollab" :expertises="listCollaboratorsExpertises"></ShowCollab>
   </div>
 </template>
 
@@ -252,11 +252,13 @@
           if (this.foundSkills[i].skill.id == this.selectedExpertise.skill.id) {
             document.getElementById(this.foundSkills[i].skill.id).getElementsByTagName("circle")[0].removeAttribute("filter");
             this.foundSkills.splice(i, 1);
+
             if (this.levelSelected == 0) {
               this.selectedExpertise.level = 0;
-              this.listCollaboratorsExpertises.splice(0, this.listCollaboratorsExpertises.length)
-              if (this.foundSkills.length != 0)
+              this.listCollaboratorsExpertises.splice(0, this.listCollaboratorsExpertises.length);
+              if (this.foundSkills.length != 0) {
                 this.getCollaboratorsByExpertises(this.foundSkills);
+              }
               return;
             }
           }
@@ -393,7 +395,6 @@
                 }
               }
             }
-
           },
           response => {
             console.log(response);
@@ -417,11 +418,11 @@
                   this.listCollaboratorsExpertises[m].expertisesInduit.splice(3, this.listCollaboratorsExpertises[m].expertisesInduit.length - 3);
                 }
               }
-        for (var i = 0; i < this.listCollaboratorsExpertises.length; i++) {
+              for (var i = 0; i < this.listCollaboratorsExpertises.length; i++) {
                 this.listCollaboratorsExpertises[i].expertisesChosen.sort(function (a, b) {
                   return (a.skill.label > b.skill.label) ? 1 : ((b.skill.label > a.skill.label) ? -1 : 0);
                 });
-                console.log("hello: "  +this.listCollaboratorsExpertises[i].expertisesChosen[0])
+                console.log("hello: " + this.listCollaboratorsExpertises[i].expertisesChosen[0])
                 var tmp = [this.listCollaboratorsExpertises[i].expertisesChosen[0]];
                 for (var j = 0; j < this.listCollaboratorsExpertises[i].expertisesChosen.length; j++) {
                   if (this.listCollaboratorsExpertises[i].expertisesChosen[j].skill.label != tmp[tmp.length - 1].skill.label) {
@@ -452,6 +453,8 @@
                 this.listCollaboratorsExpertises[i].expertisesChosen.reverse();
                 this.listCollaboratorsExpertises[i].expertisesInduit.reverse();
 
+                document.getElementById("resultCollab").scrollIntoView();
+
               }
 
             },
@@ -469,16 +472,14 @@
           }
         }
         return false;
-    },
-  }
-  ,
+      },
+    }
+    ,
 
-  components: {
-    customCircle: CustomCircle, ShowCollab
-  :
-    ShowCollab
-  }
-  ,
+    components: {
+      customCircle: CustomCircle, ShowCollab: ShowCollab
+    }
+    ,
   }
 
 
@@ -542,7 +543,7 @@
     font-size: 14px;
     line-height: 1.42857143;
     color: #333;
-    background-color: #efefef;
+    background-color: rgb(224, 53, 89);
     text-decoration: #3032ff;
   }
 

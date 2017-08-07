@@ -190,5 +190,10 @@ describe('test customcircle.vue', function() {
     expect(vmCustomCircle.currentRating).toEqual(rating);
   });
 
+  it('should ',function () {
+    vmCustomCircle.showTooltip();
+    $('div.star-rating span.pointer:first-child polygon').trigger("mouseover");
+
+  });
 
 });

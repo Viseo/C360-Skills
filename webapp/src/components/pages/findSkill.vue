@@ -91,6 +91,7 @@
         if (this.noSkillsFound)
           this.valueStock = this.value;
         this.$store.commit('setFoundedSkillsLabel', this.skillsFound);
+        this.value='';
       },
       sendWish(){
         if (!this.valueStock) this.valueStock = this.savedValue;
@@ -139,8 +140,9 @@
     font-size: 14px;
     line-height: 1.42857143;
     color: #333;
-    background-color: #fff;
+    background-color: rgb(224, 53, 89);
     text-decoration: #3032ff;
+      color: #fff;
   }
 
   .typeaheadSkills .dropdown-menu > li > a {
