@@ -1,7 +1,9 @@
 <template>
   <div class="container-fluid">
     <div class="col-lg-offset-4 col-lg-4 searchField typeaheadSkills">
+      <span class="squareForglyphiconSearch">
       <span class="glyphicon glyphicon-search" ref="searchSkill " @click="typeAheadSearch()"></span>
+        </span>
       <typeahead
         class="inputForm "
         v-model="value"
@@ -559,12 +561,28 @@
     box-shadow: 0 0 10px #76071b;
   }
 
-  .glyphicon-search {
-    top: 12px;
+  .squareForglyphiconSearch {
+    position: relative;
+    display: block;
+    top: 21px;
+    width: 41.5px;
+    height: 41px;
+    left: 94.5%;
     z-index: 6;
-    left: 94%;
-    font-size: 20px;
-    color: tan;
+
+    cursor: pointer;
+    background-color: gainsboro;
+  }
+
+  .glyphicon-search {
+    position: absolute;
+    cursor: pointer;
+    top: 11px;
+    z-index: 6;
+    left: 20%;
+    font-size: 26px;
+    color: white;
+
   }
 
   p#noResult {
