@@ -35,7 +35,7 @@
       </g>
     </svg>
     <p id="noResult" v-show="noCollabFound">Aucun résultat ne correspond à votre recherche.</p>
-    <ShowCollab :expertises="listCollaboratorsExpertises"></ShowCollab>
+    <ShowCollab id="resultCollab" :expertises="listCollaboratorsExpertises"></ShowCollab>
   </div>
 </template>
 
@@ -250,11 +250,13 @@
           if (this.foundSkills[i].skill.id == this.selectedExpertise.skill.id) {
             document.getElementById(this.foundSkills[i].skill.id).getElementsByTagName("circle")[0].removeAttribute("filter");
             this.foundSkills.splice(i, 1);
+
             if (this.levelSelected == 0) {
               this.selectedExpertise.level = 0;
-              this.listCollaboratorsExpertises.splice(0, this.listCollaboratorsExpertises.length)
-              if (this.foundSkills.length != 0)
+              this.listCollaboratorsExpertises.splice(0, this.listCollaboratorsExpertises.length);
+              if (this.foundSkills.length != 0){
                 this.getCollaboratorsByExpertises(this.foundSkills);
+              }
               return;
             }
           }
@@ -391,7 +393,6 @@
                 }
               }
             }
-
           },
           response => {
             console.log(response);
@@ -450,6 +451,8 @@
                 this.listCollaboratorsExpertises[i].expertisesChosen.reverse();
                 this.listCollaboratorsExpertises[i].expertisesInduit.reverse();
 
+                var elmnt = document.getElementById("resultCollab");
+                 elmnt.scrollIntoView();
               }
 
             },
