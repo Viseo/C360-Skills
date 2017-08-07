@@ -55,7 +55,6 @@
 
     computed: {
       foundedSkillsTypeahead: function () {
-        console.log("test");
         return this.$store.state.foundedSkillsLabel;
       },
     },
@@ -145,18 +144,27 @@
         }
       },
 
+
       showFocusOnSearch(id){
+        let self = this;
+
         if (this.foundedSkillsTypeahead) {
           if (this.foundedSkillsTypeahead[0]) {
             if (this.foundedSkillsTypeahead[0].id == id) {
               document.getElementById(id).getElementsByTagName("circle")[0].setAttribute("filter", "url(#blurMe)");
+              setTimeout(function () {
+                document.getElementById(id).getElementsByTagName("circle")[0].removeAttribute("filter");
+                self.$store.commit('setFoundedSkillsLabel', '');
+              }, 6000);
               return true;
             }
             return false;
           }
           return false;
         }
+
         return false;
+
       }
     }
   }

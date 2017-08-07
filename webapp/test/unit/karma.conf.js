@@ -15,7 +15,9 @@ module.exports = function (config) {
     frameworks: ['jasmine'],
     reporters: ['spec', 'coverage'],
     files: [
+      'src/node_modules/jquery',
       './index.js'
+
     ],
     preprocessors: {
       './index.js': ['webpack', 'sourcemap'],
