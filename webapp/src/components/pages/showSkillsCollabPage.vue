@@ -24,6 +24,10 @@
                         :showCircleBlur="showFocusOnSearch(expertise.skill.id)"/>
         </g>
       </svg>
+      <p id="textLevelCollab">
+        <span class="glyphicon glyphicon-info-sign" style="margin-right:5px;"></span>
+        Renseignez votre niveau pour chaque compétence
+      </p>
     </div>
   </div>
 </template>
@@ -129,7 +133,7 @@
             this.expertises.sort(function (a, b) {
               return (a.skill.id > b.skill.id) ? 1 : ((b.skill.id > a.skill.id) ? -1 : 0);
             });
-            this.myViewBox = "0 0 1250 "+ parseInt((Math.floor(this.expertises.length/8)*150) + 200);
+            this.myViewBox = "0 0 1250 "+ parseInt((Math.floor(this.expertises.length/8)*150) + 150);
           }, response => {
             console.log(response);
           });
@@ -230,5 +234,9 @@
     width: 88px;
     text-align: center;
     border: none;
+  }
+
+  #textLevelCollab {
+    text-align:center;
   }
 </style>

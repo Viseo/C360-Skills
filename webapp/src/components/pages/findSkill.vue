@@ -1,18 +1,23 @@
 <template>
-    <div class=" col-lg-4 col-lg-offset-4 col-lg-4 searchField typeaheadSkills"
-         @keyup.enter="storeSkillsFound(capitalizeSearch)">
-      <span class="glyphicon glyphicon-search" ref="searchSkill" @click="storeSkillsFound(capitalizeSearch)"></span>
-      <typeahead
-        class="inputForm "
-        v-model="value"
-        :data="allSkillsName"
-        placeholder="Chercher une compétence">
-      </typeahead>
-      <div class="noResultDiv" v-show="noSkillsFound">
-        <span>La compétence que vous recherchez n'est pas référencée.</span><span class="pointer" @click="sendWish"> Cliquez ici pour la proposer.</span>
-        <div v-show="wishSent">Votre proposition de compétence {{valueStock}} a bien été prise en compte.</div>
-      </div>
+  <div class=" col-lg-4 col-lg-offset-4 col-lg-4 searchField typeaheadSkills"
+       @keyup.enter="storeSkillsFound(capitalizeSearch)">
+
+        <span class="squareForglyphiconSearch">
+           <span class="glyphicon glyphicon-search" ref="searchSkill" @click="storeSkillsFound(capitalizeSearch)">
+        </span>
+      </span>
+
+    <typeahead
+      class="inputForm "
+      v-model="value"
+      :data="allSkillsName"
+      placeholder="Chercher une compétence">
+    </typeahead>
+    <div class="noResultDiv" v-show="noSkillsFound">
+      <span>La compétence que vous recherchez n'est pas référencée.</span><span class="pointer" @click="sendWish"> Cliquez ici pour la proposer.</span>
+      <div v-show="wishSent">Votre proposition de compétence {{valueStock}} a bien été prise en compte.</div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -27,7 +32,7 @@
         skillsFound: [],
         noSkillsFound: false,
         value: '',
-        wish:'',
+        wish: '',
         showAnimation: false,
         valueStock: '',
         wishSent: false,
@@ -49,10 +54,10 @@
     },
 
     watch: {
-      value: function() {
-          if(this.value) {
-            this.savedValue = this.value;
-          }
+      value: function () {
+        if (this.value) {
+          this.savedValue = this.value;
+        }
       }
     },
 
@@ -80,22 +85,23 @@
           if (this.skills[index].label.indexOf(nom) != -1) {
             this.skillsFound.push(this.skills[index]);
           }
-        };
+        }
+        ;
         this.noSkillsFound = (this.skillsFound.length == 0) ? true : false;
-        if(this.noSkillsFound)
-          this.valueStock=this.value;
+        if (this.noSkillsFound)
+          this.valueStock = this.value;
         this.$store.commit('setFoundedSkillsLabel', this.skillsFound);
         this.value='';
       },
       sendWish(){
-        if(!this.valueStock) this.valueStock = this.savedValue;
+        if (!this.valueStock) this.valueStock = this.savedValue;
         var wish = {"label": this.valueStock};
         axios.post(config.server + "/api/addwish", wish)
           .then(response => {
             this.wishSent = true;
-            setTimeout( () => {
-                this.wishSent = false;
-              },3000);
+            setTimeout(() => {
+              this.wishSent = false;
+            }, 3000);
             this.savedValue = "";
             console.log(response);
           }, response => {
@@ -148,27 +154,43 @@
   }
 
   .inputForm {
-    bottom:20px;
-    z-index:5;
+    bottom: 20px;
+    z-index: 5;
   }
 
   .inputForm .form-control:focus {
     outline: none !important;
-    border:1px solid #ff9ebe;
+    border: 1px solid #ff9ebe;
     box-shadow: 0 0 10px #76071b;
   }
 
-  .glyphicon-search {
-    top: 15px;
+  .squareForglyphiconSearch {
+    position: relative;
+    display: block;
+    top: 21px;
+    width: 41px;
+    height: 41px;
+    left: 94.5%;
     z-index: 6;
-    left: 95%;
-    font-size: 20px;
-    color: tan;
+
+    cursor: pointer;
+    background-color: gainsboro;
+  }
+
+  .glyphicon-search {
+    position: absolute;
+    cursor: pointer;
+    top: 11px;
+    z-index: 6;
+    left: 20%;
+    font-size: 26px;
+    color: white;
+
   }
 
   .noResultDiv {
-    position:relative;
-    bottom:10px;
+    position: relative;
+    bottom: 10px;
     text-align: center;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   }
@@ -177,10 +199,10 @@
     cursor: pointer;
     color: #0979af;
   }
+
   .noResultDiv div {
     color: #4c924c;
   }
-
 
 
 </style>
