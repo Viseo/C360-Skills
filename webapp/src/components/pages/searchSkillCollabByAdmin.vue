@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid">
-    <div class="col-lg-offset-4 col-lg-4 searchField typeaheadSkills">
+    <div class="col-lg-offset-4 col-lg-4 searchField typeaheadSkills" @keyup.enter="typeAheadSearch()">
       <span class="glyphicon glyphicon-search" ref="searchSkill " @click="typeAheadSearch()"></span>
       <typeahead
         class="inputForm "
@@ -100,7 +100,6 @@
       this.getAllLinks();
       this.getAllSkills();
       this.getAllExpertise();
-
     },
 
     methods: {
@@ -108,9 +107,8 @@
         for (var i in this.collabs) {
           if (this.value.indexOf(this.collabs[i].lastName) != -1 || this.value.indexOf(this.collabs[i].firstName) != -1) {
             this.foundCollab = this.collabs[i];
-            for (var i in this.foundSkills) {
-              this.foundSkills = [];
-            }
+            this.foundSkills = [];
+
             this.getFoundCollabExpertises();
           }
         }
@@ -120,6 +118,10 @@
             this.selectedSkills();
           }
         }
+        console.log('c1');
+        //document.getElementById("resultCollab").scrollIntoView();
+        this.scrollToShowCollab();
+        console.log('c2');
       },
 
       onClickChild (value) {
@@ -143,6 +145,12 @@
           }, response => {
             console.log(response);
           });
+      },
+
+      scrollToShowCollab(){
+        if (this.listCollaboratorsExpertises.length != 0) {
+          document.getElementById("resultCollab").scrollIntoView();
+        }
       },
 
       getFoundCollabExpertises(){
@@ -170,6 +178,7 @@
             for (var i = 0; i < this.collabExpertises.length; i++) {
               this.CollaboratorExpertises.expertisesChosen.push(this.collabExpertises[i]);
             }
+            this.scrollToShowCollab();
           }, response => {
             console.log(response);
           }).then(response => {
@@ -195,6 +204,7 @@
                 }
                 this.listCollaboratorsExpertises = [];
                 this.listCollaboratorsExpertises.push(this.CollaboratorExpertises);
+                this.scrollToShowCollab();
               },
               response => {
                 console.log(response);
@@ -350,7 +360,6 @@
           })
       },
       getCollaboratorsByExpertises(listExpertises){
-
         axios.post(config.server + '/api/collaboratorsexpertises', listExpertises).then(response => {
             this.collaboratorsByExpertise = response.data;
             this.collaboratorsByExpertise.sort(function (a, b) {
@@ -451,8 +460,8 @@
                 this.listCollaboratorsExpertises[i].expertisesChosen.reverse();
                 this.listCollaboratorsExpertises[i].expertisesInduit.reverse();
 
-                document.getElementById("resultCollab").scrollIntoView();
-
+                //document.getElementById("resultCollab").scrollIntoView();
+                this.scrollToShowCollab(); //ok
               }
 
             },
@@ -469,6 +478,7 @@
             return true;
           }
         }
+        console.log("false");
         return false;
       },
     }
