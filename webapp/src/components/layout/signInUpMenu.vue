@@ -1,7 +1,9 @@
 <template>
+
   <div class="col-lg-8 col-sm-12 col-xs-12 col-md-6 col-lg-6 col-lg-offset-3  col-md-offset-3">
     <div style="box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.2);
-                 border-radius: 3px 3px 0 0;">
+                 border-radius: 3px 3px 0 0;"
+         class="allPanel">
       <ul class="tab-group">
         <li :class="tabinscription">
           <a ref='inscriptionButton' @click="showInscriptionForm()">Inscription</a>
@@ -142,8 +144,8 @@
     display: block;
     text-decoration: none;
     padding: 15px;
-    background: rgba(160, 179, 176, 0.25);
-    color: #a0b3b0;
+    background: rgba(255, 255, 255, 0.25) !important;
+    color: rgba(224, 53, 89, 1)!important;
     font-size: 20px;
     float: left;
     width: 50%;
@@ -157,8 +159,7 @@
     color: #ffffff;
   }
   .tab-group .active a {
-    background: #428bca;
-    color: #ffffff;
+    color: #ffffff !important;
   }
 
   .tab-content > div:last-child {
@@ -224,7 +225,7 @@
   }
 
   .tab.active a{
-    background: rgb(224,53,89);
+    background: rgb(224,53,89) !important;
   }
 
   .tab-group li a:hover {
@@ -234,7 +235,20 @@
   #register-submit {
     background: rgb(224,53,89);
     border-color: rgb(224,53,89);
-
   }
+
+  .allPanel {
+    background-color: #f3f3f3 !important;
+    z-index: 0;
+    opacity: 0.9;
+  }
+
+  body {
+    margin:0;
+    padding:0;
+    background: url("../../assets/image-2.jpeg") no-repeat center center fixed;
+    background-size: cover;
+  }
+
 
 </style>

@@ -180,13 +180,16 @@
 </script>
 
 <style>
+  .row{
+    z-index: 6;
+  }
 
   #header-component {
     height: 65px;
   }
 
   #header-color {
-    background-color: rgb(224, 53, 89);
+    background-color: rgb(255, 255, 255);
   }
 
   #wrap {
@@ -207,6 +210,8 @@
 
   #navbar-title {
     font-size: 1.3em;
+    color: rgb(224, 53, 89) !important;
+    Font-Weight: Bold;
   }
 
   #navbar-right-part {
@@ -254,6 +259,8 @@
 
   #navbar-app {
     font-size: 200%;
+    color: rgb(224, 53, 89) !important;
+
   }
 
   i.glyphicon {
