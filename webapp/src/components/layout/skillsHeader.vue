@@ -192,10 +192,6 @@
     background-color: rgb(255, 255, 255);
   }
 
-  #wrap {
-    margin-bottom: 100px;
-  }
-
   #custom-navbar {
     padding: 10px 30px 10px 10px;
   }

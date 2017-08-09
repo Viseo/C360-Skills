@@ -1,8 +1,8 @@
 <template>
-
+<div id="connexionContainer">
   <div class="col-lg-8 col-sm-12 col-xs-12 col-md-6 col-lg-6 col-lg-offset-3  col-md-offset-3">
     <div style="box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.2);
-                 border-radius: 3px 3px 0 0;"
+                 border-radius: 3px 3px 0 0; margin-top:100px;"
          class="allPanel">
       <ul class="tab-group">
         <li :class="tabinscription">
@@ -22,6 +22,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -244,8 +245,15 @@
   }
 
   body {
-    margin:0;
-    padding:0;
+    min-height:100%;
+  }
+
+  html {
+    height: 100%;
+  }
+
+  #connexionContainer {
+    height:100vh;
     background: url("../../assets/image-2.jpeg") no-repeat center center fixed;
     background-size: cover;
   }

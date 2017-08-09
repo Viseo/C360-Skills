@@ -414,6 +414,10 @@
     overflow-y: auto;
   }
 
+  .login1 .svg-container {
+    margin-top:100px;
+  }
+
   .typeaheadSkills .dropdown-menu > .active > a {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 14px;
