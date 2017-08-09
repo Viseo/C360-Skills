@@ -407,5 +407,14 @@
     z-index: 1000;
   }
 
+  #navbar-subtitle {
+    color: rgb(224, 53, 89) !important;
+  }
+
+  .text-left {
+    color: rgb(224, 53, 89) !important;
+
+  }
+
 </style>
 
