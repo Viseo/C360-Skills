@@ -1,5 +1,5 @@
 <template>
-  <div class=" col-lg-4 col-lg-offset-4 col-lg-4 searchField typeaheadSkills"
+  <div class=" col-lg-4 col-lg-offset-4 col-lg-4 searchField typeaheadSkills" id="testtype"
        @keyup.enter="storeSkillsFound(capitalizeSearch)">
 
         <span class="squareForglyphiconSearch">
@@ -120,6 +120,7 @@
     margin-left: 400px;
     height: 92px;
     box-sizing: border-box;
+    margin-top: 100px;
   }
 
   .typeaheadSkills .dropdown-menu {
