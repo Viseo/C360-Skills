@@ -1,8 +1,8 @@
 <template>
   <div class="container-fluid">
     <div class="col-lg-offset-4 col-lg-4 searchField typeaheadSkills" @keyup.enter="typeAheadSearch()">
-      <span class="squareForglyphiconSearch">
-      <span class="glyphicon glyphicon-search" ref="searchSkill " @click="typeAheadSearch()"></span>
+      <span class="squareForglyphiconSearch" id="hihi">
+      <span id="hahaha" class="glyphicon glyphicon-search" ref="searchSkill " @click="typeAheadSearch()"></span>
         </span>
       <typeahead
         class="inputForm "
@@ -533,6 +533,7 @@
   .typeaheadSkills {
     height: 90px;
     box-sizing: border-box;
+    margin-top: 100px;
   }
 
   .typeaheadSkills .dropdown-menu {
@@ -573,13 +574,13 @@
     box-shadow: 0 0 10px #76071b;
   }
 
-  .squareForglyphiconSearch2 {
+  .squareForglyphiconSearch {
     position: relative;
     display: block;
-    top: 15px;
+    top: 14px;
     width: 34px;
-    height: 34px;
-    left: 92.3%;
+    height: 34.5px;
+    left: 92.6%;
     z-index: 6;
     cursor: pointer;
     background-color: gainsboro;
@@ -592,7 +593,7 @@
     z-index: 2;
     left: 20%;
     font-size: 24px;
-    color: #ffffff;
+    color: rgb(255, 255, 255);
 
   }
 

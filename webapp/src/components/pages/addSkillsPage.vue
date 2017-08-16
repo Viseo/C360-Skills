@@ -393,42 +393,8 @@
     border: none;
   }
 
-  .typeaheadSkills {
-    width: 800px;
-    margin-left: 400px;
-    height: 90px;
-    box-sizing: border-box;
-  }
-
-  .typeaheadSkills .dropdown-menu {
-    position: static;
-    z-index: 1000;
-    width: 100%;
-    padding: 12px 20px;
-    background-color: #fff;
-    margin: 8px 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    max-height: 150px;
-    overflow-y: auto;
-  }
-
   .login1 .svg-container {
     margin-top:100px;
-  }
-
-  .typeaheadSkills .dropdown-menu > .active > a {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 14px;
-    line-height: 1.42857143;
-    color: #333;
-    background-color: #fff;
-    text-decoration: #3032ff;
-  }
-
-  .typeaheadSkills .dropdown-menu > li > a {
-    display: block;
   }
 
   .inputForm {
@@ -442,12 +408,6 @@
     box-shadow: 0 0 10px #76071b;
   }
 
-  .glyphicon-search {
-    top: 12px;
-    z-index: 6;
-    left: 95%;
-    font-size: 20px;
-    color: tan;
-  }
+
 
 </style>
