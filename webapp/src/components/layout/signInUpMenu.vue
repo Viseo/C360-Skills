@@ -144,7 +144,7 @@
     display: block;
     text-decoration: none;
     padding: 15px;
-    background: rgba(255, 255, 255, 0.25) !important;
+    background: white !important;
     color: rgba(224, 53, 89, 1)!important;
     font-size: 20px;
     float: left;
@@ -238,9 +238,8 @@
   }
 
   .allPanel {
-    background-color: #f3f3f3 !important;
+    background-color: rgba(243, 243, 243, 0.81) !important;
     z-index: 0;
-    opacity: 0.9;
   }
 
   body {
