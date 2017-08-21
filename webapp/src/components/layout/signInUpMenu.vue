@@ -253,7 +253,7 @@
 
   #connexionContainer {
     height:100vh;
-    background: url("../../assets/image-2.jpeg") no-repeat center center fixed;
+    background: url("../../assets/image-2.jpeg") no-repeat;
     background-size: cover;
   }
 
