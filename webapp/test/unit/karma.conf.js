@@ -12,7 +12,8 @@ module.exports = function (config) {
     //    http://karma-runner.github.io/0.13/config/browsers.html
     // 2. add it to the `browsers` array below.
     browsers: ['Chrome'],
-    frameworks: ['jasmine'],
+    frameworks: ['jasmine-jquery', 'jasmine'],
+
     reporters: ['spec', 'coverage'],
     files: [
       '../../../webapp/node_modules/jquery/dist/jquery.min.js',

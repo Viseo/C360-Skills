@@ -8,12 +8,15 @@ import config from '@/config/config'
 import MockAdapter from 'axios-mock-adapter'
 import storeVuex from '@/vuex/store'
 import routerConfig from '@/config/router'
-//import jasmine from 'jasmine-jquery'
-import * as $ from 'jquery'
+// import jasmine from 'jasmine-jquery'
+// import * as $ from 'jquery'
 
 //var Constructor = Vue.extend(CustomCircle);
 var vmCustomCircle;
 var mock;
+
+var $ = window.jQuery = require('jquery');
+
 //var $ = window.jQuery = require('jquery');
 //var $ = window.jQuery = require('jasmine-jquery');
 
@@ -192,8 +195,10 @@ describe('test customcircle.vue', function() {
 
   it('should ',function () {
     vmCustomCircle.showTooltip();
-    $('div.star-rating span.pointer:first-child polygon').trigger("mouseover");
 
+    var  poly = $('div.star-rating span.pointer:first-child polygon');
+
+    $(vmCustomCircle.$el.querySelector('span.pointer')).trigger('mouseenter');
   });
 
 });
