@@ -1,6 +1,6 @@
 <template>
 
-  <form id="registr-form" @submit.prevent="verifyForm">
+  <form id="registr-form" @submit.prevent="verifyForm" >
     <customInput
       label="login"
       labelText="Code de login"

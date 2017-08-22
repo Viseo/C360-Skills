@@ -154,7 +154,7 @@
   }
 
   .inputForm {
-    bottom: 20px;
+    /*bottom: 20px;*/
     z-index: 5;
   }
 
@@ -167,7 +167,7 @@
   .squareForglyphiconSearch {
     position: relative;
     display: block;
-    top: 21px;
+    top: 41px;
     width: 41px;
     height: 41px;
     left: 94.5%;
