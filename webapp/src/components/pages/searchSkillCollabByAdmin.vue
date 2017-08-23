@@ -573,15 +573,14 @@
     box-shadow: 0 0 10px #76071b;
   }
 
-  .squareForglyphiconSearch {
+  .squareForglyphiconSearch2 {
     position: relative;
     display: block;
-    top: 21px;
-    width: 41.5px;
-    height: 41px;
-    left: 94.5%;
+    top: 15px;
+    width: 34px;
+    height: 34px;
+    left: 92.3%;
     z-index: 6;
-
     cursor: pointer;
     background-color: gainsboro;
   }
@@ -589,11 +588,11 @@
   .glyphicon-search {
     position: absolute;
     cursor: pointer;
-    top: 11px;
-    z-index: 6;
+    top: 5px;
+    z-index: 2;
     left: 20%;
-    font-size: 26px;
-    color: white;
+    font-size: 24px;
+    color: #ffffff;
 
   }
 

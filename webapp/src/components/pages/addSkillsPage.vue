@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="login1">
     <div class="svg-container" id="svg-container">
       <h4 class="mystyle">Administration des compétences</h4>
       <hr class="myhrline">
