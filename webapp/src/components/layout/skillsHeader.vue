@@ -193,7 +193,7 @@
   }
 
   #wrap {
-    margin-bottom: 100px;
+    margin-bottom: 60px;
   }
 
   #custom-navbar {

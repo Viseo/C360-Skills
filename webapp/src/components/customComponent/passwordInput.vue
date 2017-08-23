@@ -32,7 +32,7 @@
             <span v-show="isNotValid" class="glyphicon glyphicon-remove-circle color-red"></span>
           </td>
         </tr>
-        <tr><td style="height: 20px;">
+        <tr><td>
           <span v-show="emptyField" class="color-red ">{{labelText}} est obligatoire</span>
           <span v-show="errorField && !emptyField" class="color-red">{{errorMessage}}</span>
         </td></tr>

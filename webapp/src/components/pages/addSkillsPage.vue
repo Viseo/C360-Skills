@@ -1,8 +1,8 @@
 <template>
   <div class="login1">
     <div class="svg-container" id="svg-container">
-      <h4 class="mystyle">Administration des compétences</h4>
-      <hr class="myhrline">
+        <h4 class="mystyle" style="margin-top: 50px; margin-bottom: 37px;">Administration des compétences</h4>
+
       <svg version="1.1" :viewBox="myViewBox" preserveAspectRatio="xMinYMin meet">
         <defs>
           <filter id="blurMe">
@@ -366,9 +366,17 @@
     margin-left: 50px;
   }
 
-  h4.mystyle {
+  .mystyle {
     text-align: center;
     font-size: 1.75rem;
+    background-color: #e03559;
+    height: 30px;
+    margin-bottom: 20px;
+    margin-top: 30px;
+    margin-left: 20px;
+    width: 97.4%;
+    border-radius: 6px 6px 0px 0px;
+    padding-top: 5px;color: white;
   }
 
   hr.myhrline {

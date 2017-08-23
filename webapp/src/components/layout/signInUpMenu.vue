@@ -1,27 +1,29 @@
 <template>
-
-  <div class="col-lg-8 col-sm-12 col-xs-12 col-md-6 col-lg-6 col-lg-offset-3  col-md-offset-3">
-    <div style="box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.2);
+  <div class="backgroundImage">
+    <div class="col-lg-8 col-sm-12 col-xs-12 col-md-6 col-lg-6 col-lg-offset-3 col-md-offset-3" :style="positionBox">
+      <div style="box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.2);
                  border-radius: 3px 3px 0 0;"
-         class="allPanel">
-      <ul class="tab-group">
-        <li :class="tabinscription">
-          <a ref='inscriptionButton' @click="showInscriptionForm()">Inscription</a>
-        </li>
-        <li :class="tabconnexion">
-          <a ref="connexionButton" @click="showConnexionForm()">Connexion</a>
-        </li>
-      </ul>
-      <div class="panel-body">
-        <div class="row">
-          <div class="col-xs-12 col-xm-12 col-md-6 cold-lg-6 col-offset-3 col-md-offset-3">
-            <inscriptionform ref="insc" v-if="newCollab"></inscriptionform>
-            <connexionform ref="conn" v-else></connexionform>
+           class="allPanel">
+        <ul class="tab-group">
+          <li :class="tabinscription">
+            <a ref='inscriptionButton' @click="showInscriptionForm()">Inscription</a>
+          </li>
+          <li :class="tabconnexion">
+            <a ref="connexionButton" @click="showConnexionForm()">Connexion</a>
+          </li>
+        </ul>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-12 col-xm-12 col-md-6 cold-lg-6 col-offset-3 col-md-offset-3">
+              <inscriptionform ref="insc" v-if="newCollab"></inscriptionform>
+              <connexionform ref="conn" v-else></connexionform>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -37,6 +39,7 @@
         color_connexion: 'color-red',
         tabconnexion: "tab active",
         tabinscription: "tab",
+        positionBox: "position: absolute;top:20%;",
         newCollab: false
       }
     },
@@ -49,11 +52,13 @@
       this.tabinscription = 'tab active';
       this.tabconnexion = 'tab';
       this.newCollab = true;
+      this.positionBox = "position: absolute;top:10%;";
     },
     showConnexionForm() {
       this.tabinscription = 'tab';
       this.tabconnexion = 'tab active';
       this.newCollab = false;
+      this.positionBox = "position: absolute;top:20%;";
     }
   }
 }
@@ -113,7 +118,6 @@
     margin-left: 50%;
   }
   .password .glyphicon-lock,#password2 .glyphicon-lock {
-
     left: 10px;
     position: absolute;
     top: 12px;
@@ -132,8 +136,7 @@
 
   .tab-group {
     list-style: none;
-    padding: 0;
-    margin: 0 0 40px 0;
+    padding: 0px;
   }
   .tab-group:after {
     content: "";
@@ -242,11 +245,10 @@
     z-index: 0;
   }
 
-  body {
-    margin:0;
-    padding:0;
-    background: url("../../assets/image-2.jpeg") no-repeat center center fixed;
-    background-size: cover;
+  .backgroundImage {
+    background: url("../../assets/image-2.jpeg") fixed;
+    background-repeat: round;
+    height: 92vh;
   }
 
 

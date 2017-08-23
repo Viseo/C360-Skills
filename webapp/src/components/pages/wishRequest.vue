@@ -1,8 +1,7 @@
 <template>
   <div v-show="isWish">
     <div class="wish-request" id="wish-request">
-      <h4 class="mystyle">Demande de création</h4>
-      <hr class="myhrline">
+      <h4 class="mystyle" style="margin-top: -31px; margin-bottom: 37px;">Demande de création</h4>
     </div>
     <div data-simplebar class="wishContainer">
       <div>

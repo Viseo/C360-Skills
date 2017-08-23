@@ -2,8 +2,13 @@
   <div>
     <FindSkills></FindSkills>
     <div class="svg-container collab" id="svg-container">
-      <h4 class="mystyle">Liste de vos compétences</h4>
-      <hr class="myhrline">
+
+        <div >
+          <legend class="mystyle">
+            <h4 style=" margin-top: 2px;">Liste de vos compétences</h4>
+          </legend>
+        </div>
+      <!--<hr class="myhrline">-->
       <svg version="1.1" :viewBox="myViewBox" preserveAspectRatio="xMinYMin meet">
         <defs>
           <filter id="blurMe">
@@ -220,9 +225,17 @@
     margin-top:5px;
   }
 
-  h4.mystyle {
+  .mystyle {
     text-align: center;
-    font-size:1.75rem;
+    font-size: 1.75rem;
+    background-color: #e03559;
+    height: 30px;
+    margin-bottom: 20px;
+    margin-top: 30px;
+    margin-left: 20px;
+    width: 97.4%;
+    border-radius: 6px 6px 0px 0px;
+    padding-top: 5px;color: white;
   }
 
   input[type=text].inputCircle:focus {

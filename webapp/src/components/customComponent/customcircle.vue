@@ -9,10 +9,11 @@
     </text>
     <foreignObject :x="cx-45" :y="cy+5" class="myclass" width="100%" height="100%">
       <div v-show="!star">
-        <p><span v-tooltip.bottom="currentLevel">
-        <star-rating @rating-selected="setRating" @current-rating="showCurrentRating" v-model="rating"
-                     :show-rating="false"
-                     :star-size="18">
+        <p>
+          <span v-tooltip.bottom="currentLevel">
+          <star-rating @rating-selected="setRating" @current-rating="showCurrentRating" v-model="rating"
+                       :show-rating="false"
+                       :star-size="18">
           </star-rating>
         <p class="level"></p>
         </span></p>
@@ -26,6 +27,7 @@
   import axios from 'axios'
   import config from '../../config/config'
   import StarRating from 'vue-star-rating'
+
   var $ = window.jQuery = require('jquery');
 
   export default {
@@ -72,61 +74,29 @@
 
     methods: {
       showTooltip(){
-        $("div.star-rating span.pointer:first-child polygon").hover(function () {
-          let levelTooltip = $(this).closest('p').find(".level");
-          levelTooltip.css("visibility", "visible");
-          levelTooltip.css("background-color", "#97253d");
-          levelTooltip.css("margin-left", "6px");
-          levelTooltip.text('Elémentaire');
-        }, function () {
-          let levelTooltip = $(this).closest('p').find(".level");
-          levelTooltip.css("visibility", "hidden");
-        });
 
-        $("div.star-rating span.pointer:nth-child(2) polygon").hover(function () {
-          let levelTooltip = $(this).closest('p').find(".level");
-          levelTooltip.css("background-color", "orange");
-          levelTooltip.css("visibility", "visible");
-          levelTooltip.css("margin-left", "25px");
-          levelTooltip.text('Débutant');
-        }, function () {
-          let levelTooltip = $(this).closest('p').find(".level");
-          levelTooltip.css("visibility", "hidden");
-        });
-        $("div.star-rating span.pointer:nth-child(3) polygon").hover(function () {
-          let levelTooltip = $(this).closest('p').find(".level");
-          levelTooltip.css("background-color", "#e17155");
-          levelTooltip.css("visibility", "visible");
-          levelTooltip.css("margin-left", "43px");
-          levelTooltip.text('Confirmé');
-        }, function () {
-          let levelTooltip = $(this).closest('p').find(".level");
-          levelTooltip.css("visibility", "hidden");
-        });
-        $("div.star-rating span.pointer:nth-child(4) polygon").hover(function () {
-          let levelTooltip = $(this).closest('p').find(".level");
-          levelTooltip.css("background-color", "#00d466");
-          levelTooltip.css("visibility", "visible");
-          levelTooltip.css("margin-left", "60px");
-          levelTooltip.text('Avancé');
-        }, function () {
-          let levelTooltip = $(this).closest('p').find(".level");
-          levelTooltip.css("visibility", "hidden");
-        });
-        $("div.star-rating span.pointer:nth-child(5) polygon").hover(function () {
-          let levelTooltip = $(this).closest('p').find(".level");
-          levelTooltip.css("background-color", "#0c8700");
-          levelTooltip.css("visibility", "visible");
-          levelTooltip.css("margin-left", "79px");
-          levelTooltip.text('Expert');
-        }, function () {
-          let levelTooltip = $(this).closest('p').find(".level");
-          levelTooltip.css("visibility", "hidden");
-        });
+        const data = [{bg: "#97253d", label: 'Elémentaire', marge: "6px"},
+          {bg: "orange", label: 'Débutant', marge: "25px"},
+          {bg: "#e17155", label: 'Confirmé', marge: "43px"},
+          {bg: "#00d466", label: 'Avancé', marge: "60px"},
+          {bg: "#0c8700", label: 'Expert', marge: "79px"}];
+
+        for (let i = 1; i <= data.length; i++) {
+          $('div.star-rating span.pointer:nth-child(' + i + ') polygon').hover(function () {
+            let levelTooltip = $(this).closest('p').find(".level");
+            levelTooltip.css("visibility", "visible");
+            levelTooltip.css("background-color", data[i - 1].bg);
+            levelTooltip.css("margin-left", data[i - 1].marge);
+            levelTooltip.text(data[i - 1].label);
+          }, function () {
+            let levelTooltip = $(this).closest('p').find(".level");
+            levelTooltip.css("visibility", "hidden");
+          });
+        }
       },
 
       setRating: function (raiting) {
-        if (this.ratingSaved == this.rating) {
+        if (this.ratingSaved === this.rating) {
           raiting = 0;
           this.rating = 0;
         }

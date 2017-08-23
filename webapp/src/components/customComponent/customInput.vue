@@ -1,6 +1,6 @@
 <template>
-  <table style="border-spacing: 0px">
-    <div class="form-group">
+  <table >
+    <div class="form-group" style="margin-bottom: 5px;">
       <label>{{labelText}}</label>
       <div class="inner-addon left-addon"
            :class="{ 'has-error' : emptyField || existField || errorField }">
@@ -32,7 +32,7 @@
                  @input="updateValue($event.target.value)"
                  onblur="this.placeholder = placeholder " >
         </td></tr>
-        <tr><td style="height: 20px;">
+        <tr><td >
           <span v-show="emptyField" class="color-red">{{labelText}} est obligatoire</span>
           <span v-show="existField" class="color-red ">{{existMessage}}</span>
           <span v-show="errorField" class="color-red">{{ errorMessage }}</span>

@@ -27,7 +27,7 @@
             </td>
           </tr>
           <tr>
-            <td style="height: 20px;">
+            <td >
             <span v-show="emailEmpty"
                   class="color-red ">Email est obligatoire.</span>
               <span v-show="!isNotNewEmail && !emailEmpty"
@@ -77,7 +77,7 @@
             </td>
           </tr>
           <tr>
-            <td style="height: 20px;">
+            <td >
             <span v-show="passwordEmpty"
                   class="color-red ">Mot de passe est obligatoire.</span>
             </td>
