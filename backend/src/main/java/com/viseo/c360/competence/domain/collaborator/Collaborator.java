@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.Date;
 
 @Entity
 public class Collaborator extends BaseEntity {
@@ -47,10 +48,14 @@ public class Collaborator extends BaseEntity {
     @NotNull
     Boolean defaultPicture;
 
+    @NotNull
+    Date lastUpdateDate;
 
     public Collaborator() {
         super();
+        this.lastUpdateDate = new Date();
     }
+
 
     public String getPersonnalIdNumber() {
         return personnalIdNumber;
@@ -132,4 +137,11 @@ public class Collaborator extends BaseEntity {
         this.defaultPicture = defaultPicture;
     }
 
+    public Date getLastUpdateDate() {
+        return lastUpdateDate;
+    }
+
+    public void setLastUpdateDate(Date lastUpdateDate) {
+        this.lastUpdateDate = lastUpdateDate;
+    }
 }

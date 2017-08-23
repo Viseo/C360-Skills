@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import javax.persistence.FlushModeType;
 import javax.persistence.PersistenceException;
+import java.util.Date;
 import java.util.List;
 
 import static com.viseo.c360.competence.dao.db.DAOFacade.Parameter.param;
@@ -33,6 +34,7 @@ public class CollaboratorDAO {
     //collaborateur
     @Transactional
     public Collaborator addCollaborator(Collaborator collaborator) throws PersistenceException {
+        collaborator.setLastUpdateDate(new Date());
         daoFacade.persist(collaborator);
         daoFacade.flush();
         List<Skill> skills = skillDAO.getAllSkills();
@@ -49,6 +51,7 @@ public class CollaboratorDAO {
 
     @Transactional
     public Collaborator updateCollaborator(Collaborator collaborator) throws PersistenceException {
+        collaborator.setLastUpdateDate(new Date());
         collaborator = daoFacade.merge(collaborator);
         daoFacade.flush();
         return collaborator;
