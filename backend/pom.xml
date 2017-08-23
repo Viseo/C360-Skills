@@ -81,6 +81,12 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.6</version>
+        </dependency>
+
         <!-- SPRING -->
         <dependency>
             <groupId>org.springframework.amqp</groupId>
@@ -91,7 +97,7 @@
         <dependency>
             <groupId>org.springframework.amqp</groupId>
             <artifactId>spring-erlang</artifactId>
-            <version>${spring.amqp.version}</version>
+            <version>LATEST</version>
         </dependency>
         <dependency>
             <groupId>com.rabbitmq</groupId>
