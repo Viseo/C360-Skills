@@ -101,9 +101,15 @@ public class CollaboratorWS {
 
         try {
             this.rabbitTemplate.convertAndSend(fanout.getName(),"",mapperObj.writeValueAsString(myCollaboratorDescription));
-            String consumerResponse = (String) rabbitTemplate.convertSendAndReceive(responseQueue);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            Message consumerResponse = this.rabbitTemplate.receive(responseQueue.getName());
             if (consumerResponse != null) {
-                receivedCollab = new ObjectMapper().readValue(consumerResponse, CollaboratorDescription.class);
+                receivedCollab = new ObjectMapper().readValue(consumerResponse.getBody(), CollaboratorDescription.class);
                 System.out.println("Received Collaborator : " + receivedCollab.getFirstName() + receivedCollab.getLastName());
             }
             receivedCollab = handleReceivedCollaborator(myCollaboratorDescription, receivedCollab);

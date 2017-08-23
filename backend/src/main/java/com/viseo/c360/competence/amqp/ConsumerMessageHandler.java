@@ -29,12 +29,17 @@ public class ConsumerMessageHandler {
         try {
             CollaboratorDescription collaborator = mapperObj.readValue(request, CollaboratorDescription.class);
             System.out.println("Halelujah j'ai reçu ça   : " + request);
-            Collaborator c = ws.getCollaboratorByLogin(collaborator.getEmail());
-            System.out.println("Le voila = " + c.getFirstName());
-            if(c != null)
-            rabbitTemplate.convertAndSend(responseQueue.getName(),mapperObj.writeValueAsString(c));
-            else
-                System.out.println("Rien trouvé");
+            if(collaborator.getFirstName() == null){
+                Collaborator c = ws.getCollaboratorByLogin(collaborator.getEmail());
+                System.out.println("Le voila = " + c.getFirstName());
+                if(c.getFirstName() != null)
+                    rabbitTemplate.convertAndSend(responseQueue.getName(),mapperObj.writeValueAsString(c));
+                else
+                    System.out.println("Rien trouvé");
+            }
+            else{
+                System.out.println("REPONSE : "+ collaborator.getFirstName() + " " + collaborator.getLastName());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

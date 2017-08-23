@@ -59,21 +59,26 @@ public class CollaboratorDAO {
 
     public Collaborator getCollaboratorByLoginPassword(String personnalEmail, String personnalPassword) {
         daoFacade.setFlushMode(FlushModeType.COMMIT);
-        Collaborator registredUser =
-                (Collaborator) daoFacade.getSingle(
+        Collaborator registredUser = new Collaborator();
+        List<Collaborator> results =
+                daoFacade.getList(
                         "select c from Collaborator c where c.email = :personnalEmail and c.password = :personnalPassword",
-                        param("personnalEmail", personnalEmail), param("personnalPassword", personnalPassword));
+                        param("personnalEmail",personnalEmail), param("personnalPassword",personnalPassword));
+        if(results.size() != 0){
+            registredUser = results.get(0);
+        }
         return registredUser;
     }
 
     public Collaborator getCollaboratorByLogin(String personnalEmail) {
         daoFacade.setFlushMode(FlushModeType.COMMIT);
-       List<Collaborator> registredUser = daoFacade.getList(
-                        "select c from Collaborator c where c.email = :personnalEmail",
-                        param("personnalEmail", personnalEmail));
-        if(registredUser.size() > 0)
-        return registredUser.get(0);
-        return null;
+        Collaborator registredUser = new Collaborator();
+        List<Collaborator> list = daoFacade.getList(
+                "select c from Collaborator c where c.email = :personnalEmail",
+                param("personnalEmail",personnalEmail));
+        if(list.size() > 0)
+            registredUser = list.get(0);
+        return registredUser;
     }
 
     public Collaborator getCollaboratorById(Long collab_id) {
