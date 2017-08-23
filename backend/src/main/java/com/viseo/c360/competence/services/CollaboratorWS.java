@@ -2,6 +2,7 @@ package com.viseo.c360.competence.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 //import com.viseo.c360.competence.amqp.RequestProducerConfig;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 import com.viseo.c360.competence.converters.collaborator.*;
 import com.viseo.c360.competence.dao.CollaboratorDAO;
 import com.viseo.c360.competence.dao.ExpertiseDAO;
@@ -19,7 +20,9 @@ import com.viseo.c360.competence.exceptions.dao.util.UniqueFieldErrors;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.crypto.MacProvider;
+import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.JsonMessageConverter;
 import org.springframework.context.ApplicationContext;
@@ -30,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.inject.Inject;
 import javax.mail.MessagingException;
 import javax.persistence.PersistenceException;
+import java.io.IOException;
 import java.security.Key;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +52,15 @@ public class CollaboratorWS {
     @Inject
     ExpertiseDAO expertiseDAO;
 
+    @Inject
+    RabbitTemplate rabbitTemplate;
+
+    @Inject
+    FanoutExchange fanout;
+
+    @Inject
+    Queue responseQueue;
+
     @CrossOrigin
     @RequestMapping(value = "${endpoint.user}", method = RequestMethod.POST)
     @ResponseBody
@@ -55,8 +68,7 @@ public class CollaboratorWS {
         try {
             System.out.println("THIS IS DAO : "+collaboratorDAO);
             InitializeMap();
-            Collaborator c = collaboratorDAO.getCollaboratorByLoginPassword(myCollaboratorDescription.getEmail(), myCollaboratorDescription.getPassword());
-            CollaboratorDescription user = new CollaboratorToDescription().convert(c);
+            CollaboratorDescription user = checkIfCollaboratorExistElsewhere(myCollaboratorDescription);
             Key key = MacProvider.generateKey();
             String compactJws = Jwts.builder()
                     .claim("firstName", user.getFirstName())
@@ -73,21 +85,51 @@ public class CollaboratorWS {
             currentUserMap.put("userConnected", compactJws);
             ObjectMapper mapperObj = new ObjectMapper();
 
-            //ApplicationContext ctx = new AnnotationConfigApplicationContext(RequestProducerConfig.class);
-            //RabbitTemplate rabbitTemplate = ctx.getBean(RabbitTemplate.class);
 
-            AtomicInteger counter = new AtomicInteger();
-//            for (int i = 0; i < 5; i++){
-//                System.out.println("sending new custom message..");
-                //rabbitTemplate.convertAndSend(new CustomMessage(counter.incrementAndGet(), "RabbitMQ Spring JSON Example"));
-            //Object reponse = rabbitTemplate.convertSendAndReceive(mapperObj.writeValueAsString(user.getEmail()));
-                //System.out.println("VOICI LA REPONSE"+reponse);
-//            }
 
             return currentUserMap;
         } catch (ConversionException e) {
             e.printStackTrace();
             throw new C360Exception(e);
+        }
+    }
+
+    public CollaboratorDescription checkIfCollaboratorExistElsewhere(CollaboratorDescription myCollaboratorDescription) {
+        ObjectMapper mapperObj = new ObjectMapper();
+
+        CollaboratorDescription receivedCollab = null;
+
+        try {
+            this.rabbitTemplate.convertAndSend(fanout.getName(),"",mapperObj.writeValueAsString(myCollaboratorDescription));
+            String consumerResponse = (String) rabbitTemplate.convertSendAndReceive(responseQueue);
+            if (consumerResponse != null) {
+                receivedCollab = new ObjectMapper().readValue(consumerResponse, CollaboratorDescription.class);
+                System.out.println("Received Collaborator : " + receivedCollab.getFirstName() + receivedCollab.getLastName());
+            }
+            receivedCollab = handleReceivedCollaborator(myCollaboratorDescription, receivedCollab);
+
+            return receivedCollab;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public CollaboratorDescription handleReceivedCollaborator(CollaboratorDescription myCollaboratorDescription, CollaboratorDescription receivedCollab) {
+        Collaborator storedCollaborator = collaboratorDAO.getCollaboratorByLoginPassword(myCollaboratorDescription.getEmail(), myCollaboratorDescription.getPassword());
+
+        CollaboratorDescription addedCollaborator;
+
+        if (isEmpty(storedCollaborator.getEmail())) {
+            receivedCollab.setId(0);
+            addedCollaborator = addCollaborator(receivedCollab);
+            System.out.println("ADDEDCOLLAB" + addedCollaborator.getFirstName());
+            return addedCollaborator;
+        } else {
+            // A COMPLETEE
+            return new CollaboratorToDescription().convert(storedCollaborator);
         }
     }
 
@@ -158,20 +200,15 @@ public class CollaboratorWS {
     @CrossOrigin
     @RequestMapping(value = "${endpoint.collaborators}", method = RequestMethod.POST)
     @ResponseBody
-    public String addCollaborator(@RequestBody CollaboratorDescription collaboratorDescription) {
+    public CollaboratorDescription addCollaborator(@RequestBody CollaboratorDescription collaboratorDescription) {
         try {
             collaboratorDescription.setDefaultPicture(true);
             Collaborator collaborator = collaboratorDAO.addCollaborator(new DescriptionToCollaborator().convert(collaboratorDescription));
-            return "success";
+            return new CollaboratorToDescription().convert(collaborator);
         } catch (PersistenceException pe) {
             UniqueFieldErrors uniqueFieldErrors = exceptionUtil.getUniqueFieldError(pe);
-            if(uniqueFieldErrors.getField() == "personnalIdNumber"){
-                return "personnalIdNumber";
-            }else if(uniqueFieldErrors.getField() == "email"){
-                return "email";
-            }else{
-                return "success";
-            }
+            if (uniqueFieldErrors == null) throw new C360Exception(pe);
+            else throw new UniqueFieldException(uniqueFieldErrors.getField());
         }
     }
 

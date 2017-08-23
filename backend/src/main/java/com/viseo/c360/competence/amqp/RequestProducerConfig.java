@@ -1,17 +1,11 @@
-/*
 package com.viseo.c360.competence.amqp;
 
-*/
-/**
- * Created by SJO3662  on 27/07/2017.
- *//*
-
-import org.springframework.amqp.core.AcknowledgeMode;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.amqp.support.converter.JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
@@ -20,8 +14,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RequestProducerConfig {
 
-    private static final String SIMPLE_MESSAGE_QUEUE = "simple.queue.name";
-    protected final String replyQueueName = "reply.queue.skill";
 
     @Bean
     public ConnectionFactory connectionFactory() {
@@ -31,10 +23,6 @@ public class RequestProducerConfig {
         return connectionFactory;
     }
 
-    @Bean
-    public Queue simpleQueue() {
-        return new Queue(SIMPLE_MESSAGE_QUEUE);
-    }
 
     @Bean
     public MessageConverter jsonMessageConverter(){
@@ -42,30 +30,50 @@ public class RequestProducerConfig {
     }
 
     @Bean
+    public FanoutExchange fanoutExchange() {
+        return new FanoutExchange("amq.fanout");
+    }
+    @Bean
+    public Queue fanoutQueue1() {
+        return new Queue("fanout-queue1", false);
+    }
+
+    @Bean
+    public Queue fanoutQueue2() {
+        return new Queue("fanout-queue2", false);
+    }
+
+    @Bean
+    public Queue responseQueue() {
+        return new Queue("response-queue", false);
+    }
+
+    @Bean
     public RabbitTemplate rabbitTemplate() {
         RabbitTemplate template = new RabbitTemplate(connectionFactory());
-        template.setRoutingKey(SIMPLE_MESSAGE_QUEUE);
-        template.setMessageConverter(jsonMessageConverter());
-        template.setReplyQueue(replyQueue());
-        template.setReplyTimeout(10000);
         return template;
     }
 
     @Bean
-    public Queue replyQueue() {
-        return new Queue(this.replyQueueName);
+    public Binding binding1(FanoutExchange fanoutExchange, Queue fanoutQueue1) {
+        return BindingBuilder.bind(fanoutQueue1).to(fanoutExchange);
     }
+
+    @Bean
+    public Binding binding2(FanoutExchange fanoutExchange, Queue fanoutQueue2) {
+        return BindingBuilder.bind(fanoutQueue2).to(fanoutExchange);
+    }
+
+
 
     @Bean
     public SimpleMessageListenerContainer listenerContainer() {
         SimpleMessageListenerContainer listenerContainer = new SimpleMessageListenerContainer();
+        listenerContainer.setQueueNames(fanoutQueue2().getName());
         listenerContainer.setConnectionFactory(connectionFactory());
-        listenerContainer.setQueues(replyQueue());
-        listenerContainer.setMessageConverter(jsonMessageConverter());
-        listenerContainer.setMessageListener(rabbitTemplate());
+        listenerContainer.setMessageListener(new MessageListenerAdapter(new ConsumerMessageHandler()));
         listenerContainer.setAcknowledgeMode(AcknowledgeMode.NONE);
         return listenerContainer;
     }
 
 }
-*/
