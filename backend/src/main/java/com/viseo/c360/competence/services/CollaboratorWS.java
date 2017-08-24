@@ -1,9 +1,7 @@
 package com.viseo.c360.competence.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.viseo.c360.competence.amqp.RequestProducerConfig;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-
+import com.viseo.c360.competence.amqp.RabbitMessage;
 import com.viseo.c360.competence.converters.collaborator.*;
 import com.viseo.c360.competence.dao.CollaboratorDAO;
 import com.viseo.c360.competence.dao.ExpertiseDAO;
@@ -25,9 +23,6 @@ import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.support.converter.JsonMessageConverter;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.convert.ConversionException;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +35,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
+//import com.viseo.c360.competence.amqp.RequestProducerConfig;
 
 @RestController
 public class CollaboratorWS {
@@ -103,8 +101,12 @@ public class CollaboratorWS {
 
         CollaboratorDescription receivedCollab = null;
 
+        RabbitMessage rabbitMessage = new RabbitMessage();
+        rabbitMessage.setCollaboratorDescription(myCollaboratorDescription);
+        rabbitMessage.setNameFileResponse(responseCompetence.getName());
+
         try {
-            this.rabbitTemplate.convertAndSend(fanout.getName(), "", mapperObj.writeValueAsString(myCollaboratorDescription));
+            this.rabbitTemplate.convertAndSend(fanout.getName(), "", mapperObj.writeValueAsString(rabbitMessage));
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -113,7 +115,11 @@ public class CollaboratorWS {
 
             Message consumerResponse = this.rabbitTemplate.receive(responseCompetence.getName());
             if (consumerResponse != null) {
-                receivedCollab = new ObjectMapper().readValue(consumerResponse.getBody(), CollaboratorDescription.class);
+
+                RabbitMessage rabbitMessageResponse = new RabbitMessage();
+                rabbitMessageResponse = new ObjectMapper().readValue(consumerResponse.getBody(), RabbitMessage.class);
+                receivedCollab = rabbitMessageResponse.getCollaboratorDescription();
+
                 System.out.println("Received Collaborator : " + receivedCollab.getFirstName() + receivedCollab.getLastName());
             }
             receivedCollab = handleReceivedCollaborator(myCollaboratorDescription, receivedCollab);
@@ -145,7 +151,7 @@ public class CollaboratorWS {
             //  COMPLET
             CollaboratorDescription storedcollaboratorDescription = new CollaboratorToDescription().convert(storedCollaborator);
 
-            if(receivedCollab == null || receivedCollab.getFirstName() == null || storedcollaboratorDescription.getPassword().equals(receivedCollab.getPassword()) || storedcollaboratorDescription.getLastUpdateDate().after(receivedCollab.getLastUpdateDate())){
+            if(receivedCollab == null || receivedCollab.getFirstName() == null || (storedcollaboratorDescription.getPassword().equals(receivedCollab.getPassword()) && (storedcollaboratorDescription.getPassword().equals(myCollaboratorDescription.getPassword()))) || (storedcollaboratorDescription.getLastUpdateDate().after(receivedCollab.getLastUpdateDate()) && storedcollaboratorDescription.getPassword().equals(myCollaboratorDescription.getPassword()))){
                 System.out.println("MOT DE PASSE IDENTIQUE OU PLUS RECENT");
                 return storedcollaboratorDescription;
             }

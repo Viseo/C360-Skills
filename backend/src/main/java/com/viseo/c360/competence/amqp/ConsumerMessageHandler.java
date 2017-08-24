@@ -1,10 +1,9 @@
 package com.viseo.c360.competence.amqp;
 
+import com.viseo.c360.competence.converters.collaborator.CollaboratorToDescription;
 import com.viseo.c360.competence.dao.CollaboratorDAO;
 import com.viseo.c360.competence.domain.collaborator.Collaborator;
 import com.viseo.c360.competence.dto.collaborator.CollaboratorDescription;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
@@ -30,15 +29,20 @@ public class ConsumerMessageHandler {
         com.fasterxml.jackson.databind.ObjectMapper mapperObj = new com.fasterxml.jackson.databind.ObjectMapper();
 
         try {
-            CollaboratorDescription collaborator = mapperObj.readValue(request, CollaboratorDescription.class);
+            RabbitMessage rabbitMessageResponse = new RabbitMessage();
+            rabbitMessageResponse = new com.fasterxml.jackson.databind.ObjectMapper().readValue(request, RabbitMessage.class);
+
+            CollaboratorDescription collaborator = rabbitMessageResponse.getCollaboratorDescription();
             System.out.println("Halelujah j'ai reçu ça   : " + request);
             if(collaborator.getFirstName() == null){
                 Collaborator c = ws.getCollaboratorByLogin(collaborator.getEmail());
                 System.out.println("Le voila = " + c.getFirstName());
+                rabbitMessageResponse.setCollaboratorDescription(new CollaboratorToDescription().convert(c));
                 if(c.getFirstName() != null)
-                    rabbitTemplate.convertAndSend(responseFormation.getName(),mapperObj.writeValueAsString(c));
-                else
-                    System.out.println("Rien trouvé");
+                    if(!rabbitMessageResponse.getNameFileResponse().equals(responseCompetence.getName()))
+                        rabbitTemplate.convertAndSend(rabbitMessageResponse.getNameFileResponse(),mapperObj.writeValueAsString(rabbitMessageResponse));
+                    else
+                        System.out.println("Rien trouvé");
             }
             else{
                 System.out.println("REPONSE : "+ collaborator.getFirstName() + " " + collaborator.getLastName());
