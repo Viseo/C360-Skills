@@ -155,7 +155,7 @@ public class CollaboratorWS {
                 System.out.println("MOT DE PASSE IDENTIQUE OU PLUS RECENT");
                 return storedcollaboratorDescription;
             }
-            else if(myCollaboratorDescription.getPassword().equals(receivedCollab.getPassword())){
+            else if( (myCollaboratorDescription.getPassword().equals(receivedCollab.getPassword())) && (storedcollaboratorDescription.getLastUpdateDate().before(receivedCollab.getLastUpdateDate()))){
                 storedcollaboratorDescription = updateCollaboratorPassword(receivedCollab.getPassword(),String.valueOf(storedcollaboratorDescription.getId()));
                 return storedcollaboratorDescription;
             }
