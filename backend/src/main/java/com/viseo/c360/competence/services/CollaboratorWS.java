@@ -3,6 +3,7 @@ package com.viseo.c360.competence.services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 //import com.viseo.c360.competence.amqp.RequestProducerConfig;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 import com.viseo.c360.competence.converters.collaborator.*;
 import com.viseo.c360.competence.dao.CollaboratorDAO;
 import com.viseo.c360.competence.dao.ExpertiseDAO;
@@ -40,6 +41,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+
 @RestController
 public class CollaboratorWS {
 
@@ -59,14 +61,17 @@ public class CollaboratorWS {
     FanoutExchange fanout;
 
     @Inject
-    Queue responseQueue;
+    Queue responseFormation;
+
+    @Inject
+    Queue responseCompetence;
 
     @CrossOrigin
     @RequestMapping(value = "${endpoint.user}", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, CollaboratorDescription> getUserByLoginPassword(@RequestBody CollaboratorDescription myCollaboratorDescription) throws Exception {
         try {
-            System.out.println("THIS IS DAO : "+collaboratorDAO);
+            System.out.println("THIS IS DAO : " + collaboratorDAO);
             InitializeMap();
             CollaboratorDescription user = checkIfCollaboratorExistElsewhere(myCollaboratorDescription);
             Key key = MacProvider.generateKey();
@@ -86,7 +91,6 @@ public class CollaboratorWS {
             ObjectMapper mapperObj = new ObjectMapper();
 
 
-
             return currentUserMap;
         } catch (ConversionException e) {
             e.printStackTrace();
@@ -100,14 +104,14 @@ public class CollaboratorWS {
         CollaboratorDescription receivedCollab = null;
 
         try {
-            this.rabbitTemplate.convertAndSend(fanout.getName(),"",mapperObj.writeValueAsString(myCollaboratorDescription));
+            this.rabbitTemplate.convertAndSend(fanout.getName(), "", mapperObj.writeValueAsString(myCollaboratorDescription));
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
-            Message consumerResponse = this.rabbitTemplate.receive(responseQueue.getName());
+            Message consumerResponse = this.rabbitTemplate.receive(responseCompetence.getName());
             if (consumerResponse != null) {
                 receivedCollab = new ObjectMapper().readValue(consumerResponse.getBody(), CollaboratorDescription.class);
                 System.out.println("Received Collaborator : " + receivedCollab.getFirstName() + receivedCollab.getLastName());
@@ -124,18 +128,37 @@ public class CollaboratorWS {
     }
 
     public CollaboratorDescription handleReceivedCollaborator(CollaboratorDescription myCollaboratorDescription, CollaboratorDescription receivedCollab) {
-        Collaborator storedCollaborator = collaboratorDAO.getCollaboratorByLoginPassword(myCollaboratorDescription.getEmail(), myCollaboratorDescription.getPassword());
+        Collaborator storedCollaborator = collaboratorDAO.getCollaboratorByLogin(myCollaboratorDescription.getEmail());
 
         CollaboratorDescription addedCollaborator;
 
         if (isEmpty(storedCollaborator.getEmail())) {
-            receivedCollab.setId(0);
-            addedCollaborator = addCollaborator(receivedCollab);
-            System.out.println("ADDEDCOLLAB" + addedCollaborator.getFirstName());
-            return addedCollaborator;
+            if(receivedCollab.getPassword().equals(myCollaboratorDescription.getPassword())){
+                receivedCollab.setId(0);
+                addedCollaborator = addCollaborator(receivedCollab);
+                System.out.println("ADDEDCOLLAB" + addedCollaborator.getFirstName());
+                return addedCollaborator;
+            }
+            else
+                return null;
         } else {
-            // A COMPLETEE
-            return new CollaboratorToDescription().convert(storedCollaborator);
+            //  COMPLET
+            CollaboratorDescription storedcollaboratorDescription = new CollaboratorToDescription().convert(storedCollaborator);
+
+            if(receivedCollab == null || receivedCollab.getFirstName() == null || storedcollaboratorDescription.getPassword().equals(receivedCollab.getPassword()) || storedcollaboratorDescription.getLastUpdateDate().after(receivedCollab.getLastUpdateDate())){
+                System.out.println("MOT DE PASSE IDENTIQUE OU PLUS RECENT");
+                return storedcollaboratorDescription;
+            }
+            else if(myCollaboratorDescription.getPassword().equals(receivedCollab.getPassword())){
+                storedcollaboratorDescription = updateCollaboratorPassword(receivedCollab.getPassword(),String.valueOf(storedcollaboratorDescription.getId()));
+                return storedcollaboratorDescription;
+            }
+            else {
+                System.out.println("MOT DE PASSE MOINS RECENT");
+
+                return null;
+            }
+
         }
     }
 
@@ -179,7 +202,7 @@ public class CollaboratorWS {
     @ResponseBody
     public boolean checkIsAlreadyConnected(@RequestBody String thisToken) {
         try {
-            thisToken = thisToken.replace("=","");
+            thisToken = thisToken.replace("=", "");
             return mapUserCache.get(thisToken) != null;
         } catch (Exception e) {
             e.printStackTrace();
@@ -349,11 +372,11 @@ public class CollaboratorWS {
     @CrossOrigin
     @RequestMapping(value = "${endpoint.collaboratorsexpertises}", method = RequestMethod.POST)
     @ResponseBody
-    public List<ExpertiseDescription> getCollabsByExpertises(@RequestBody List<ExpertiseDescription> list){
+    public List<ExpertiseDescription> getCollabsByExpertises(@RequestBody List<ExpertiseDescription> list) {
         try {
             return new ExpertiseToDescription().convert(expertiseDAO.getCollabsByExpertise(new DescriptionToExpertise().convert(list)));
 
-        }catch(ConversionException e) {
+        } catch (ConversionException e) {
             e.printStackTrace();
             throw new C360Exception(e);
         }
@@ -362,16 +385,15 @@ public class CollaboratorWS {
     @CrossOrigin
     @RequestMapping(value = "${endpoint.expertisebycollaborator}", method = RequestMethod.POST)
     @ResponseBody
-    public List<ExpertiseDescription> getInductedExpertisesByCollaborators(@RequestBody List<ExpertiseDescription> list){
+    public List<ExpertiseDescription> getInductedExpertisesByCollaborators(@RequestBody List<ExpertiseDescription> list) {
         try {
             return new ExpertiseToDescription().convert(expertiseDAO.getInductedExpertisesByCollaborators(new DescriptionToExpertise().convert(list)));
 
-        }catch(ConversionException e) {
+        } catch (ConversionException e) {
             e.printStackTrace();
             throw new C360Exception(e);
         }
     }
-
 
 
 }

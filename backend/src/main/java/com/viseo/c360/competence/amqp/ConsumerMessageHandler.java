@@ -20,7 +20,10 @@ public class ConsumerMessageHandler {
     RabbitTemplate rabbitTemplate;
 
     @Inject
-    Queue responseQueue;
+    Queue responseFormation;
+
+    @Inject
+    Queue responseCompetence;
 
     public void handleMessage(String request) {
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
@@ -33,7 +36,7 @@ public class ConsumerMessageHandler {
                 Collaborator c = ws.getCollaboratorByLogin(collaborator.getEmail());
                 System.out.println("Le voila = " + c.getFirstName());
                 if(c.getFirstName() != null)
-                    rabbitTemplate.convertAndSend(responseQueue.getName(),mapperObj.writeValueAsString(c));
+                    rabbitTemplate.convertAndSend(responseFormation.getName(),mapperObj.writeValueAsString(c));
                 else
                     System.out.println("Rien trouvé");
             }
