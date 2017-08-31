@@ -77,7 +77,7 @@
             </td>
           </tr>
           <tr>
-            <td >
+            <td height="20px" >
             <span v-show="passwordEmpty"
                   class="color-red ">Mot de passe est obligatoire.</span>
             </td>

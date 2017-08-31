@@ -12,8 +12,8 @@
             <a ref="connexionButton" @click="showConnexionForm()">Connexion</a>
           </li>
         </ul>
-        <div class="panel-body">
-          <div class="row">
+        <div class="panel-body" style="padding: -7px !important;">
+          <div class="row" style="margin-top: 20px;">
             <div class="col-xs-12 col-xm-12 col-md-6 cold-lg-6 col-offset-3 col-md-offset-3">
               <inscriptionform ref="insc" v-if="newCollab"></inscriptionform>
               <connexionform ref="conn" v-else></connexionform>
@@ -39,7 +39,7 @@
         color_connexion: 'color-red',
         tabconnexion: "tab active",
         tabinscription: "tab",
-        positionBox: "position: absolute;top:20%;",
+        positionBox: "top:20%;",
         newCollab: false
       }
     },
