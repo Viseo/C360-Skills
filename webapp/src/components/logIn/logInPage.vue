@@ -76,8 +76,8 @@
                      @blur="isPasswordEmpty()">
             </td>
           </tr>
-          <tr>
-            <td height="20px" >
+          <tr style="height: 20px;">
+            <td >
             <span v-show="passwordEmpty"
                   class="color-red ">Mot de passe est obligatoire.</span>
             </td>

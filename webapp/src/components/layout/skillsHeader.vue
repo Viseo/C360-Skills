@@ -26,7 +26,7 @@
               <span class="text-left col-lg-8 col-lg-offset-2 col-md-5 col-sm-5 col-xs-5" style="margin-top:10px"
                     @mouseover="setDisconnectedToTrue()" v-show="showName()">{{ lastName }} {{ firstName }}</span>
               <dropdown class="col-lg-8 col-lg-offset-2 col-md-5 col-sm-5 col-xs-5" type="default" v-if="showPicture()"
-                        v-show="showDisconnexion()" text="Choisissez une action" id="menu">
+                        v-show="showDisconnexion()" text="Choisissez une action" id="menu" >
                 <li><a @click="isAdminOrCollabPath">Espace compétences</a></li>
                 <li><a @click="isAdminOrCollabPath">{{ isAdminOrCollabName() }}</a></li>
                 <li role="separator" class="divider"></li>
@@ -42,14 +42,14 @@
                   <span id="navbar-app" class="col-lg-2 col-sm-2 col-md-2 glyphicon glyphicon-th dropdown-toggle"
                         data-toggle="dropdown" aria-hidden="true" href="#"></span>
 
-                  <ul id="dropdown-app" class="dropdown-menu">
+                  <ul id="dropdown-app" class="dropdown-menu" style="cursor: pointer;">
                     <li>
                       <span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img
                         src="../../assets/microservices_icon/icon_cv.png"
                         class="text-center  icon-app"><p>GCv</p></a></span>
-                      <span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img
-                        src="../../assets/microservices_icon/icon_competence.png"
-                        class="text-center icon-app"><p>GCon</p></span>
+                      <!--<span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img-->
+                        <!--src="../../assets/microservices_icon/icon_competence.png"-->
+                        <!--class="text-center icon-app"><p>GCon</p></span>-->
                       <span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img
                         src="../../assets/microservices_icon/icon_formation.png"
                         class="text-center icon-app"><p>GF</p></a></span>
