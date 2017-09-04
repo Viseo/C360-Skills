@@ -168,18 +168,6 @@ public class CollaboratorWS {
         }
     }
 
-    /*private void Send(String message) throws Exception {
-        *//*ConnectionFactory var1 = new ConnectionFactory();
-        var1.setHost("localhost");
-        Connection var2 = var1.newConnection();
-        Channel var3 = var2.createChannel();
-        var3.queueDeclare("hello", false, false, false, (Map)null);
-        var3.basicPublish("", "hello", (BasicProperties)null, message.getBytes("UTF-8"));
-        System.out.println(" [x] Sent \'" + message + "\'");
-        var3.close();
-        var2.close();*//*
-    }*/
-
     private static ConcurrentHashMap<String, CollaboratorDescription> mapUserCache;
 
     private void InitializeMap() {
