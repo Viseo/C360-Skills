@@ -10,6 +10,7 @@ import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.UUID;
 
 public class ConsumerMessageHandler {
     @Inject
@@ -29,18 +30,17 @@ public class ConsumerMessageHandler {
         com.fasterxml.jackson.databind.ObjectMapper mapperObj = new com.fasterxml.jackson.databind.ObjectMapper();
 
         try {
-            RabbitMessage rabbitMessageResponse = new RabbitMessage();
-            rabbitMessageResponse = new com.fasterxml.jackson.databind.ObjectMapper().readValue(request, RabbitMessage.class);
-
-            CollaboratorDescription collaborator = rabbitMessageResponse.getCollaboratorDescription();
+            ConnectionMessage connectionMessageResponse = new ConnectionMessage();
+            connectionMessageResponse = new com.fasterxml.jackson.databind.ObjectMapper().readValue(request, ConnectionMessage.class);
+            CollaboratorDescription collaborator = connectionMessageResponse.getCollaboratorDescription();
             System.out.println("Halelujah j'ai reçu ça   : " + request);
             if(collaborator.getFirstName() == null){
                 Collaborator c = ws.getCollaboratorByLogin(collaborator.getEmail());
                 System.out.println("Le voila = " + c.getFirstName());
-                rabbitMessageResponse.setCollaboratorDescription(new CollaboratorToDescription().convert(c));
+                connectionMessageResponse.setCollaboratorDescription(new CollaboratorToDescription().convert(c));
                 if(c.getFirstName() != null)
-                    if(!rabbitMessageResponse.getNameFileResponse().equals(responseCompetence.getName()))
-                        rabbitTemplate.convertAndSend(rabbitMessageResponse.getNameFileResponse(),mapperObj.writeValueAsString(rabbitMessageResponse));
+                    if(!connectionMessageResponse.getNameFileResponse().equals(responseCompetence.getName()))
+                        rabbitTemplate.convertAndSend(connectionMessageResponse.getNameFileResponse(),mapperObj.writeValueAsString(connectionMessageResponse));
                     else
                         System.out.println("Rien trouvé");
             }
