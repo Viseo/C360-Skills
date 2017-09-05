@@ -121,7 +121,7 @@ public class CollaboratorWS {
                         elapsedTime = (new Date()).getTime() - startTime;
                         if(elapsedTime > 3000)
                             break;
-                        consumerResponse = channel.basicGet(responseFormation.getName(), false);
+                        consumerResponse = channel.basicGet(responseCompetence.getName(), false);
                         if(consumerResponse != null){
                             deliveryTag = consumerResponse.getEnvelope().getDeliveryTag();
                             ConnectionMessage rabbitMessageResponse = new ObjectMapper().readValue(consumerResponse.getBody(), ConnectionMessage.class);
