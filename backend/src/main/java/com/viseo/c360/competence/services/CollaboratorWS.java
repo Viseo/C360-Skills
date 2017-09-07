@@ -102,11 +102,10 @@ public class CollaboratorWS {
         UUID personalMessageSequence = UUID.randomUUID();
         ConnectionMessage connectionMessage = new ConnectionMessage()
                 .setCollaboratorDescription(inputCollaboratorData)
-                .setNameFileResponse(responseCompetence.getName())
+                .setNameFileResponse(responseFormation.getName())
                 .setSequence(personalMessageSequence);
         try {
             this.rabbitTemplate.convertAndSend(fanout.getName(), "", mapperObj.writeValueAsString(connectionMessage));
-            sleep();
             ConnectionMessage mostRecentRemoteCollaborator = null;
             mostRecentRemoteCollaborator = this.rabbitTemplate.execute(new ChannelCallback<ConnectionMessage>() {
 
@@ -117,31 +116,34 @@ public class CollaboratorWS {
                     ConnectionMessage mostRecentConsumerResponse = null;
                     GetResponse consumerResponse;
                     long deliveryTag;
+                    sleep();
                     do {
                         elapsedTime = (new Date()).getTime() - startTime;
-                        if(elapsedTime > 3000)
+                        if (elapsedTime > 2000)
                             break;
-                        consumerResponse = channel.basicGet(responseCompetence.getName(), false);
-                        if(consumerResponse != null){
+                        consumerResponse = channel.basicGet(responseFormation.getName(), false);
+                        if (consumerResponse != null) {
                             deliveryTag = consumerResponse.getEnvelope().getDeliveryTag();
                             ConnectionMessage rabbitMessageResponse = new ObjectMapper().readValue(consumerResponse.getBody(), ConnectionMessage.class);
+                            channel.basicAck(deliveryTag, true);
                             if (rabbitMessageResponse.getSequence().equals(personalMessageSequence)) {
-                                channel.basicAck(deliveryTag, true);
                                 if (mostRecentConsumerResponse == null ||
                                         rabbitMessageResponse.getCollaboratorDescription().getLastUpdateDate()
                                                 .after(mostRecentConsumerResponse.getCollaboratorDescription().getLastUpdateDate())) {
                                     mostRecentConsumerResponse = rabbitMessageResponse;
                                 }
                             } else {
-                                channel.basicReject(deliveryTag, true);
-
-                            }}
+                                channel.basicPublish("", responseFormation.getName(), null, consumerResponse.getBody());
+                            }
+                        }
                     } while (consumerResponse != null);
+
+
                     return mostRecentConsumerResponse;
                 }
             });
-            if(mostRecentRemoteCollaborator != null)
-            return mostRecentRemoteCollaborator.getCollaboratorDescription();
+            if (mostRecentRemoteCollaborator != null)
+                return mostRecentRemoteCollaborator.getCollaboratorDescription();
             return null;
         } catch (IOException e) {
             throw new RuntimeException(e);
