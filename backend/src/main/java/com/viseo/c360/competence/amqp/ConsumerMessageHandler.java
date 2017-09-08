@@ -10,7 +10,6 @@ import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.util.UUID;
 
 public class ConsumerMessageHandler {
     @Inject
@@ -38,10 +37,10 @@ public class ConsumerMessageHandler {
                 Collaborator c = ws.getCollaboratorByLogin(collaborator.getEmail());
                 System.out.println("Le voila = " + c.getFirstName());
                 connectionMessageResponse.setCollaboratorDescription(new CollaboratorToDescription().convert(c));
-                if(c.getFirstName() != null)
+                if(c.getFirstName() != null){
                     if(!connectionMessageResponse.getNameFileResponse().equals(responseCompetence.getName()))
                         rabbitTemplate.convertAndSend(connectionMessageResponse.getNameFileResponse(),mapperObj.writeValueAsString(connectionMessageResponse));
-                    else
+                } else
                         System.out.println("Rien trouvé");
             }
             else{

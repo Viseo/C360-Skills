@@ -3,6 +3,7 @@ package com.viseo.c360.competence.amqp;
 import com.viseo.c360.competence.dto.collaborator.CollaboratorDescription;
 
 import javax.inject.Inject;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -16,6 +17,8 @@ public class ConnectionMessage {
     UUID Sequence;
 
     private String nameFileResponse;
+
+    private Date messageDate;
 
     public CollaboratorDescription getCollaboratorDescription() {
         return collaboratorDescription;
@@ -32,6 +35,15 @@ public class ConnectionMessage {
 
     public ConnectionMessage setSequence(UUID sequence) {
         Sequence = sequence;
+        return this;
+    }
+
+    public Date getMessageDate() {
+        return messageDate;
+    }
+
+    public ConnectionMessage setMessageDate(Date messageDate) {
+        this.messageDate = messageDate;
         return this;
     }
 

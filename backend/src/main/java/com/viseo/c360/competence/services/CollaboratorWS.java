@@ -102,8 +102,9 @@ public class CollaboratorWS {
         UUID personalMessageSequence = UUID.randomUUID();
         ConnectionMessage connectionMessage = new ConnectionMessage()
                 .setCollaboratorDescription(inputCollaboratorData)
-                .setNameFileResponse(responseFormation.getName())
-                .setSequence(personalMessageSequence);
+                .setNameFileResponse(responseCompetence.getName())
+                .setSequence(personalMessageSequence)
+                .setMessageDate(new Date());
         try {
             this.rabbitTemplate.convertAndSend(fanout.getName(), "", mapperObj.writeValueAsString(connectionMessage));
             ConnectionMessage mostRecentRemoteCollaborator = null;
@@ -119,24 +120,24 @@ public class CollaboratorWS {
                     sleep();
                     do {
                         elapsedTime = (new Date()).getTime() - startTime;
-                        if (elapsedTime > 2000)
-                            break;
-                        consumerResponse = channel.basicGet(responseFormation.getName(), false);
+                        consumerResponse = channel.basicGet(responseCompetence.getName(), false);
                         if (consumerResponse != null) {
                             deliveryTag = consumerResponse.getEnvelope().getDeliveryTag();
                             ConnectionMessage rabbitMessageResponse = new ObjectMapper().readValue(consumerResponse.getBody(), ConnectionMessage.class);
                             channel.basicAck(deliveryTag, true);
-                            if (rabbitMessageResponse.getSequence().equals(personalMessageSequence)) {
-                                if (mostRecentConsumerResponse == null ||
-                                        rabbitMessageResponse.getCollaboratorDescription().getLastUpdateDate()
-                                                .after(mostRecentConsumerResponse.getCollaboratorDescription().getLastUpdateDate())) {
-                                    mostRecentConsumerResponse = rabbitMessageResponse;
+                            if ((new Date().getTime() - rabbitMessageResponse.getMessageDate().getTime()) < 5000) {
+                                if (rabbitMessageResponse.getSequence().equals(personalMessageSequence)) {
+                                    if (mostRecentConsumerResponse == null ||
+                                            rabbitMessageResponse.getCollaboratorDescription().getLastUpdateDate()
+                                                    .after(mostRecentConsumerResponse.getCollaboratorDescription().getLastUpdateDate())) {
+                                        mostRecentConsumerResponse = rabbitMessageResponse;
+                                    }
+                                } else {
+                                    channel.basicPublish("", responseCompetence.getName(), null, consumerResponse.getBody());
                                 }
-                            } else {
-                                channel.basicPublish("", responseFormation.getName(), null, consumerResponse.getBody());
                             }
                         }
-                    } while (consumerResponse != null);
+                    } while (consumerResponse != null && elapsedTime < 2000);
 
 
                     return mostRecentConsumerResponse;
