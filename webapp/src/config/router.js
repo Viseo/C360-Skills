@@ -18,7 +18,7 @@ function isAlreadyAuthenticated() {
 
 function isAdministratorAuthenticated() {
   var userToken = localStorage.getItem('token');
-  var isAdministrator = jwtDecode(userToken).isAdmin;
+  var isAdministrator = jwtDecode(userToken).roles;
   return isAdministrator;
 }
 

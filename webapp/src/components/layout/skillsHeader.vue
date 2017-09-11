@@ -26,7 +26,7 @@
               <span class="text-left col-lg-8 col-lg-offset-2 col-md-5 col-sm-5 col-xs-5" style="margin-top:10px"
                     @mouseover="setDisconnectedToTrue()" v-show="showName()">{{ lastName }} {{ firstName }}</span>
               <dropdown class="col-lg-8 col-lg-offset-2 col-md-5 col-sm-5 col-xs-5" type="default" v-if="showPicture()"
-                        v-show="showDisconnexion()" text="Choisissez une action" id="menu" >
+                        v-show="showDisconnexion()" text="Choisissez une action" id="menu">
                 <li><a @click="isAdminOrCollabPath">Espace compétences</a></li>
                 <li><a @click="isAdminOrCollabPath">{{ isAdminOrCollabName() }}</a></li>
                 <li role="separator" class="divider"></li>
@@ -48,11 +48,11 @@
                         src="../../assets/microservices_icon/icon_cv.png"
                         class="text-center  icon-app"><p>GCv</p></a></span>
                       <!--<span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img-->
-                        <!--src="../../assets/microservices_icon/icon_competence.png"-->
-                        <!--class="text-center icon-app"><p>GCon</p></span>-->
+                      <!--src="../../assets/microservices_icon/icon_competence.png"-->
+                      <!--class="text-center icon-app"><p>GCon</p></span>-->
                       <span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img
                         src="../../assets/microservices_icon/icon_formation.png"
-                        class="text-center icon-app"><p>GF</p></a></span>
+                        class="text-center icon-app" @click="goToTrainingMicroservice()"><p>GF</p></a></span>
                       <span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img
                         src="../../assets/microservices_icon/icon_mission.png"
                         class="text-center icon-app"><p>GM</p></span>
@@ -83,11 +83,13 @@
       return {
         title: 'Gestion des compétences',
         disconnect: false,
-        dialog: false
+        dialog: false,
+        userToken: {}
       }
     },
 
     mounted() {
+      this.connectFromElsewhere();
       if (this.$route.name != "login" && localStorage.getItem("token")) {
         this.$store.commit('setTokenFromLocalStorage');
         this.$store.dispatch('isTokenValid', this.$router);
@@ -111,8 +113,8 @@
       },
 
       firstName: function () {
-        if (this.$store.getters.isAuthenticated && this.$store.getters.collaboratorLoggedIn.firstName) {
-          return this.$store.getters.collaboratorLoggedIn.firstName;
+        if (this.$store.getters.isAuthenticated && this.$store.getters.collaboratorLoggedIn.sub) {
+          return this.$store.getters.collaboratorLoggedIn.sub;
         }
         else {
           return null;
@@ -121,6 +123,37 @@
 
     },
     methods: {
+      goToTrainingMicroservice(){
+        axios.get(config.server + "/api/collabdescriptionbyid/" + this.$store.getters.collaboratorLoggedIn.id).then(response => {
+          var collabToSend = response.data;
+          collabToSend.firstName = null;
+          axios.post("http://localhost:8080/api/user", collabToSend).then(() => {
+            window.location.replace("http://localhost:8080/");
+          })
+
+        }, response => {
+          window.location.replace("http://localhost:8080/");
+        })
+      },
+
+      connectFromElsewhere(){
+        axios.get(config.server + "/api/gethashmap").then(response => {
+          this.$store.commit('clearToken');
+          this.userToken = response.data;
+          if (this.userToken != null && this.userToken != 'undefined'){
+            this.$store.commit('setToken', this.userToken.userConnected);
+            if(this.$store.getters.collaboratorLoggedIn.roles == true){
+              this.$router.push("/addSkills");
+            }
+            else{
+              console.log("ROLES 2" +this.$store.getters.collaboratorLoggedIn.roles);
+              this.$router.push("/showSkillsCollab");
+            }
+          }
+        }, response => {
+          console.log(response);
+        });
+      },
       setDisconnectedToTrue(){
         this.disconnect = true;
       },
@@ -161,14 +194,17 @@
             this.$router.push('/searchSkillCollabByAdmin');
           }
         }
-        else {
+        else if (this.$route.path == '/showSkillsCollab') {
           this.$router.push('/profiltoupdate');
+        }
+        else {
+          this.$router.push('/showSkillsCollab');
         }
       },
       isAdminOrCollabName(){
         if (this.$store.getters.isAuthenticated && this.$store.getters.collaboratorLoggedIn.isAdmin) {
 
-            return "Rechercher un profil";
+          return "Rechercher un profil";
 
         }
         else {
@@ -180,7 +216,7 @@
 </script>
 
 <style>
-  .row{
+  .row {
     z-index: 6;
   }
 

@@ -169,7 +169,7 @@
 
       isAdministratorAuthenticated() {
         var userToken = localStorage.getItem('token');
-        var isAdministrator = jwtDecode(userToken).isAdmin;
+        var isAdministrator = jwtDecode(userToken).roles;
         console.log("heheh"+isAdministrator);
         return isAdministrator;
       },

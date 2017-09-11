@@ -66,6 +66,8 @@ public class CollaboratorWS {
     @Inject
     Queue responseCompetence;
 
+    String compactJws;
+
     private String createSecurityToken(CollaboratorDescription user){
         return Jwts.builder()
                 .setSubject(user.getFirstName())
@@ -76,6 +78,20 @@ public class CollaboratorWS {
                 .compact();
     }
 
+    @RequestMapping(value = "${endpoint.gethashmap}", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, String> connectUserFromElsewhere() {
+        try {
+            Map<String, String> currentUserMap = new HashMap<>();
+            if(compactJws!=null)
+                currentUserMap.put("userConnected", compactJws);
+            return currentUserMap;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new C360Exception(e);
+        }
+    }
+
     @CrossOrigin
     @RequestMapping(value = "${endpoint.user}", method = RequestMethod.POST)
     @ResponseBody
@@ -83,7 +99,7 @@ public class CollaboratorWS {
         InitializeMap();
         CollaboratorDescription externalDescription = checkIfCollaboratorExistElsewhere(myCollaboratorDescription);
         CollaboratorDescription user = handleReceivedCollaborator(myCollaboratorDescription,externalDescription);
-        String compactJws = createSecurityToken(user);
+        compactJws = createSecurityToken(user);
         this.putUserInCache(compactJws, user);
         Map<String, String> currentUserMap = new HashMap<>();
         currentUserMap.put("userConnected", compactJws);
@@ -241,6 +257,7 @@ public class CollaboratorWS {
     public Boolean deleteDisconnectedUserFromCache(@RequestBody String token) {
         try {
             mapUserCache.remove(token);
+            compactJws = null;
             if (mapUserCache.get(token) == null)
                 return true;
             else
