@@ -1,5 +1,6 @@
 package com.viseo.c360.competence.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.GetResponse;
@@ -78,19 +79,78 @@ public class CollaboratorWS {
                 .compact();
     }
 
-    @RequestMapping(value = "${endpoint.gethashmap}", method = RequestMethod.GET)
-    @ResponseBody
-    public Map<String, String> connectUserFromElsewhere() {
+    public CollaboratorDescription checkIfAlreadyConnected(ConnectionMessage message) {
         try {
-            Map<String, String> currentUserMap = new HashMap<>();
-            if(compactJws!=null)
-                currentUserMap.put("userConnected", compactJws);
-            return currentUserMap;
+            CollaboratorDescription user = mapUserCache.get(message.getToken());
+            if(user != null){
+                ConnectionMessage response = new ConnectionMessage().setNameFileResponse(message.getNameFileResponse())
+                        .setCollaboratorDescription(user)
+                        .setMessageDate(new Date())
+                        .setSequence(message.getSequence());
+                ObjectMapper mapper = new ObjectMapper();
+                rabbitTemplate.convertAndSend(message.getNameFileResponse(),mapper.writeValueAsString(response));
+            }
+            return user;
         } catch (Exception e) {
             e.printStackTrace();
             throw new C360Exception(e);
         }
     }
+
+    @RequestMapping(value = "${endpoint.getuserifalreadyconnectedelsewhere}", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, String> getUserIfAlreadyConnectedElseWhere(@RequestBody String theToken){
+        try {
+            ConnectionMessage request = new ConnectionMessage();
+            UUID personalMessageSequence = UUID.randomUUID();
+            request.setSequence(personalMessageSequence)
+                    .setToken(theToken.substring(0, theToken.length() - 1))
+                    .setMessageDate(new Date())
+                    .setNameFileResponse(responseCompetence.getName());
+            ObjectMapper mapper = new ObjectMapper();
+            rabbitTemplate.convertAndSend(fanout.getName(),"",mapper.writeValueAsString(request));
+            ConnectionMessage connectedUser = this.rabbitTemplate.execute(new ChannelCallback<ConnectionMessage>() {
+
+                @Override
+                public ConnectionMessage doInRabbit(final Channel channel) throws Exception {
+                    long startTime = System.currentTimeMillis();
+                    long elapsedTime = 0;
+                    ConnectionMessage mostRecentConsumerResponse = null;
+                    GetResponse consumerResponse;
+                    long deliveryTag;
+                    sleep();
+                    do {
+                        elapsedTime = (new Date()).getTime() - startTime;
+                        consumerResponse = channel.basicGet(responseCompetence.getName(), false);
+                        if (consumerResponse != null) {
+                            deliveryTag = consumerResponse.getEnvelope().getDeliveryTag();
+                            ConnectionMessage rabbitMessageResponse = new ObjectMapper().readValue(consumerResponse.getBody(), ConnectionMessage.class);
+                            channel.basicAck(deliveryTag, true);
+                                if (rabbitMessageResponse.getSequence().equals(personalMessageSequence)) {
+                                    if (mostRecentConsumerResponse == null ||
+                                            rabbitMessageResponse.getCollaboratorDescription().getLastUpdateDate()
+                                                    .after(mostRecentConsumerResponse.getCollaboratorDescription().getLastUpdateDate())) {
+                                        mostRecentConsumerResponse = rabbitMessageResponse;
+                                    }
+                                } else {
+                                    channel.basicPublish("", responseCompetence.getName(), null, consumerResponse.getBody());
+                                }
+
+                        }
+                    } while (consumerResponse != null && elapsedTime < 2000);
+
+
+                    return mostRecentConsumerResponse;
+                }
+            });
+            return this.getUserByLoginPassword(connectedUser.getCollaboratorDescription());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new C360Exception(e);
+        }
+    }
+
 
     @CrossOrigin
     @RequestMapping(value = "${endpoint.user}", method = RequestMethod.POST)
@@ -111,6 +171,35 @@ public class CollaboratorWS {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
         }
+    }
+
+    public CollaboratorDescription connectUserInMicroservicesFunction(Long collab_id) {
+        try {
+            ObjectMapper mapperObj = new ObjectMapper();
+
+            CollaboratorDescription user = new CollaboratorToDescription().convert(collaboratorDAO.getCollaboratorById(collab_id));
+            UUID personalMessageSequence = UUID.randomUUID();
+            ConnectionMessage connectionMessage = new ConnectionMessage()
+                    .setCollaboratorDescription(user)
+                    .setNameFileResponse(responseCompetence.getName())
+                    .setSequence(personalMessageSequence)
+                    .setMessageDate(new Date());
+            rabbitTemplate.convertAndSend(fanout.getName(),"",mapperObj.writeValueAsString(connectionMessage));
+            return user;
+        } catch (ConversionException e) {
+            e.printStackTrace();
+            throw new C360Exception(e);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new C360Exception(e);
+        }
+    }
+
+    @RequestMapping(value = "${endpoint.connectuserinmicroservices}", method = RequestMethod.GET)
+    @ResponseBody
+    public CollaboratorDescription connectUserInMicroservices(@PathVariable Long collab_id) {
+        return this.connectUserInMicroservicesFunction(collab_id);
+
     }
 
     public CollaboratorDescription checkIfCollaboratorExistElsewhere(CollaboratorDescription inputCollaboratorData) {

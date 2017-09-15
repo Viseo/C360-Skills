@@ -20,6 +20,8 @@ public class ConnectionMessage {
 
     private Date messageDate;
 
+    private String token;
+
     public CollaboratorDescription getCollaboratorDescription() {
         return collaboratorDescription;
     }
@@ -31,6 +33,15 @@ public class ConnectionMessage {
 
     public UUID getSequence() {
         return Sequence;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public ConnectionMessage setToken(String token) {
+        this.token = token;
+        return this;
     }
 
     public ConnectionMessage setSequence(UUID sequence) {

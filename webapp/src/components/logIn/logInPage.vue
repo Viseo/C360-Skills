@@ -161,6 +161,10 @@
       }
     },
 
+    mounted:function(){
+        this.getTokenFromURL();
+    },
+
     methods: {
       isAlreadyAuthenticated() {
         var userToken = localStorage.getItem('token');
@@ -173,6 +177,22 @@
         console.log("heheh"+isAdministrator);
         return isAdministrator;
       },
+
+      getTokenFromURL(){
+        var d = window.location.href.indexOf("?user=");
+        if(d != -1){
+        var token = window.location.href.slice(d+6,window.location.href.length);
+        if(token != null && token!= 'undefined'){
+          axios.post(config.server + "/api/getuserifalreadyconnectedelsewhere",token).then((response) => {
+              this.$store.commit('clearToken');
+          this.userToken = response.data;
+          this.$store.commit('setToken', this.userToken.userConnected);
+          this.redirectIfAlreadyAuthenticated();
+        }, response => {
+            console.log(response);
+          });
+        }
+      }},
 
       redirectIfAlreadyAuthenticated(to, from, next) {
         if (this.isAlreadyAuthenticated() && this.isAdministratorAuthenticated()) {

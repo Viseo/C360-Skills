@@ -89,7 +89,6 @@
     },
 
     mounted() {
-      this.connectFromElsewhere();
       if (this.$route.name != "login" && localStorage.getItem("token")) {
         this.$store.commit('setTokenFromLocalStorage');
         this.$store.dispatch('isTokenValid', this.$router);
@@ -124,36 +123,9 @@
     },
     methods: {
       goToTrainingMicroservice(){
-        axios.get(config.server + "/api/collabdescriptionbyid/" + this.$store.getters.collaboratorLoggedIn.id).then(response => {
-          var collabToSend = response.data;
-          collabToSend.firstName = null;
-          axios.post("http://localhost:8080/api/user", collabToSend).then(() => {
-            window.location.replace("http://localhost:8080/");
-          })
-
-        }, response => {
-          window.location.replace("http://localhost:8080/");
-        })
+        window.location.replace("http://localhost:8080/#/login?user=" + this.$store.getters.token);
       },
 
-      connectFromElsewhere(){
-        axios.get(config.server + "/api/gethashmap").then(response => {
-          this.$store.commit('clearToken');
-          this.userToken = response.data;
-          if (this.userToken != null && this.userToken != 'undefined'){
-            this.$store.commit('setToken', this.userToken.userConnected);
-            if(this.$store.getters.collaboratorLoggedIn.roles == true){
-              this.$router.push("/addSkills");
-            }
-            else{
-              console.log("ROLES 2" +this.$store.getters.collaboratorLoggedIn.roles);
-              this.$router.push("/showSkillsCollab");
-            }
-          }
-        }, response => {
-          console.log(response);
-        });
-      },
       setDisconnectedToTrue(){
         this.disconnect = true;
       },
