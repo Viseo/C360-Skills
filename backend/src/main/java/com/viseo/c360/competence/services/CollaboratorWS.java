@@ -68,6 +68,7 @@ public class CollaboratorWS {
     Queue responseCompetence;
 
     String compactJws;
+    private boolean compteExisteInOtherApp = false;
 
     private String createSecurityToken(CollaboratorDescription user){
         return Jwts.builder()
@@ -380,23 +381,38 @@ public class CollaboratorWS {
                     long elapsedTime = 0;
                     ConnectionMessage mostRecentConsumerResponse = null;
                     GetResponse consumerResponse;
+                    long deliveryTag;
                     sleep();
                     do {
                         elapsedTime = (new Date()).getTime() - startTime;
                         consumerResponse = channel.basicGet(responseCompetence.getName(), false);
-                        if (consumerResponse == null) {
-                            /* repondre ça existe pas, on peut continuer */
-                            System.out.println("compte existe pas!");
+
+                        if (consumerResponse != null) {
+                            deliveryTag = consumerResponse.getEnvelope().getDeliveryTag();
+                            ConnectionMessage rabbitMessageResponse = new ObjectMapper().readValue(consumerResponse.getBody(), ConnectionMessage.class);
+                            channel.basicAck(deliveryTag, true);
+                            if (rabbitMessageResponse.getSequence().equals(personalMessageSequence)) {
+                                if (mostRecentConsumerResponse == null ||
+                                        rabbitMessageResponse.getCollaboratorDescription().getLastUpdateDate()
+                                                .after(mostRecentConsumerResponse.getCollaboratorDescription().getLastUpdateDate())) {
+                                    mostRecentConsumerResponse = rabbitMessageResponse;
+                                }
+                            } else {
+                                channel.basicPublish("", responseCompetence.getName(), null, consumerResponse.getBody());
+                            }
+                            System.out.println("compte existe!");
+                            compteExisteInOtherApp = true;
+                            return null;
                         }
                         else{
-                            System.out.println("compte existe!");
-                            return null;
+                            System.out.println("compte existe pas!");
+                            compteExisteInOtherApp = false;
                         }
                     } while (consumerResponse != null && elapsedTime < 2000);
                     return mostRecentConsumerResponse;
                 }
             });
-            if (connectedUser == null){
+            if (compteExisteInOtherApp){
                 //if the email is already exist in other microservice
                 return null;
             }
