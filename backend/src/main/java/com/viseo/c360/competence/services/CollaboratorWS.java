@@ -361,15 +361,59 @@ public class CollaboratorWS {
     @RequestMapping(value = "${endpoint.collaborators}", method = RequestMethod.POST)
     @ResponseBody
     public CollaboratorDescription addCollaborator(@RequestBody CollaboratorDescription collaboratorDescription) {
-        try {
-            collaboratorDescription.setDefaultPicture(true);
-            Collaborator collaborator = collaboratorDAO.addCollaborator(new DescriptionToCollaborator().convert(collaboratorDescription));
-            return new CollaboratorToDescription().convert(collaborator);
-        } catch (PersistenceException pe) {
-            UniqueFieldErrors uniqueFieldErrors = exceptionUtil.getUniqueFieldError(pe);
-            if (uniqueFieldErrors == null) throw new C360Exception(pe);
-            else throw new UniqueFieldException(uniqueFieldErrors.getField());
+        try{
+            ConnectionMessage checkIfUserExist = new ConnectionMessage();
+            UUID personalMessageSequence = UUID.randomUUID();
+            checkIfUserExist.setCollaboratorDescription(collaboratorDescription).
+                    setMessageDate(new Date()).
+                    setNameFileResponse(responseCompetence.getName()).
+                    setSequence(personalMessageSequence);
+            ObjectMapper mapper = new ObjectMapper();
+            rabbitTemplate.convertAndSend(fanout.getName(),"",mapper.writeValueAsString(checkIfUserExist));
+
+
+            ConnectionMessage connectedUser = this.rabbitTemplate.execute(new ChannelCallback<ConnectionMessage>() {
+
+                @Override
+                public ConnectionMessage doInRabbit(final Channel channel) throws Exception {
+                    long startTime = System.currentTimeMillis();
+                    long elapsedTime = 0;
+                    ConnectionMessage mostRecentConsumerResponse = null;
+                    GetResponse consumerResponse;
+                    sleep();
+                    do {
+                        elapsedTime = (new Date()).getTime() - startTime;
+                        consumerResponse = channel.basicGet(responseCompetence.getName(), false);
+                        if (consumerResponse == null) {
+                            /* repondre ça existe pas, on peut continuer */
+                            System.out.println("compte existe pas!");
+                        }
+                        else{
+                            System.out.println("compte existe!");
+                            return null;
+                        }
+                    } while (consumerResponse != null && elapsedTime < 2000);
+                    return mostRecentConsumerResponse;
+                }
+            });
+            if (connectedUser == null){
+                //if the email is already exist in other microservice
+                return null;
+            }
+            try {
+                collaboratorDescription.setDefaultPicture(true);
+                Collaborator collaborator = collaboratorDAO.addCollaborator(new DescriptionToCollaborator().convert(collaboratorDescription));
+                return new CollaboratorToDescription().convert(collaborator);
+            } catch (PersistenceException pe) {
+                UniqueFieldErrors uniqueFieldErrors = exceptionUtil.getUniqueFieldError(pe);
+                if (uniqueFieldErrors == null) throw new C360Exception(pe);
+                else throw new UniqueFieldException(uniqueFieldErrors.getField());
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new C360Exception(e);
         }
+
     }
 
     @CrossOrigin

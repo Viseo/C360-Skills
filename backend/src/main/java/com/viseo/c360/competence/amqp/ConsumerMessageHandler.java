@@ -43,7 +43,7 @@ public class ConsumerMessageHandler {
                 Collaborator c = dao.getCollaboratorByLogin(collaborator.getEmail());
                 System.out.println("Le voila = " + c.getFirstName());
                 connectionMessageResponse.setCollaboratorDescription(new CollaboratorToDescription().convert(c));
-                if (c.getFirstName() != null) {
+                if (c != null) {
                     if (!connectionMessageResponse.getNameFileResponse().equals(responseCompetence.getName())) {
                         rabbitTemplate.convertAndSend(connectionMessageResponse.getNameFileResponse(), mapperObj.writeValueAsString(connectionMessageResponse));
                         System.out.println("Collaborateur envoyé !");

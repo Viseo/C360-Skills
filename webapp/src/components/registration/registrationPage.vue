@@ -345,6 +345,9 @@
               this.emailAlreadyExist = true;
               this.personalIdNumberAlreadyExist = false;
             }
+            else if (response.data == ""){
+              console.log("email already exist in anther microservice");
+            }
             else {
               console.log("cas normal");
               this.user.email = this.collaboratorToRegister.email;
