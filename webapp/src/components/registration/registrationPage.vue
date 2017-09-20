@@ -334,32 +334,29 @@
 
       addCollaborator(){
         axios.post(config.server + "/api/collaborateurs", this.collaboratorToRegister).then(
+
           response => {
-            if (response.data == "personnalIdNumber") {
-              console.log("PID already exist");
-              this.personalIdNumberAlreadyExist = true;
-              this.emailAlreadyExist = false;
-            }
-            else if (response.data == "email") {
-              console.log("email already exist");
-              this.emailAlreadyExist = true;
-              this.personalIdNumberAlreadyExist = false;
-            }
-            else if (response.data == ""){
-              console.log("email already exist in anther microservice");
-              this.emailAlreadyExist = true;
-              this.personalIdNumberAlreadyExist = false;
-            }
-            else {
               console.log("cas normal");
               this.user.email = this.collaboratorToRegister.email;
               this.user.password = this.collaboratorToRegister.password;
               this.logIn();
+          },response =>{
+            console.log(response);
+            if (response.response.data.indexOf("UniqueFieldException: personnalIdNumber") != -1 ) {
+              console.log("PID already exist");
+              this.personalIdNumberAlreadyExist = true;
+              this.emailAlreadyExist = false;
             }
-          }).catch(function (error) {
+            else if (response.response.data.indexOf("UniqueFieldException: email") != -1) {
+              console.log("email already exist");
+              this.personalIdNumberAlreadyExist = false;
+              this.emailAlreadyExist = true;
+            }
+            else{
               console.log(error);
             }
-        );
+          })
+
       },
 
       verifyForm (){
