@@ -9,12 +9,12 @@ import java.util.UUID;
 /**
  * Created by SJO3662 on 24/08/2017.
  */
-public class ConnectionMessage {
+public class RabbitMessage {
 
     @Inject
     private CollaboratorDescription collaboratorDescription;
 
-    UUID Sequence;
+    private UUID Sequence;
 
     private String nameFileResponse;
 
@@ -22,11 +22,13 @@ public class ConnectionMessage {
 
     private String token;
 
+    private MessageType type = MessageType.CONNECTION;
+
     public CollaboratorDescription getCollaboratorDescription() {
         return collaboratorDescription;
     }
 
-    public ConnectionMessage setCollaboratorDescription(CollaboratorDescription collaboratorDescription) {
+    public RabbitMessage setCollaboratorDescription(CollaboratorDescription collaboratorDescription) {
         this.collaboratorDescription = collaboratorDescription;
         return this;
     }
@@ -39,12 +41,12 @@ public class ConnectionMessage {
         return token;
     }
 
-    public ConnectionMessage setToken(String token) {
+    public RabbitMessage setToken(String token) {
         this.token = token;
         return this;
     }
 
-    public ConnectionMessage setSequence(UUID sequence) {
+    public RabbitMessage setSequence(UUID sequence) {
         Sequence = sequence;
         return this;
     }
@@ -53,7 +55,7 @@ public class ConnectionMessage {
         return messageDate;
     }
 
-    public ConnectionMessage setMessageDate(Date messageDate) {
+    public RabbitMessage setMessageDate(Date messageDate) {
         this.messageDate = messageDate;
         return this;
     }
@@ -62,8 +64,16 @@ public class ConnectionMessage {
         return nameFileResponse;
     }
 
-    public ConnectionMessage setNameFileResponse(String nameFileResponse) {
+    public RabbitMessage setNameFileResponse(String nameFileResponse) {
         this.nameFileResponse = nameFileResponse;
         return this;
+    }
+
+    public MessageType getType() {
+        return type;
+    }
+
+    public void setType(MessageType type) {
+        this.type = type;
     }
 }

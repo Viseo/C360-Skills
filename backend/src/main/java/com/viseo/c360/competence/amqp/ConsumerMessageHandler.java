@@ -33,8 +33,7 @@ public class ConsumerMessageHandler {
         com.fasterxml.jackson.databind.ObjectMapper mapperObj = new com.fasterxml.jackson.databind.ObjectMapper();
 
         try {
-            ConnectionMessage connectionMessageResponse = new ConnectionMessage();
-            connectionMessageResponse = new com.fasterxml.jackson.databind.ObjectMapper().readValue(request, ConnectionMessage.class);
+            RabbitMessage connectionMessageResponse = new com.fasterxml.jackson.databind.ObjectMapper().readValue(request, RabbitMessage.class);
             CollaboratorDescription collaborator = connectionMessageResponse.getCollaboratorDescription();
             System.out.println("Halelujah j'ai reçu ça   : " + request);
             if (connectionMessageResponse.getToken() != null) {
