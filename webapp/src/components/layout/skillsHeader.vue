@@ -150,6 +150,7 @@
       disconnectUser(){
         axios.post(config.server + '/api/userdisconnect', this.$store.getters.token).then(
           response => {
+            console.log("disconnect");
             this.$store.commit('resetStore');
             this.$store.commit('clearToken');
             this.$router.push('/login');

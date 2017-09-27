@@ -98,10 +98,21 @@ public class CollaboratorWS {
                     rabbitTemplate.convertAndSend(message.getNameFileResponse(), mapper.writeValueAsString(response));
                 }
             } else if (msg.getType() == MessageType.DISCONNECTION) {
+                String token = null;
                 DisconnectionMessage message = (DisconnectionMessage) msg;
-                System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-                mapUserCache.remove(message.getToken());
-                compactJws = null;
+                System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA : " + message.getCollaboratorDescription());
+                if(!message.getNameFileResponse().equals(this.responseCompetence.getName())){
+                    CollaboratorDescription collaborator = message.getCollaboratorDescription();
+                    for (String t : mapUserCache.keySet()){
+                        if (mapUserCache.get(t).getEmail().equals(collaborator.getEmail())){
+                            token = t;
+                            System.out.println("Reomving token : " + token);
+                            mapUserCache.remove(token);
+                            compactJws = null;
+                            break;
+                        }
+                    }
+                }
             }
             return user;
         } catch (Exception e) {
@@ -366,23 +377,27 @@ public class CollaboratorWS {
     @RequestMapping(value = "${endpoint.userdisconnect}", method = RequestMethod.POST)
     @ResponseBody
     public Boolean deleteDisconnectedUserFromCache(@RequestBody String token) {
-        try {
+        CollaboratorDescription collaborator = mapUserCache.get(token.substring(0, token.length()-1));
+        if (collaborator != null){
+            try {
             /* log out for this microservice */
-            mapUserCache.remove(token);
-            compactJws = null;
+                mapUserCache.remove(token);
+                compactJws = null;
             /* send disconnection request for other microservices */
-            DisconnectionMessage msg = new DisconnectionMessage();
-            UUID personalMessageSequence = UUID.randomUUID();
-            msg.setToken(token)
-                    .setSequence(personalMessageSequence)
-                    .setNameFileResponse(responseCompetence.getName());
-            ObjectMapper mapper = new ObjectMapper();
-            rabbitTemplate.convertAndSend(fanout.getName(),"",mapper.writeValueAsString(msg));
-            return (mapUserCache.get(token) == null);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new C360Exception(e);
+                DisconnectionMessage msg = new DisconnectionMessage();
+                msg.setToken(token)
+                        .setNameFileResponse(responseCompetence.getName())
+                        .setCollaboratorDescription(collaborator);
+                ObjectMapper mapper = new ObjectMapper();
+                rabbitTemplate.convertAndSend(fanout.getName(),"",mapper.writeValueAsString(msg));
+                return (mapUserCache.get(token) == null);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new C360Exception(e);
+            }
         }
+        else
+            return true;
     }
 
     @CrossOrigin
