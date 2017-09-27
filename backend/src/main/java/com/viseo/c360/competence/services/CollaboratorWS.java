@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.GetResponse;
+import com.viseo.c360.competence.amqp.DisconnectionMessage;
 import com.viseo.c360.competence.amqp.MessageType;
-import com.viseo.c360.competence.amqp.RabbitMessage;
+import com.viseo.c360.competence.amqp.ConnectionMessage;
+import com.viseo.c360.competence.amqp.RabbitMsg;
 import com.viseo.c360.competence.converters.collaborator.*;
 import com.viseo.c360.competence.dao.CollaboratorDAO;
 import com.viseo.c360.competence.dao.ExpertiseDAO;
@@ -23,6 +25,7 @@ import com.viseo.c360.competence.exceptions.dao.util.UniqueFieldErrors;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.crypto.MacProvider;
+import org.json.simple.parser.ParseException;
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.ChannelCallback;
@@ -80,20 +83,22 @@ public class CollaboratorWS {
                 .compact();
     }
 
-    public CollaboratorDescription checkIfAlreadyConnected(RabbitMessage message) {
+    public CollaboratorDescription checkIfAlreadyConnected(RabbitMsg msg) {
         try {
             CollaboratorDescription user = null;
-            if (message.getType() == MessageType.CONNECTION) {
+            if (msg.getType() == MessageType.CONNECTION) {
+                ConnectionMessage message = (ConnectionMessage) msg;
                 user = mapUserCache.get(message.getToken());
                 if (user != null) {
-                    RabbitMessage response = new RabbitMessage().setNameFileResponse(message.getNameFileResponse())
+                    ConnectionMessage response = new ConnectionMessage().setNameFileResponse(message.getNameFileResponse())
                             .setCollaboratorDescription(user)
                             .setMessageDate(new Date())
                             .setSequence(message.getSequence());
                     ObjectMapper mapper = new ObjectMapper();
                     rabbitTemplate.convertAndSend(message.getNameFileResponse(), mapper.writeValueAsString(response));
                 }
-            } else if (message.getType() == MessageType.DECONNECTION) {
+            } else if (msg.getType() == MessageType.DISCONNECTION) {
+                DisconnectionMessage message = (DisconnectionMessage) msg;
                 System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
                 mapUserCache.remove(message.getToken());
                 compactJws = null;
@@ -109,7 +114,7 @@ public class CollaboratorWS {
     @ResponseBody
     public Map<String, String> getUserIfAlreadyConnectedElseWhere(@RequestBody String theToken){
         try {
-            RabbitMessage request = new RabbitMessage();
+            ConnectionMessage request = new ConnectionMessage();
             UUID personalMessageSequence = UUID.randomUUID();
             request.setSequence(personalMessageSequence)
                     .setToken(theToken.substring(0, theToken.length() - 1))
@@ -117,13 +122,13 @@ public class CollaboratorWS {
                     .setNameFileResponse(responseCompetence.getName());
             ObjectMapper mapper = new ObjectMapper();
             rabbitTemplate.convertAndSend(fanout.getName(),"",mapper.writeValueAsString(request));
-            RabbitMessage connectedUser = this.rabbitTemplate.execute(new ChannelCallback<RabbitMessage>() {
+            ConnectionMessage connectedUser = this.rabbitTemplate.execute(new ChannelCallback<ConnectionMessage>() {
 
                 @Override
-                public RabbitMessage doInRabbit(final Channel channel) throws Exception {
+                public ConnectionMessage doInRabbit(final Channel channel) throws Exception {
                     long startTime = System.currentTimeMillis();
                     long elapsedTime = 0;
-                    RabbitMessage mostRecentConsumerResponse = null;
+                    ConnectionMessage mostRecentConsumerResponse = null;
                     GetResponse consumerResponse;
                     long deliveryTag;
                     sleep();
@@ -132,7 +137,7 @@ public class CollaboratorWS {
                         consumerResponse = channel.basicGet(responseCompetence.getName(), false);
                         if (consumerResponse != null) {
                             deliveryTag = consumerResponse.getEnvelope().getDeliveryTag();
-                            RabbitMessage rabbitMessageResponse = new ObjectMapper().readValue(consumerResponse.getBody(), RabbitMessage.class);
+                            ConnectionMessage rabbitMessageResponse = new ObjectMapper().readValue(consumerResponse.getBody(), ConnectionMessage.class);
                             channel.basicAck(deliveryTag, true);
                                 if (rabbitMessageResponse.getSequence().equals(personalMessageSequence)) {
                                     if (mostRecentConsumerResponse == null ||
@@ -164,7 +169,6 @@ public class CollaboratorWS {
     @RequestMapping(value = "${endpoint.user}", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, String> getUserByLoginPassword(@RequestBody CollaboratorDescription myCollaboratorDescription) {
-        InitializeMap();
         CollaboratorDescription externalDescription = checkIfCollaboratorExistElsewhere(myCollaboratorDescription);
         CollaboratorDescription user = handleReceivedCollaborator(myCollaboratorDescription,externalDescription);
         compactJws = createSecurityToken(user);
@@ -189,7 +193,7 @@ public class CollaboratorWS {
 
             CollaboratorDescription user = new CollaboratorToDescription().convert(collaboratorDAO.getCollaboratorById(collab_id));
             UUID personalMessageSequence = UUID.randomUUID();
-            RabbitMessage connectionMessage = new RabbitMessage()
+            ConnectionMessage connectionMessage = new ConnectionMessage()
                     .setCollaboratorDescription(user)
                     .setNameFileResponse(responseCompetence.getName())
                     .setSequence(personalMessageSequence)
@@ -215,21 +219,21 @@ public class CollaboratorWS {
     public CollaboratorDescription checkIfCollaboratorExistElsewhere(CollaboratorDescription inputCollaboratorData) {
         ObjectMapper mapperObj = new ObjectMapper();
         UUID personalMessageSequence = UUID.randomUUID();
-        RabbitMessage connectionMessage = new RabbitMessage()
+        ConnectionMessage connectionMessage = new ConnectionMessage()
                 .setCollaboratorDescription(inputCollaboratorData)
                 .setNameFileResponse(responseCompetence.getName())
                 .setSequence(personalMessageSequence)
                 .setMessageDate(new Date());
         try {
             this.rabbitTemplate.convertAndSend(fanout.getName(), "", mapperObj.writeValueAsString(connectionMessage));
-            RabbitMessage mostRecentRemoteCollaborator = null;
-            mostRecentRemoteCollaborator = this.rabbitTemplate.execute(new ChannelCallback<RabbitMessage>() {
+            ConnectionMessage mostRecentRemoteCollaborator = null;
+            mostRecentRemoteCollaborator = this.rabbitTemplate.execute(new ChannelCallback<ConnectionMessage>() {
 
                 @Override
-                public RabbitMessage doInRabbit(final Channel channel) throws Exception {
+                public ConnectionMessage doInRabbit(final Channel channel) throws Exception {
                     long startTime = System.currentTimeMillis();
                     long elapsedTime = 0;
-                    RabbitMessage mostRecentConsumerResponse = null;
+                    ConnectionMessage mostRecentConsumerResponse = null;
                     GetResponse consumerResponse;
                     long deliveryTag;
                     sleep();
@@ -238,7 +242,7 @@ public class CollaboratorWS {
                         consumerResponse = channel.basicGet(responseCompetence.getName(), false);
                         if (consumerResponse != null) {
                             deliveryTag = consumerResponse.getEnvelope().getDeliveryTag();
-                            RabbitMessage rabbitMessageResponse = new ObjectMapper().readValue(consumerResponse.getBody(), RabbitMessage.class);
+                            ConnectionMessage rabbitMessageResponse = new ObjectMapper().readValue(consumerResponse.getBody(), ConnectionMessage.class);
                             channel.basicAck(deliveryTag, true);
                             if ((new Date().getTime() - rabbitMessageResponse.getMessageDate().getTime()) < 5000) {
                                 if (rabbitMessageResponse.getSequence().equals(personalMessageSequence)) {
@@ -327,12 +331,7 @@ public class CollaboratorWS {
         var2.close();*//*
     }*/
 
-    private static ConcurrentHashMap<String, CollaboratorDescription> mapUserCache;
-
-    private void InitializeMap() {
-        if (mapUserCache == null)
-            mapUserCache = new ConcurrentHashMap<String, CollaboratorDescription>();
-    }
+    private static final Map<String, CollaboratorDescription> mapUserCache = new ConcurrentHashMap<>();
 
     private void putUserInCache(String token, CollaboratorDescription user) {
         mapUserCache.put(token, user);
@@ -371,16 +370,14 @@ public class CollaboratorWS {
             /* log out for this microservice */
             mapUserCache.remove(token);
             compactJws = null;
-            /* send deconnection request for other microservices */
-            RabbitMessage msg = new RabbitMessage();
+            /* send disconnection request for other microservices */
+            DisconnectionMessage msg = new DisconnectionMessage();
             UUID personalMessageSequence = UUID.randomUUID();
-            msg.setToken(token).setSequence(personalMessageSequence).setType(MessageType.DECONNECTION);
+            msg.setToken(token)
+                    .setSequence(personalMessageSequence)
+                    .setNameFileResponse(responseCompetence.getName());
             ObjectMapper mapper = new ObjectMapper();
-            try{
-                rabbitTemplate.convertAndSend(fanout.getName(),"",mapper.writeValueAsString(msg));
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+            rabbitTemplate.convertAndSend(fanout.getName(),"",mapper.writeValueAsString(msg));
             return (mapUserCache.get(token) == null);
         } catch (Exception e) {
             e.printStackTrace();
@@ -393,7 +390,7 @@ public class CollaboratorWS {
     @ResponseBody
     public CollaboratorDescription addCollaborator(@RequestBody CollaboratorDescription collaboratorDescription) {
 
-        RabbitMessage checkIfUserExist = new RabbitMessage();
+        ConnectionMessage checkIfUserExist = new ConnectionMessage();
         UUID personalMessageSequence = UUID.randomUUID();
         checkIfUserExist.setCollaboratorDescription(collaboratorDescription).
                 setMessageDate(new Date()).
@@ -406,13 +403,13 @@ public class CollaboratorWS {
             e.printStackTrace();
         }
 
-        RabbitMessage connectedUser = this.rabbitTemplate.execute(new ChannelCallback<RabbitMessage>() {
+        ConnectionMessage connectedUser = this.rabbitTemplate.execute(new ChannelCallback<ConnectionMessage>() {
 
             @Override
-            public RabbitMessage doInRabbit(final Channel channel) throws Exception {
+            public ConnectionMessage doInRabbit(final Channel channel) throws Exception {
                 long startTime = System.currentTimeMillis();
                 long elapsedTime = 0;
-                RabbitMessage mostRecentConsumerResponse = null;
+                ConnectionMessage mostRecentConsumerResponse = null;
                 GetResponse consumerResponse;
                 long deliveryTag;
                 sleep();
@@ -421,7 +418,7 @@ public class CollaboratorWS {
                     consumerResponse = channel.basicGet(responseCompetence.getName(), false);
                     if (consumerResponse != null) {
                         deliveryTag = consumerResponse.getEnvelope().getDeliveryTag();
-                        RabbitMessage rabbitMessageResponse = new ObjectMapper().readValue(consumerResponse.getBody(), RabbitMessage.class);
+                        ConnectionMessage rabbitMessageResponse = new ObjectMapper().readValue(consumerResponse.getBody(), ConnectionMessage.class);
                         channel.basicAck(deliveryTag, true);
                         if (rabbitMessageResponse.getSequence().equals(personalMessageSequence)) {
                             if (mostRecentConsumerResponse == null ||
@@ -465,7 +462,6 @@ public class CollaboratorWS {
     public Map<String, CollaboratorDescription> updateCollaborator(@RequestBody CollaboratorDescription collaborator) {
         try {
             Collaborator collaboratorToUpdate = collaboratorDAO.updateCollaborator(new DescriptionToCollaborator().convert(collaborator));
-            InitializeMap();
             Key key = MacProvider.generateKey();
             String compactJws = Jwts.builder()
                     .claim("firstName", collaborator.getFirstName())
