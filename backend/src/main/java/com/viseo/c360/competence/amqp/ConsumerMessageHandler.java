@@ -1,5 +1,6 @@
 package com.viseo.c360.competence.amqp;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.viseo.c360.competence.converters.collaborator.CollaboratorToDescription;
 import com.viseo.c360.competence.dao.CollaboratorDAO;
@@ -91,8 +92,13 @@ public class ConsumerMessageHandler {
                     connectionMessageResponse.setCollaboratorDescription(new CollaboratorToDescription().convert(c));
                     if (c.getFirstName() != null) {
                         if (!connectionMessageResponse.getNameFileResponse().equals(responseCompetence.getName())) {
-                            rabbitTemplate.convertAndSend(connectionMessageResponse.getNameFileResponse(), jo.toJSONString());
-                            System.out.println("Collaborateur envoyé !");
+                            ObjectMapper mapper = new ObjectMapper();
+                            try{
+                                rabbitTemplate.convertAndSend(connectionMessageResponse.getNameFileResponse(), mapper.writeValueAsString(connectionMessageResponse));
+                                System.out.println("Collaborateur envoyé !");
+                            }catch (JsonProcessingException e){
+                                throw new RuntimeException(e);
+                            }
                         }
 
                     }
