@@ -159,7 +159,7 @@
           });
       },
       isAdminOrCollabPath(){
-        if (this.$store.getters.isAuthenticated && this.$store.getters.collaboratorLoggedIn.isAdmin) {
+        if (this.$store.getters.isAuthenticated && this.$store.getters.collaboratorLoggedIn.roles) {
           if (this.$route.path == '/searchSkillCollabByAdmin') {
             this.$router.push('/addSkills');
           }
@@ -175,7 +175,7 @@
         }
       },
       isAdminOrCollabName(){
-        if (this.$store.getters.isAuthenticated && this.$store.getters.collaboratorLoggedIn.isAdmin) {
+        if (this.$store.getters.isAuthenticated && this.$store.getters.collaboratorLoggedIn.roles) {
 
           return "Rechercher un profil";
 

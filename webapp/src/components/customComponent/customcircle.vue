@@ -11,12 +11,13 @@
       <div v-show="!star">
         <p>
           <span v-tooltip.bottom="currentLevel">
-          <star-rating @rating-selected="setRating" @current-rating="showCurrentRating" v-model="rating"
-                       :show-rating="false"
-                       :star-size="18">
-          </star-rating>
-        <p class="level"></p>
-        </span></p>
+            <star-rating @rating-selected="setRating" @current-rating="showCurrentRating" v-model="rating"
+                         :show-rating="false"
+                         :star-size="18">
+            </star-rating>
+            <p class="level"></p>
+          </span>
+        </p>
       </div>
     </foreignObject>
   </g>
