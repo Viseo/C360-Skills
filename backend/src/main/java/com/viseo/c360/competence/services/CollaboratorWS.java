@@ -4,7 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.GetResponse;
+import com.viseo.c360.competence.amqp.DisconnectionMessage;
+import com.viseo.c360.competence.amqp.MessageType;
 import com.viseo.c360.competence.amqp.ConnectionMessage;
+import com.viseo.c360.competence.amqp.RabbitMsg;
 import com.viseo.c360.competence.converters.collaborator.*;
 import com.viseo.c360.competence.dao.CollaboratorDAO;
 import com.viseo.c360.competence.dao.ExpertiseDAO;
@@ -22,8 +25,8 @@ import com.viseo.c360.competence.exceptions.dao.util.UniqueFieldErrors;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.crypto.MacProvider;
+import org.json.simple.parser.ParseException;
 import org.springframework.amqp.core.FanoutExchange;
-import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.ChannelCallback;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -68,6 +71,7 @@ public class CollaboratorWS {
     Queue responseCompetence;
 
     String compactJws;
+    private boolean compteExisteInOtherApp = false;
 
     private String createSecurityToken(CollaboratorDescription user){
         return Jwts.builder()
@@ -79,16 +83,36 @@ public class CollaboratorWS {
                 .compact();
     }
 
-    public CollaboratorDescription checkIfAlreadyConnected(ConnectionMessage message) {
+    public CollaboratorDescription checkIfAlreadyConnected(RabbitMsg msg) {
         try {
-            CollaboratorDescription user = mapUserCache.get(message.getToken());
-            if(user != null){
-                ConnectionMessage response = new ConnectionMessage().setNameFileResponse(message.getNameFileResponse())
-                        .setCollaboratorDescription(user)
-                        .setMessageDate(new Date())
-                        .setSequence(message.getSequence());
-                ObjectMapper mapper = new ObjectMapper();
-                rabbitTemplate.convertAndSend(message.getNameFileResponse(),mapper.writeValueAsString(response));
+            CollaboratorDescription user = null;
+            if (msg.getType() == MessageType.CONNECTION) {
+                ConnectionMessage message = (ConnectionMessage) msg;
+                user = mapUserCache.get(message.getToken());
+                if (user != null) {
+                    ConnectionMessage response = new ConnectionMessage().setNameFileResponse(message.getNameFileResponse())
+                            .setCollaboratorDescription(user)
+                            .setMessageDate(new Date())
+                            .setSequence(message.getSequence());
+                    ObjectMapper mapper = new ObjectMapper();
+                    rabbitTemplate.convertAndSend(message.getNameFileResponse(), mapper.writeValueAsString(response));
+                }
+            } else if (msg.getType() == MessageType.DISCONNECTION) {
+                String token = null;
+                DisconnectionMessage message = (DisconnectionMessage) msg;
+                System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA : " + message.getCollaboratorDescription());
+                if(!message.getNameFileResponse().equals(this.responseCompetence.getName())){
+                    CollaboratorDescription collaborator = message.getCollaboratorDescription();
+                    for (String t : mapUserCache.keySet()){
+                        if (mapUserCache.get(t).getEmail().equals(collaborator.getEmail())){
+                            token = t;
+                            System.out.println("Reomving token : " + token);
+                            mapUserCache.remove(token);
+                            compactJws = null;
+                            break;
+                        }
+                    }
+                }
             }
             return user;
         } catch (Exception e) {
@@ -156,7 +180,6 @@ public class CollaboratorWS {
     @RequestMapping(value = "${endpoint.user}", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, String> getUserByLoginPassword(@RequestBody CollaboratorDescription myCollaboratorDescription) {
-        InitializeMap();
         CollaboratorDescription externalDescription = checkIfCollaboratorExistElsewhere(myCollaboratorDescription);
         CollaboratorDescription user = handleReceivedCollaborator(myCollaboratorDescription,externalDescription);
         compactJws = createSecurityToken(user);
@@ -165,6 +188,8 @@ public class CollaboratorWS {
         currentUserMap.put("userConnected", compactJws);
         return currentUserMap;
     }
+
+
 
     void sleep() {
         try {
@@ -265,7 +290,7 @@ public class CollaboratorWS {
         if (isEmpty(storedCollaborator.getEmail())) {
             if(receivedCollab.getPassword().equals(myCollaboratorDescription.getPassword())){
                 receivedCollab.setId(0);
-                addedCollaborator = addCollaborator(receivedCollab);
+                addedCollaborator = addCollaboratorDirectly(receivedCollab);
                 System.out.println("ADDEDCOLLAB" + addedCollaborator.getFirstName());
                 return addedCollaborator;
             }
@@ -292,6 +317,19 @@ public class CollaboratorWS {
         }
     }
 
+    private CollaboratorDescription addCollaboratorDirectly(CollaboratorDescription collaboratorDescription){
+        try {
+            System.out.println("ADDING COLLABORAOR DIRECTLY");
+            collaboratorDescription.setDefaultPicture(true);
+            Collaborator collaborator = collaboratorDAO.addCollaborator(new DescriptionToCollaborator().convert(collaboratorDescription));
+            return new CollaboratorToDescription().convert(collaborator);
+        } catch (PersistenceException pe) {
+            UniqueFieldErrors uniqueFieldErrors = exceptionUtil.getUniqueFieldError(pe);
+            if (uniqueFieldErrors == null) throw new C360Exception(pe);
+            else throw new UniqueFieldException(uniqueFieldErrors.getField());
+        }
+    }
+
     /*private void Send(String message) throws Exception {
         *//*ConnectionFactory var1 = new ConnectionFactory();
         var1.setHost("localhost");
@@ -304,12 +342,7 @@ public class CollaboratorWS {
         var2.close();*//*
     }*/
 
-    private static ConcurrentHashMap<String, CollaboratorDescription> mapUserCache;
-
-    private void InitializeMap() {
-        if (mapUserCache == null)
-            mapUserCache = new ConcurrentHashMap<String, CollaboratorDescription>();
-    }
+    private static final Map<String, CollaboratorDescription> mapUserCache = new ConcurrentHashMap<>();
 
     private void putUserInCache(String token, CollaboratorDescription user) {
         mapUserCache.put(token, user);
@@ -344,23 +377,89 @@ public class CollaboratorWS {
     @RequestMapping(value = "${endpoint.userdisconnect}", method = RequestMethod.POST)
     @ResponseBody
     public Boolean deleteDisconnectedUserFromCache(@RequestBody String token) {
-        try {
-            mapUserCache.remove(token);
-            compactJws = null;
-            if (mapUserCache.get(token) == null)
-                return true;
-            else
-                return false;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new C360Exception(e);
+        CollaboratorDescription collaborator = mapUserCache.get(token.substring(0, token.length()-1));
+        if (collaborator != null){
+            try {
+            /* log out for this microservice */
+                mapUserCache.remove(token);
+                compactJws = null;
+            /* send disconnection request for other microservices */
+                DisconnectionMessage msg = new DisconnectionMessage();
+                msg.setToken(token)
+                        .setNameFileResponse(responseCompetence.getName())
+                        .setCollaboratorDescription(collaborator);
+                ObjectMapper mapper = new ObjectMapper();
+                rabbitTemplate.convertAndSend(fanout.getName(),"",mapper.writeValueAsString(msg));
+                return (mapUserCache.get(token) == null);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new C360Exception(e);
+            }
         }
+        else
+            return true;
     }
 
     @CrossOrigin
     @RequestMapping(value = "${endpoint.collaborators}", method = RequestMethod.POST)
     @ResponseBody
     public CollaboratorDescription addCollaborator(@RequestBody CollaboratorDescription collaboratorDescription) {
+
+        ConnectionMessage checkIfUserExist = new ConnectionMessage();
+        UUID personalMessageSequence = UUID.randomUUID();
+        checkIfUserExist.setCollaboratorDescription(collaboratorDescription).
+                setMessageDate(new Date()).
+                setNameFileResponse(responseCompetence.getName()).
+                setSequence(personalMessageSequence);
+        ObjectMapper mapper = new ObjectMapper();
+        try{
+            rabbitTemplate.convertAndSend(fanout.getName(),"",mapper.writeValueAsString(checkIfUserExist));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        ConnectionMessage connectedUser = this.rabbitTemplate.execute(new ChannelCallback<ConnectionMessage>() {
+
+            @Override
+            public ConnectionMessage doInRabbit(final Channel channel) throws Exception {
+                long startTime = System.currentTimeMillis();
+                long elapsedTime = 0;
+                ConnectionMessage mostRecentConsumerResponse = null;
+                GetResponse consumerResponse;
+                long deliveryTag;
+                sleep();
+                do {
+                    elapsedTime = (new Date()).getTime() - startTime;
+                    consumerResponse = channel.basicGet(responseCompetence.getName(), false);
+                    if (consumerResponse != null) {
+                        deliveryTag = consumerResponse.getEnvelope().getDeliveryTag();
+                        ConnectionMessage rabbitMessageResponse = new ObjectMapper().readValue(consumerResponse.getBody(), ConnectionMessage.class);
+                        channel.basicAck(deliveryTag, true);
+                        if (rabbitMessageResponse.getSequence().equals(personalMessageSequence)) {
+                            if (mostRecentConsumerResponse == null ||
+                                    rabbitMessageResponse.getCollaboratorDescription().getLastUpdateDate()
+                                            .after(mostRecentConsumerResponse.getCollaboratorDescription().getLastUpdateDate())) {
+                                mostRecentConsumerResponse = rabbitMessageResponse;
+                            }
+                        } else {
+                            channel.basicPublish("", responseCompetence.getName(), null, consumerResponse.getBody());
+                        }
+                        System.out.println("compte existe!");
+                        compteExisteInOtherApp = true;
+                        return null;
+                    }
+                    else{
+                        System.out.println("compte existe pas!");
+                        compteExisteInOtherApp = false;
+                    }
+                } while (consumerResponse != null && elapsedTime < 2000);
+                return mostRecentConsumerResponse;
+            }
+        });
+        if (compteExisteInOtherApp){
+            //if the email is already exist in other microservice
+            throw new UniqueFieldException("email");
+        }
         try {
             collaboratorDescription.setDefaultPicture(true);
             Collaborator collaborator = collaboratorDAO.addCollaborator(new DescriptionToCollaborator().convert(collaboratorDescription));
@@ -378,7 +477,6 @@ public class CollaboratorWS {
     public Map<String, CollaboratorDescription> updateCollaborator(@RequestBody CollaboratorDescription collaborator) {
         try {
             Collaborator collaboratorToUpdate = collaboratorDAO.updateCollaborator(new DescriptionToCollaborator().convert(collaborator));
-            InitializeMap();
             Key key = MacProvider.generateKey();
             String compactJws = Jwts.builder()
                     .claim("firstName", collaborator.getFirstName())

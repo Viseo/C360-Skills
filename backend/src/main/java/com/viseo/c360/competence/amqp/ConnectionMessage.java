@@ -9,18 +9,22 @@ import java.util.UUID;
 /**
  * Created by SJO3662 on 24/08/2017.
  */
-public class ConnectionMessage {
+public class ConnectionMessage extends RabbitMsg{
 
     @Inject
     private CollaboratorDescription collaboratorDescription;
 
-    UUID Sequence;
+    private UUID sequence;
 
     private String nameFileResponse;
 
     private Date messageDate;
 
     private String token;
+
+    public ConnectionMessage(){
+        super(MessageType.CONNECTION);
+    }
 
     public CollaboratorDescription getCollaboratorDescription() {
         return collaboratorDescription;
@@ -32,7 +36,7 @@ public class ConnectionMessage {
     }
 
     public UUID getSequence() {
-        return Sequence;
+        return sequence;
     }
 
     public String getToken() {
@@ -45,7 +49,7 @@ public class ConnectionMessage {
     }
 
     public ConnectionMessage setSequence(UUID sequence) {
-        Sequence = sequence;
+        this.sequence = sequence;
         return this;
     }
 
@@ -66,4 +70,5 @@ public class ConnectionMessage {
         this.nameFileResponse = nameFileResponse;
         return this;
     }
+
 }

@@ -46,13 +46,13 @@
                     <li>
                       <span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img
                         src="../../assets/microservices_icon/icon_cv.png"
-                        class="text-center  icon-app"><p>GCv</p></a></span>
+                        class="text-center  icon-app"><p>GCv</p></span>
                       <!--<span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img-->
                       <!--src="../../assets/microservices_icon/icon_competence.png"-->
                       <!--class="text-center icon-app"><p>GCon</p></span>-->
                       <span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img
                         src="../../assets/microservices_icon/icon_formation.png"
-                        class="text-center icon-app" @click="goToTrainingMicroservice()"><p>GF</p></a></span>
+                        class="text-center icon-app" @click="goToTrainingMicroservice()"><p>GF</p></span>
                       <span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img
                         src="../../assets/microservices_icon/icon_mission.png"
                         class="text-center icon-app"><p>GM</p></span>
@@ -150,6 +150,7 @@
       disconnectUser(){
         axios.post(config.server + '/api/userdisconnect', this.$store.getters.token).then(
           response => {
+            console.log("disconnect");
             this.$store.commit('resetStore');
             this.$store.commit('clearToken');
             this.$router.push('/login');
@@ -158,7 +159,7 @@
           });
       },
       isAdminOrCollabPath(){
-        if (this.$store.getters.isAuthenticated && this.$store.getters.collaboratorLoggedIn.isAdmin) {
+        if (this.$store.getters.isAuthenticated && this.$store.getters.collaboratorLoggedIn.roles) {
           if (this.$route.path == '/searchSkillCollabByAdmin') {
             this.$router.push('/addSkills');
           }
@@ -174,7 +175,7 @@
         }
       },
       isAdminOrCollabName(){
-        if (this.$store.getters.isAuthenticated && this.$store.getters.collaboratorLoggedIn.isAdmin) {
+        if (this.$store.getters.isAuthenticated && this.$store.getters.collaboratorLoggedIn.roles) {
 
           return "Rechercher un profil";
 

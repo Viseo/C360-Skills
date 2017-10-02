@@ -6,17 +6,18 @@
            <span class="glyphicon glyphicon-search" ref="searchSkill" @click="storeSkillsFound(capitalizeSearch)">
         </span>
       </span>
-
-    <typeahead
-      class="inputForm "
-      v-model="value"
-      :data="allSkillsName"
-      placeholder="Chercher une compétence">
-    </typeahead>
-    <div class="noResultDiv" v-show="noSkillsFound">
-      <span>La compétence que vous recherchez n'est pas référencée.</span><span class="pointer" @click="sendWish"> Cliquez ici pour la proposer.</span>
-      <div v-show="wishSent">Votre proposition de compétence {{valueStock}} a bien été prise en compte.</div>
-    </div>
+     <div>
+        <typeahead
+          class="inputForm "
+          v-model="value"
+          :data="allSkillsName"
+          placeholder="Chercher une compétence">
+        </typeahead>
+        <div class="noResultDiv" v-show="noSkillsFound">
+          <span>La compétence que vous recherchez n'est pas référencée.</span><span class="pointer" @click="sendWish"> Cliquez ici pour la proposer.</span>
+          <div v-show="wishSent">Votre proposition de compétence {{valueStock}} a bien été prise en compte.</div>
+        </div>
+      </div>
   </div>
 </template>
 
@@ -190,7 +191,6 @@
 
   .noResultDiv {
     position: relative;
-    bottom: 10px;
     text-align: center;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   }
