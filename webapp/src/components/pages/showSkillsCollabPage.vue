@@ -15,6 +15,20 @@
             <feGaussianBlur in="SourceGraphic" stdDeviation="4"/>
           </filter>
         </defs>
+        <!--
+        <foreignObject :x="cx-45" :y="cy+5" class="myclass" width="100%" height="100%">
+          <div v-show="!star">
+            <p>
+            <span v-tooltip.bottom="currentLevel">
+              <star-rating @rating-selected="setRating" @current-rating="showCurrentRating" v-model="rating"
+                           :show-rating="false"
+                           :star-size="18">
+              </star-rating>
+              <p class="level"></p>
+              </span>
+            </p>
+          </div>
+        </foreignObject> -->
         <g v-for="link in links">
           <line :x1="getPositionXById(link.skill1.id)"
                 :y1="getPositionYById(link.skill1.id)"
@@ -44,6 +58,7 @@
   import ShowCollab from '../pages/showCollab.vue'
   import config from '../../config/config'
   import axios from 'axios'
+  import StarRating from 'vue-star-rating'
   import * as Vuex from "vuex";
   var $ = window.jQuery = require('jquery');
 
@@ -73,7 +88,7 @@
       this.getAllExpertise();
       this.getAllLinks();
     },
-    components: {customCircle: CustomCircle, FindSkills: FindSkills},
+    components: {customCircle: CustomCircle, FindSkills: FindSkills, StarRating},
 
     methods: {
       updateAll(){
