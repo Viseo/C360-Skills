@@ -7,6 +7,34 @@
     <text @click="handleClick()" class="textSkill" text-anchor="middle" :x="cx" :y="cy" style="fill: rgba(0,0,0,0.52);">
       {{content}}
     </text>
+
+    <svg class="stars" :data-stars="rating" :x="cx-45" :y="cy+5"
+         @current-rating="showCurrentRating"
+         v-show="!star"
+         :star-size="18">
+        <g height="25" width="23" class="star rating" data-rating="1" @click="setRating(1)" >
+          <rect height="25" width="23" fill="rgb(0,0,255)" fill-opacity="0.01"/>
+          <polygon points="9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78"/>
+        </g>
+        <g height="25" width="23" class="star rating" data-rating="2" transform="translate(18,0)" @click="setRating(2)">
+          <rect height="25" width="23" fill="rgb(0,0,255)" fill-opacity="0.01"/>
+          <polygon points="9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78"/>
+        </g>
+        <g height="25" width="23" class="star rating" data-rating="3" transform="translate(36,0)" @click="setRating(3)">
+          <rect height="25" width="23" fill="rgb(0,0,255)" fill-opacity="0.01"/>
+          <polygon points="9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78"/>
+        </g>
+        <g height="25" width="23" class="star rating" data-rating="4" transform="translate(54,0)" @click="setRating(4)">
+          <rect height="25" width="23" fill="rgb(0,0,255)" fill-opacity="0.01"/>
+          <polygon points="9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78"/>
+        </g>
+        <g height="25" width="23" class="star rating" data-rating="5" transform="translate(72,0)" @click="setRating(5)">
+          <rect height="25" width="23" fill="rgb(0,0,255)" fill-opacity="0.01"/>
+          <polygon points="9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78"/>
+        </g>
+    </svg>
+
+    <!--
     <foreignObject :x="cx-45" :y="cy+5" class="myclass" width="100%" height="100%">
       <div v-show="!star">
         <p>
@@ -20,6 +48,7 @@
         </p>
       </div>
     </foreignObject>
+    -->
   </g>
 </template>
 
@@ -96,16 +125,21 @@
         }
       },
 
-      setRating: function (raiting) {
+      setRating: function (rating) {
+        /*
         if (this.ratingSaved === this.rating) {
           raiting = 0;
           this.rating = 0;
         }
-        this.ratingSaved = raiting;
+        */
+        if (rating === this.ratingSaved){
+          rating = 0;
+        }
+        this.ratingSaved = rating;
         if (!this.$store.getters.collaboratorLoggedIn.isAdmin)
-          this.updateExpertise(this.selectedExpertise, raiting);
+          this.updateExpertise(this.selectedExpertise, rating);
         else
-          this.$emit('clicked', raiting);
+          this.$emit('clicked', rating);
         this.$emit('getExpertise', this.selectedExpertise);
       },
 
@@ -179,6 +213,10 @@
 
   .stars[data-stars] .star polygon {
     fill: #ffd055;
+  }
+
+  .stars[data-stars="0"] .star polygon {
+    fill: #d8d8d8;
   }
 
   .stars[data-stars="1"] .star:nth-child(1) ~ .star polygon {
