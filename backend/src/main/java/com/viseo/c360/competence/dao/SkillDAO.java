@@ -31,6 +31,7 @@ public class SkillDAO {
 
     @Transactional
     public Skill addSkill(Skill skill) throws PersistenceException {
+        skill.setId(0);
         daoFacade.persist(skill);
         daoFacade.flush();
         List<Collaborator> collaborators = collaboratorDAO.getAllCollaborators();

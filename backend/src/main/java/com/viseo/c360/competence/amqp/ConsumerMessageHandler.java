@@ -3,7 +3,9 @@ package com.viseo.c360.competence.amqp;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.viseo.c360.competence.converters.collaborator.CollaboratorToDescription;
+import com.viseo.c360.competence.converters.skill.SkillToDescription;
 import com.viseo.c360.competence.dao.CollaboratorDAO;
+import com.viseo.c360.competence.dao.SkillDAO;
 import com.viseo.c360.competence.domain.collaborator.Collaborator;
 import com.viseo.c360.competence.dto.collaborator.CollaboratorDescription;
 import com.viseo.c360.competence.services.CollaboratorWS;
@@ -37,6 +39,9 @@ public class ConsumerMessageHandler {
 
     @Inject
     Queue responseCompetence;
+
+    @Inject
+    SkillDAO skillDAO;
 
     private Map<String, Function<JSONObject, RabbitMsg>> factory = new HashedMap();
 
@@ -76,6 +81,24 @@ public class ConsumerMessageHandler {
                 throw new RuntimeException(ioe);
             }
         });
+        factory.put(MessageType.INFORMATION.toString(),json->{
+            //ObjectMapper objectMapper = new ObjectMapper();
+            InformationMessage informationMessage = new InformationMessage();
+            try{
+                informationMessage.setNameFileResponse((String)json.get("nameFileResponse"))
+                        .setSequence(UUID.fromString((String)json.get("sequence")))
+                        .setMessageDate(new Date((long)json.get("messageDate")));
+                /*
+               if(json.get("skillsDescription") != null){
+                   informationMessage.setSkillsDescription(objectMapper.readValue(json.get("skillsDescription").toString()
+                           , new TypeReference<List<SkillDescription>>(){}));
+               }
+               */
+                return informationMessage;
+            }catch (Exception e){
+                throw new RuntimeException(e);
+            }
+        });
         //deserialiser json et repondre
         try {
             JSONObject jo = (JSONObject) new JSONParser().parse(request);
@@ -107,6 +130,19 @@ public class ConsumerMessageHandler {
             else if (rabbitMsgResponse instanceof DisconnectionMessage){
                 DisconnectionMessage disconnectionMessage = (DisconnectionMessage) rabbitMsgResponse;
                 ws.checkIfAlreadyConnected(disconnectionMessage);
+            }
+            else if (rabbitMsgResponse instanceof InformationMessage){
+                InformationMessage informationMessageResponse = (InformationMessage) rabbitMsgResponse;
+                informationMessageResponse.setSkillsDescription(new SkillToDescription().convert(skillDAO.getAllSkills()));
+                if (!informationMessageResponse.getNameFileResponse().equals(responseCompetence.getName())) {
+                    ObjectMapper mapper = new ObjectMapper();
+                    try{
+                        rabbitTemplate.convertAndSend(informationMessageResponse.getNameFileResponse(), mapper.writeValueAsString(informationMessageResponse));
+                        System.out.println("Skill list sent successfully !");
+                    }catch (JsonProcessingException e){
+                        throw new RuntimeException(e);
+                    }
+                }
             }
 
         } catch (ParseException pe) {
