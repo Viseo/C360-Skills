@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.GetResponse;
+import com.viseo.c360.competence.amqp.DeleteSkillMessage;
 import com.viseo.c360.competence.amqp.InformationMessage;
 import com.viseo.c360.competence.converters.skill.DescriptionToSkill;
 import com.viseo.c360.competence.converters.skill.SkillToDescription;
@@ -180,16 +181,33 @@ public class SkillWS {
     @RequestMapping(value = "${endpoint.removeskill}", method = RequestMethod.POST)
     @ResponseBody
     public Boolean removeSkill(@RequestBody SkillDescription skillDescription){
-        try {
-            expertiseDAO.removeExpertisesBySkill(new DescriptionToSkill().convert(skillDescription));
-            skillDAO.removeSkill(new DescriptionToSkill().convert(skillDescription));
-            return true;
-        } catch (PersistenceException pe) {
-            UniqueFieldErrors uniqueFieldErrors = exceptionUtil.getUniqueFieldError(pe);
-            if (uniqueFieldErrors == null) throw new C360Exception(pe);
-            else throw new UniqueFieldException(uniqueFieldErrors.getField());
+        if (skillDAO.getSkillByLabel(skillDescription.getLabel())){
+            try {
+                expertiseDAO.removeExpertisesBySkill(new DescriptionToSkill().convert(skillDescription));
+                skillDAO.removeSkill(new DescriptionToSkill().convert(skillDescription));
+                sendRemoveSkillRequesToOtherServices(skillDescription);
+                return true;
+            } catch (PersistenceException pe) {
+                UniqueFieldErrors uniqueFieldErrors = exceptionUtil.getUniqueFieldError(pe);
+                if (uniqueFieldErrors == null) throw new C360Exception(pe);
+                else throw new UniqueFieldException(uniqueFieldErrors.getField());
+            }
+        }
+        else
+            return false;
+    }
+
+    private void sendRemoveSkillRequesToOtherServices(SkillDescription skillDescription) {
+        ObjectMapper mapperObj = new ObjectMapper();
+        DeleteSkillMessage deleteSkillMessage = new DeleteSkillMessage();
+        deleteSkillMessage.setSkillDescription(skillDescription);
+        try{
+            this.rabbitTemplate.convertAndSend(fanout.getName(), "", mapperObj.writeValueAsString(deleteSkillMessage));
+        }catch(JsonProcessingException jpe){
+            throw new RuntimeException(jpe);
         }
     }
+
     @CrossOrigin
     @RequestMapping(value = "${endpoint.skills}", method = RequestMethod.GET)
     @ResponseBody

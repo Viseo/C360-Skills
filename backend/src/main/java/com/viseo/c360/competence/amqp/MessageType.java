@@ -4,5 +4,6 @@ public enum MessageType {
     CONNECTION,
     DISCONNECTION,
     INFORMATION,
+    DELETESKILL,
     UPDATE;
 }
