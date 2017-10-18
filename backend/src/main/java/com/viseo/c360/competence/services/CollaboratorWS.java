@@ -4,10 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.GetResponse;
-import com.viseo.c360.competence.amqp.DisconnectionMessage;
-import com.viseo.c360.competence.amqp.MessageType;
-import com.viseo.c360.competence.amqp.ConnectionMessage;
-import com.viseo.c360.competence.amqp.RabbitMsg;
+import com.viseo.c360.competence.amqp.*;
 import com.viseo.c360.competence.converters.collaborator.*;
 import com.viseo.c360.competence.dao.CollaboratorDAO;
 import com.viseo.c360.competence.dao.ExpertiseDAO;
@@ -25,6 +22,8 @@ import com.viseo.c360.competence.exceptions.dao.util.UniqueFieldErrors;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.crypto.MacProvider;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
@@ -37,6 +36,7 @@ import javax.inject.Inject;
 import javax.mail.MessagingException;
 import javax.persistence.PersistenceException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -148,8 +148,12 @@ public class CollaboratorWS {
                         consumerResponse = channel.basicGet(responseCompetence.getName(), false);
                         if (consumerResponse != null) {
                             deliveryTag = consumerResponse.getEnvelope().getDeliveryTag();
-                            ConnectionMessage rabbitMessageResponse = new ObjectMapper().readValue(consumerResponse.getBody(), ConnectionMessage.class);
                             channel.basicAck(deliveryTag, true);
+                            // check if the right msg type
+                            JSONObject jo = (JSONObject) new JSONParser().parse(new String(consumerResponse.getBody(), StandardCharsets.UTF_8));
+                            RabbitMsg rbtMsg = ResolveMsgFactory.getFactory().get(jo.get("type")).apply(jo);
+                            if(rbtMsg.getType() == MessageType.CONNECTION){
+                                ConnectionMessage rabbitMessageResponse = new ObjectMapper().readValue(consumerResponse.getBody(), ConnectionMessage.class);
                                 if (rabbitMessageResponse.getSequence().equals(personalMessageSequence)) {
                                     if (mostRecentConsumerResponse == null ||
                                             rabbitMessageResponse.getCollaboratorDescription().getLastUpdateDate()
@@ -159,7 +163,10 @@ public class CollaboratorWS {
                                 } else {
                                     channel.basicPublish("", responseCompetence.getName(), null, consumerResponse.getBody());
                                 }
-
+                            }
+                            else {
+                                channel.basicPublish("", responseCompetence.getName(), null, consumerResponse.getBody());
+                            }
                         }
                     } while (consumerResponse != null && elapsedTime < 2000);
 

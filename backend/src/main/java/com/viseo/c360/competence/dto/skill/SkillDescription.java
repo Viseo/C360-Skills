@@ -1,6 +1,8 @@
 package com.viseo.c360.competence.dto.skill;
 import com.viseo.c360.competence.dto.BaseDTO;
 
+import java.util.List;
+
 public class SkillDescription extends BaseDTO {
 
     String label;

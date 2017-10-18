@@ -4,8 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.GetResponse;
-import com.viseo.c360.competence.amqp.DeleteSkillMessage;
-import com.viseo.c360.competence.amqp.InformationMessage;
+import com.viseo.c360.competence.amqp.*;
 import com.viseo.c360.competence.converters.skill.DescriptionToSkill;
 import com.viseo.c360.competence.converters.skill.SkillToDescription;
 import com.viseo.c360.competence.dao.ExpertiseDAO;
@@ -15,6 +14,8 @@ import com.viseo.c360.competence.exceptions.C360Exception;
 import com.viseo.c360.competence.exceptions.dao.UniqueFieldException;
 import com.viseo.c360.competence.exceptions.dao.util.ExceptionUtil;
 import com.viseo.c360.competence.exceptions.dao.util.UniqueFieldErrors;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.ChannelCallback;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.persistence.PersistenceException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -116,15 +118,23 @@ public class SkillWS {
                         consumerResponse = channel.basicGet(responseCompetence.getName(), false);
                         if (consumerResponse != null){
                             deliveryTag = consumerResponse.getEnvelope().getDeliveryTag();
-                            InformationMessage rabbitMessageResponse = new ObjectMapper().readValue(consumerResponse.getBody(), InformationMessage.class);
                             channel.basicAck(deliveryTag, true);
-                            if ((new Date().getTime() - rabbitMessageResponse.getMessageDate().getTime()) < 50000) {
-                                if (rabbitMessageResponse.getSequence().equals(personalMessageSequence)) {
-                                    collectedResponse.setSkillsDescription(mergeTwoSkillList(collectedResponse.getSkillsDescription()
-                                            , rabbitMessageResponse.getSkillsDescription()));
-                                } else {
-                                    channel.basicPublish("", responseCompetence.getName(), null, consumerResponse.getBody());
+                            // check if the right msg type
+                            JSONObject jo = (JSONObject) new JSONParser().parse(new String(consumerResponse.getBody(), StandardCharsets.UTF_8));
+                            RabbitMsg rbtMsg = ResolveMsgFactory.getFactory().get(jo.get("type")).apply(jo);
+                            if(rbtMsg.getType() == MessageType.INFORMATION){
+                                InformationMessage rabbitMessageResponse = new ObjectMapper().readValue(consumerResponse.getBody(), InformationMessage.class);
+                                if ((new Date().getTime() - rabbitMessageResponse.getMessageDate().getTime()) < 50000) {
+                                    if (rabbitMessageResponse.getSequence().equals(personalMessageSequence)) {
+                                        collectedResponse.setSkillsDescription(mergeTwoSkillList(collectedResponse.getSkillsDescription()
+                                                , rabbitMessageResponse.getSkillsDescription()));
+                                    } else {
+                                        channel.basicPublish("", responseCompetence.getName(), null, consumerResponse.getBody());
+                                    }
                                 }
+                            }
+                            else{
+                                channel.basicPublish("", responseCompetence.getName(), null, consumerResponse.getBody());
                             }
                         }
                     }while(elapsedTime < 2000);
