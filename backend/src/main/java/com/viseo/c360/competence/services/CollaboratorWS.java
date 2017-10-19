@@ -260,18 +260,26 @@ public class CollaboratorWS {
                         consumerResponse = channel.basicGet(responseCompetence.getName(), false);
                         if (consumerResponse != null) {
                             deliveryTag = consumerResponse.getEnvelope().getDeliveryTag();
-                            ConnectionMessage rabbitMessageResponse = new ObjectMapper().readValue(consumerResponse.getBody(), ConnectionMessage.class);
                             channel.basicAck(deliveryTag, true);
-                            if ((new Date().getTime() - rabbitMessageResponse.getMessageDate().getTime()) < 5000) {
-                                if (rabbitMessageResponse.getSequence().equals(personalMessageSequence)) {
-                                    if (mostRecentConsumerResponse == null ||
-                                            rabbitMessageResponse.getCollaboratorDescription().getLastUpdateDate()
-                                                    .after(mostRecentConsumerResponse.getCollaboratorDescription().getLastUpdateDate())) {
-                                        mostRecentConsumerResponse = rabbitMessageResponse;
+                            // check if the right msg type
+                            JSONObject jo = (JSONObject) new JSONParser().parse(new String(consumerResponse.getBody(), StandardCharsets.UTF_8));
+                            RabbitMsg rbtMsg = ResolveMsgFactory.getFactory().get(jo.get("type")).apply(jo);
+                            if(rbtMsg.getType() == MessageType.CONNECTION){
+                                ConnectionMessage rabbitMessageResponse = new ObjectMapper().readValue(consumerResponse.getBody(), ConnectionMessage.class);
+                                if ((new Date().getTime() - rabbitMessageResponse.getMessageDate().getTime()) < 5000) {
+                                    if (rabbitMessageResponse.getSequence().equals(personalMessageSequence)) {
+                                        if (mostRecentConsumerResponse == null ||
+                                                rabbitMessageResponse.getCollaboratorDescription().getLastUpdateDate()
+                                                        .after(mostRecentConsumerResponse.getCollaboratorDescription().getLastUpdateDate())) {
+                                            mostRecentConsumerResponse = rabbitMessageResponse;
+                                        }
+                                    } else {
+                                        channel.basicPublish("", responseCompetence.getName(), null, consumerResponse.getBody());
                                     }
-                                } else {
-                                    channel.basicPublish("", responseCompetence.getName(), null, consumerResponse.getBody());
                                 }
+                            }
+                            else{
+                                channel.basicPublish("", responseCompetence.getName(), null, consumerResponse.getBody());
                             }
                         }
                     } while (consumerResponse != null && elapsedTime < 2000);

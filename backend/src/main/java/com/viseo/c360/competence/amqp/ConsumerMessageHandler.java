@@ -86,7 +86,7 @@ public class ConsumerMessageHandler {
                     ObjectMapper mapper = new ObjectMapper();
                     try{
                         rabbitTemplate.convertAndSend(informationMessageResponse.getNameFileResponse(), mapper.writeValueAsString(informationMessageResponse));
-                        System.out.println("Skill list sent successfully !");
+                        System.out.println("Skill list sent successfully : " + informationMessageResponse.getSkillsDescription().size());
                     }catch (JsonProcessingException e){
                         throw new RuntimeException(e);
                     }
