@@ -75,6 +75,12 @@ public class ExpertiseDAO {
     }
 
     @Transactional
+    public List<Expertise> getExpertiseByCollabEmail(Collaborator collaborator){
+        daoFacade.getList("select e from Expertise e left outer join fetch e.skill where e.collaborator.email = :collaborator", param("collaborator", collaborator.getEmail()));
+        return daoFacade.getList("select e from Expertise e left outer join fetch e.skill where e.collaborator.email = :collaborator", param("collaborator", collaborator.getEmail()));
+    }
+
+    @Transactional
     public List<Expertise> getAllExpertises(Collaborator collaborator) {
         daoFacade.getList("select e from Expertise e left outer join fetch e.skill where e.collaborator.id =:collaborator",param("collaborator",collaborator.getId()));
         return daoFacade.getList("select e from Expertise e left outer join fetch e.collaborator where e.collaborator.id =:collaborator",param("collaborator",collaborator.getId()));

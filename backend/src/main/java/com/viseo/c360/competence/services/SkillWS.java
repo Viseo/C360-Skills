@@ -9,6 +9,9 @@ import com.viseo.c360.competence.converters.skill.DescriptionToSkill;
 import com.viseo.c360.competence.converters.skill.SkillToDescription;
 import com.viseo.c360.competence.dao.ExpertiseDAO;
 import com.viseo.c360.competence.dao.SkillDAO;
+import com.viseo.c360.competence.domain.collaborator.Collaborator;
+import com.viseo.c360.competence.domain.collaborator.Expertise;
+import com.viseo.c360.competence.domain.skill.Skill;
 import com.viseo.c360.competence.dto.skill.SkillDescription;
 import com.viseo.c360.competence.exceptions.C360Exception;
 import com.viseo.c360.competence.exceptions.dao.UniqueFieldException;
@@ -227,6 +230,24 @@ public class SkillWS {
         } catch (ConversionException e) {
             e.printStackTrace();
             throw new C360Exception(e);
+        }
+    }
+
+    public void addCollaboratorSkillLevel(List<Skill> skills, List<Collaborator> collaborators){
+        for(Collaborator collaborator : collaborators){
+            List<Expertise> expertises = expertiseDAO.getExpertiseByCollabEmail(collaborator);
+            for(Expertise expertise : expertises){
+                for (Skill skill : skills){
+                    if (skill.getLabel().equals(expertise.getSkill().getLabel())){
+                        int level = expertise.getLevel();
+                        if (level < 5){
+                            level+=1;
+                            expertiseDAO.updateExpertise(expertise.setLevel(level));
+                        }
+                        break;
+                    }
+                }
+            }
         }
     }
 }

@@ -9,6 +9,7 @@ import com.viseo.c360.competence.dao.SkillDAO;
 import com.viseo.c360.competence.domain.collaborator.Collaborator;
 import com.viseo.c360.competence.dto.collaborator.CollaboratorDescription;
 import com.viseo.c360.competence.services.CollaboratorWS;
+import com.viseo.c360.competence.services.SkillWS;
 import org.apache.commons.collections.map.HashedMap;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -30,6 +31,9 @@ public class ConsumerMessageHandler {
 
     @Inject
     CollaboratorWS ws;
+
+    @Inject
+    SkillWS skillWS;
 
     @Inject
     RabbitTemplate rabbitTemplate;
@@ -90,6 +94,13 @@ public class ConsumerMessageHandler {
                     }catch (JsonProcessingException e){
                         throw new RuntimeException(e);
                     }
+                }
+            }
+            else if (rabbitMsgResponse instanceof AddSkillLevelMessage){
+                AddSkillLevelMessage addSkillLevelMessageResponse = (AddSkillLevelMessage) rabbitMsgResponse;
+                if (addSkillLevelMessageResponse.getNameFileResponse().equals(responseCompetence.getName())){
+                    skillWS.addCollaboratorSkillLevel(addSkillLevelMessageResponse.getSkills()
+                            , addSkillLevelMessageResponse.getCollaborators());
                 }
             }
 

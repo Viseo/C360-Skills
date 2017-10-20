@@ -5,5 +5,6 @@ public enum MessageType {
     DISCONNECTION,
     INFORMATION,
     DELETESKILL,
+    ADDSKILLLEVEL,
     UPDATE;
 }

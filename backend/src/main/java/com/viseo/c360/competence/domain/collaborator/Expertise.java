@@ -48,8 +48,9 @@ public class Expertise extends BaseEntity {
         return level;
     }
 
-    public void setLevel(int level) {
+    public Expertise setLevel(int level) {
         this.level = level;
+        return this;
     }
 
     public boolean isNoted() {
