@@ -123,7 +123,11 @@
     },
     methods: {
       goToTrainingMicroservice(){
-        window.location.replace("http://localhost:8080/#/login?user=" + this.$store.getters.token);
+        var tempToken = this.$store.getters.token;
+        /*this.$store.commit('resetStore');
+        this.$store.commit('clearToken');
+        console.log("QQQQQQQQQQQQQQQQQQQQQ");*/
+        window.location.replace("http://localhost:8080/#/login?user=" + tempToken);
       },
 
       setDisconnectedToTrue(){

@@ -207,12 +207,14 @@
 
       logIn(){
         axios.post(config.server + "/api/user", this.collaboratorToLogIn).then(response => {
+          this.isErrorAuthentification = false;
           this.$store.commit('clearToken');
           this.userToken = response.data;
           this.$store.commit('setToken', this.userToken.userConnected);
           this.redirectIfAlreadyAuthenticated();
         }, response => {
           console.log(response);
+          this.isErrorAuthentification = true;
         });
       },
 

@@ -174,6 +174,7 @@ public class CollaboratorWS {
                     return mostRecentConsumerResponse;
                 }
             });
+            System.out.println("TEST184, this:" + this + " connectedUser: " + connectedUser);
             return this.getUserByLoginPassword(connectedUser.getCollaboratorDescription());
 
         } catch (Exception e) {

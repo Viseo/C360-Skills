@@ -32,11 +32,12 @@ const store = new Vuex.Store({
 
   actions: {
     isTokenValid(context, router){
+      console.log("TEST if token is valid");
       axios.post(config.server + '/api/sendtoken', localStorage.getItem("token")).then(
         response => {
-          if(response.data)
-          console.log("Token valide");
-
+          if(response.data){
+            console.log("Token valide");
+          }
           else{
             console.log("Token non valide");
             context.commit('clearToken');
