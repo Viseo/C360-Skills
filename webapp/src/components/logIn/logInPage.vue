@@ -175,6 +175,7 @@
         var userToken = localStorage.getItem('token');
         var isAdministrator = jwtDecode(userToken).roles;
         console.log("heheh"+isAdministrator);
+        this.$store.commit('setIsAdmin', isAdministrator);
         return isAdministrator;
       },
 

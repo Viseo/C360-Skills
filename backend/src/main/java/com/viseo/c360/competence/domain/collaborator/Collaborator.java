@@ -47,8 +47,7 @@ public class Collaborator extends BaseEntity {
 
     @NotNull
     Boolean defaultPicture;
-
-    @NotNull
+    
     Date lastUpdateDate;
 
     public Collaborator() {

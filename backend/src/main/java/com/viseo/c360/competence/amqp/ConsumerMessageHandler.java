@@ -8,6 +8,7 @@ import com.viseo.c360.competence.dao.CollaboratorDAO;
 import com.viseo.c360.competence.dao.SkillDAO;
 import com.viseo.c360.competence.domain.collaborator.Collaborator;
 import com.viseo.c360.competence.dto.collaborator.CollaboratorDescription;
+import com.viseo.c360.competence.dto.skill.SkillDescription;
 import com.viseo.c360.competence.services.CollaboratorWS;
 import com.viseo.c360.competence.services.SkillWS;
 import org.apache.commons.collections.map.HashedMap;
@@ -21,6 +22,7 @@ import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
@@ -84,15 +86,26 @@ public class ConsumerMessageHandler {
                 ws.checkIfAlreadyConnected(disconnectionMessage);
             }
             else if (rabbitMsgResponse instanceof InformationMessage){
-                InformationMessage informationMessageResponse = (InformationMessage) rabbitMsgResponse;
-                informationMessageResponse.setSkillsDescription(new SkillToDescription().convert(skillDAO.getAllSkills()));
-                if (!informationMessageResponse.getNameFileResponse().equals(responseCompetence.getName())) {
-                    ObjectMapper mapper = new ObjectMapper();
-                    try{
-                        rabbitTemplate.convertAndSend(informationMessageResponse.getNameFileResponse(), mapper.writeValueAsString(informationMessageResponse));
-                        System.out.println("Skill list sent successfully : " + informationMessageResponse.getSkillsDescription().size());
-                    }catch (JsonProcessingException e){
-                        throw new RuntimeException(e);
+                if(skillDAO != null){
+                    // avoid the initial problem
+                    InformationMessage informationMessageResponse = (InformationMessage) rabbitMsgResponse;
+                    List<SkillDescription> skillsToSend = new SkillToDescription().convert(skillDAO.getAllSkills());
+                    skillsToSend.forEach(skill ->{
+                        Date today = new Date();
+                        if ((today.getTime() - skill.getDate().getTime()) > 12*60*60*1000L){
+                            // do the remove function
+                            //skillsToSend.remove(skill);
+                        }
+                    });
+                    informationMessageResponse.setSkillsDescription(skillsToSend);
+                    if (!informationMessageResponse.getNameFileResponse().equals(responseCompetence.getName())) {
+                        ObjectMapper mapper = new ObjectMapper();
+                        try{
+                            rabbitTemplate.convertAndSend(informationMessageResponse.getNameFileResponse(), mapper.writeValueAsString(informationMessageResponse));
+                            System.out.println("Skill list sent successfully : " + informationMessageResponse.getSkillsDescription().size());
+                        }catch (JsonProcessingException e){
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
             }

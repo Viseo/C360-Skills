@@ -35,8 +35,16 @@ const store = new Vuex.Store({
       console.log("TEST if token is valid");
       axios.post(config.server + '/api/sendtoken', localStorage.getItem("token")).then(
         response => {
-          if(response.data){
+          if(response.data != ""){
             console.log("Token valide");
+            if (response.data == "admin"){
+              console.log("Admin");
+              this.state.isAdmin = true;
+            }
+            else{
+              console.log("Not admin");
+              this.state.isAdmin = false;
+            }
           }
           else{
             console.log("Token non valide");
@@ -64,6 +72,10 @@ const store = new Vuex.Store({
         localStorage.setItem("token", collaboratorToken);
         state.collaboratorLoggedIn = jwtDecode(state.token);
       }
+    },
+
+    setIsAdmin(state, isAdmin){
+      state.isAdmin = isAdmin;
     },
 
     setTokenFromLocalStorage(state) {

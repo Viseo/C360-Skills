@@ -27,7 +27,7 @@
                     @mouseover="setDisconnectedToTrue()" v-show="showName()">{{ lastName }} {{ firstName }}</span>
               <dropdown class="col-lg-8 col-lg-offset-2 col-md-5 col-sm-5 col-xs-5" type="default" v-if="showPicture()"
                         v-show="showDisconnexion()" text="Choisissez une action" id="menu">
-                <li><a @click="isAdminOrCollabPath">Espace compétences</a></li>
+                <li><a @click="goToEspaceCompetence">Espace compétences</a></li>
                 <li><a @click="isAdminOrCollabPath">{{ isAdminOrCollabName() }}</a></li>
                 <li role="separator" class="divider"></li>
                 <li><a @click="disconnectUser">Déconnexion</a></li>
@@ -163,21 +163,24 @@
           });
       },
       isAdminOrCollabPath(){
-        if (this.$store.getters.isAuthenticated && this.$store.getters.collaboratorLoggedIn.roles) {
-          if (this.$route.path == '/searchSkillCollabByAdmin') {
-            this.$router.push('/addSkills');
-          }
-          else {
-            this.$router.push('/searchSkillCollabByAdmin');
-          }
+        if (this.$store.state.isAdmin)
+        {
+          this.$router.push('/searchSkillCollabByAdmin');
         }
-        else if (this.$route.path == '/showSkillsCollab') {
+        else{
           this.$router.push('/profiltoupdate');
         }
-        else {
+      },
+
+      goToEspaceCompetence(){
+        if (this.$store.state.isAdmin){
+          this.$router.push('/addSkills');
+        }
+        else{
           this.$router.push('/showSkillsCollab');
         }
       },
+
       isAdminOrCollabName(){
         if (this.$store.getters.isAuthenticated && this.$store.getters.collaboratorLoggedIn.roles) {
 

@@ -379,10 +379,20 @@ public class CollaboratorWS {
     @CrossOrigin
     @RequestMapping(value = "${endpoint.isconnected}", method = RequestMethod.POST)
     @ResponseBody
-    public boolean checkIsAlreadyConnected(@RequestBody String thisToken) {
+    public String checkIsAlreadyConnected(@RequestBody String thisToken) {
         try {
             thisToken = thisToken.replace("=", "");
-            return mapUserCache.get(thisToken) != null;
+            if (mapUserCache.get(thisToken) != null){
+                if(mapUserCache.get(thisToken).getIsAdmin()){
+                    return "admin";
+                }
+                else{
+                    return "notAdmin";
+                }
+            }
+            else {
+                return null;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             throw new C360Exception(e);
