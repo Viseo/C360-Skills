@@ -1,6 +1,7 @@
 <template>
   <div class="container-fluid">
-    <div class="col-lg-offset-4 col-lg-4 searchField typeaheadSkills" @keyup.enter="typeAheadSearch()">
+    <div class="col-lg-offset-4 col-lg-4 typeaheadSkills"
+         @keyup.enter="typeAheadSearch()">
       <!--
       <span class="squareForglyphiconSearch">
         <span class="glyphicon glyphicon-search" ref="searchSkill " @click="typeAheadSearch()"></span>

@@ -1,24 +1,31 @@
 <template>
-  <div class=" col-lg-4 col-lg-offset-4 col-lg-4 searchField typeaheadSkills"
-       @keyup.enter="storeSkillsFound(capitalizeSearch)">
-
-        <span class="squareForglyphiconSearch">
-           <span class="glyphicon glyphicon-search" ref="searchSkill" @click="storeSkillsFound(capitalizeSearch)">
-        </span>
-      </span>
-     <div>
-        <typeahead
-          class="inputForm "
-          v-model="value"
-          :data="allSkillsName"
-          placeholder="Chercher une compétence">
-        </typeahead>
-        <div class="noResultDiv" v-show="noSkillsFound"  >
-          <span>La compétence que vous recherchez n'est pas référencée.</span><span class="pointer" @click="sendWish"> Cliquez ici pour la proposer.</span>
-          <div v-show="wishSent">Votre proposition de compétence {{valueStock}} a bien été prise en compte.</div>
-        </div>
+  <div class="container-fluid">
+    <div class=" col-lg-4 col-lg-offset-4 col-lg-4 typeaheadSkills"
+         @keyup.enter="storeSkillsFound(capitalizeSearch)">
+      <!--
+              <span class="squareForglyphiconSearch">
+                 <span class="glyphicon glyphicon-search" ref="searchSkill" @click="storeSkillsFound(capitalizeSearch)">
+              </span>
+            </span>
+            -->
+      <typeahead
+        class="inputForm col-lg-11" style="padding-right: 0px"
+        v-model="value"
+        :data="allSkillsName"
+        placeholder="Chercher une compétence">
+      </typeahead>
+      <div class="col-lg-1" style="padding-left: 0px">
+        <button class="glyphicon glyphicon-search btn btn-danger" ref="searchSkill "
+                @click="storeSkillsFound(capitalizeSearch)">
+        </button>
       </div>
+      <div class="noResultDiv" v-show="noSkillsFound"  >
+        <span>La compétence que vous recherchez n'est pas référencée.</span><span class="pointer" @click="sendWish"> Cliquez ici pour la proposer.</span>
+        <div v-show="wishSent">Votre proposition de compétence {{valueStock}} a bien été prise en compte.</div>
+      </div>
+    </div>
   </div>
+
 </template>
 
 <script>
@@ -117,10 +124,9 @@
 
 <style>
   .typeaheadSkills {
-    width: 800px;
-    margin-left: 400px;
-    height: 92px;
+    height: 90px;
     box-sizing: border-box;
+    padding-top: 30px;
   }
 
   .typeaheadSkills .dropdown-menu {
@@ -149,11 +155,11 @@
   .typeaheadSkills .dropdown-menu > li > a {
     display: block;
   }
-
+/*
   .inputForm .form-control {
     padding: 20px 15px;
   }
-
+*/
   .inputForm {
     /*bottom: 20px;*/
     z-index: 5;
@@ -177,7 +183,7 @@
     cursor: pointer;
     background-color: gainsboro;
   }
-
+/*
   .glyphicon-search {
     position: absolute;
     cursor: pointer;
@@ -188,6 +194,7 @@
     color: white;
 
   }
+  */
 
   .noResultDiv {
     position: relative;
