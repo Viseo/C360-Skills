@@ -1,17 +1,24 @@
 <template>
   <div class="container-fluid">
     <div class="col-lg-offset-4 col-lg-4 searchField typeaheadSkills" @keyup.enter="typeAheadSearch()">
+      <!--
       <span class="squareForglyphiconSearch">
-      <span class="glyphicon glyphicon-search" ref="searchSkill " @click="typeAheadSearch()"></span>
-        </span>
+        <span class="glyphicon glyphicon-search" ref="searchSkill " @click="typeAheadSearch()"></span>
+      </span>
+      -->
       <typeahead
-        class="inputForm "
+        class="inputForm col-lg-11" style="padding-right: 0px"
         v-model="value"
         :data="searchResult"
         placeholder="Chercher une compétence"
         :template="typeaheadTemplate">
       </typeahead>
+      <div class="col-lg-1" style="padding-left: 0px">
+        <button class="glyphicon glyphicon-search btn btn-danger" ref="searchSkill " @click="typeAheadSearch()">
+        </button>
+      </div>
     </div>
+
     <div class="svg-container" id="svg-container">
       <h4 class="mystyle">Rechercher des compétences</h4>
     </div>
@@ -540,6 +547,7 @@
   .typeaheadSkills {
     height: 90px;
     box-sizing: border-box;
+    padding-top: 30px;
   }
 
   .typeaheadSkills .dropdown-menu {
@@ -580,13 +588,13 @@
     box-shadow: 0 0 10px #76071b;
   }
 
-  .squareForglyphiconSearch2 {
+  .squareForglyphiconSearch {
     position: relative;
     display: block;
-    top: 15px;
+   /* top: 15px;*/
     width: 34px;
     height: 34px;
-    left: 92.3%;
+   /* left: 92.3%;*/
     z-index: 6;
     cursor: pointer;
     background-color: gainsboro;
@@ -595,10 +603,10 @@
   .glyphicon-search {
     position: absolute;
     cursor: pointer;
-    top: 5px;
+    /*top: 5px;*/
     z-index: 2;
-    left: 20%;
-    font-size: 24px;
+    /*left: 20%;*/
+    /*font-size: 24px;*/
     color: #ffffff;
 
   }

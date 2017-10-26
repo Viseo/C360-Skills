@@ -44,7 +44,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import static io.jsonwebtoken.impl.crypto.MacProvider.generateKey;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
-//import com.viseo.c360.competence.amqp.RequestProducerConfig;
 
 @RestController
 public class CollaboratorWS {
@@ -79,6 +78,7 @@ public class CollaboratorWS {
                 .claim("lastName", user.getLastName())
                 .claim("roles", user.getIsAdmin())
                 .claim("id", user.getId())
+                .claim("defaultPicture", user.getDefaultPicture())
                 .signWith(SignatureAlgorithm.HS512, generateKey())
                 .compact();
     }

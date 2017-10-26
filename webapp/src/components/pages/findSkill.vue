@@ -13,7 +13,7 @@
           :data="allSkillsName"
           placeholder="Chercher une compétence">
         </typeahead>
-        <div class="noResultDiv" v-show="noSkillsFound">
+        <div class="noResultDiv" v-show="noSkillsFound"  >
           <span>La compétence que vous recherchez n'est pas référencée.</span><span class="pointer" @click="sendWish"> Cliquez ici pour la proposer.</span>
           <div v-show="wishSent">Votre proposition de compétence {{valueStock}} a bien été prise en compte.</div>
         </div>
