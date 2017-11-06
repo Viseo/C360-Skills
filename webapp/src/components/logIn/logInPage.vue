@@ -237,7 +237,7 @@
         this.isPasswordEmpty();
         if (!this.emailEmpty && !this.passwordEmpty) {
           this.user.email = this.email;
-          this.user.password = this.password;
+          this.user.password = this.$sha256(this.password);
           this.collaboratorToLogIn = JSON.parse(JSON.stringify(this.user));
           this.logIn();
         }

@@ -8,6 +8,7 @@ import store from './vuex/store'
 import VTooltip from 'v-tooltip'
 import router from './config/router.js'
 import VueStrap from 'vue-strap'
+import sha256 from '../node_modules/js-sha256/src/sha256'
 
 require('../node_modules/bootstrap/dist/css/bootstrap.css');
 require('../node_modules/bootstrap/dist/css/bootstrap.css');
@@ -21,6 +22,7 @@ Vue.config.productionTip = false;
 Vue.component('dropdown', VueStrap.dropdown);
 Vue.component('typeahead', VueStrap.typeahead);
 Vue.component('tooltip', VueStrap.tooltip);
+Vue.prototype.$sha256=sha256;
 
 
 // Vue.config.productionTip = false;

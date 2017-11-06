@@ -375,7 +375,7 @@
           this.collaborator.lastName = this.lastName;
           this.collaborator.firstName = this.firstName;
           this.collaborator.email = this.email;
-          this.collaborator.password = this.password;
+          this.collaborator.password = this.$sha256(this.password);
           this.collaborator.confirmPassword = this.confirmPassword;
           this.collaboratorToRegister = JSON.parse(JSON.stringify(this.collaborator));
           this.addCollaborator();
