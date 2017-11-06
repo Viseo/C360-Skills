@@ -619,13 +619,13 @@
             this.saveUpdateCollaborator();
           }
         } else {
-          if (this.collabDescription.password == this.password) {
+          if (this.collabDescription.password == this.$sha256(this.password)) {
             this.isRightOldPassword = true;
             this.oldPasswordEmpty = false;
             this.passwordEmpty = false;
-            if (this.collabDescription.password != this.newPassword) {
+            if (this.collabDescription.password != this.$sha256(this.newPassword)) {
               if (this.newPassword == this.confirmPassword) {
-                this.CollabToUpdate.password = this.newPassword;
+                this.CollabToUpdate.password = this.$sha256(this.newPassword);
                 if (this.imageHasBeenChanged === true) {
                   this.updateCollaboratorImage();
                   this.CollabToUpdate.defaultPicture = false;
