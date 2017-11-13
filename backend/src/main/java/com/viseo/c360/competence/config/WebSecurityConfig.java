@@ -12,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -55,7 +56,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 // we don't need CSRF because our token is invulnerable
                 .csrf().disable()
                 // All urls must be authenticated (filter for token always fires (/**)
-                .authorizeRequests().anyRequest().authenticated()
+                .authorizeRequests()
+                    .antMatchers("/login").permitAll()
+                    .anyRequest().authenticated()
+                .and()
+                .formLogin().loginPage("/login")
                 .and()
                 // Call our errorHandler if authentication/authorisation fails
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
@@ -67,5 +72,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
         // disable page caching
         httpSecurity.headers().cacheControl();
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/api/user");
     }
 }
