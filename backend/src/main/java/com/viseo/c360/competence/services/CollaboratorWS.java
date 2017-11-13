@@ -74,8 +74,7 @@ public class CollaboratorWS {
 
     private String createSecurityToken(CollaboratorDescription user){
         return Jwts.builder()
-                .setSubject(user.getFirstName())
-                .claim("lastName", user.getLastName())
+                .setSubject(user.getEmail())
                 .claim("roles", user.getIsAdmin())
                 .claim("id", user.getId())
                 .claim("defaultPicture", user.getDefaultPicture())
@@ -195,6 +194,13 @@ public class CollaboratorWS {
         Map<String, String> currentUserMap = new HashMap<>();
         currentUserMap.put("userConnected", compactJws);
         return currentUserMap;
+    }
+
+
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    @ResponseBody
+    public void testApiSecurity () {
+        System.out.println("LOL!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     }
 
 

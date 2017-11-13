@@ -87,7 +87,6 @@
             <version>3.6</version>
         </dependency>
 
-        <!-- SPRING -->
         <dependency>
             <groupId>org.springframework.amqp</groupId>
             <artifactId>spring-rabbit</artifactId>
@@ -111,6 +110,7 @@
             <version>1.9.13</version>
         </dependency>
 
+        <!-- SPRING -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
@@ -182,6 +182,13 @@
             <artifactId>spring-security-config</artifactId>
             <version>4.0.3.RELEASE</version>
         </dependency>
+        <!--
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+            <version>1.5.7.RELEASE</version>
+        </dependency>
+        -->
 
         <dependency>
             <groupId>javax.inject</groupId>
