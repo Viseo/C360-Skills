@@ -1,10 +1,13 @@
 package com.viseo.c360.competence.file;
 
+import org.springframework.context.annotation.Configuration;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Configuration
 public class CORSFilter implements Filter {
 
     @Override
@@ -12,10 +15,10 @@ public class CORSFilter implements Filter {
 
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
-        System.out.println("Request :"+ request.getMethod());
+        System.out.println("CORSFilter Request :"+ request.getMethod());
 
                 HttpServletResponse resp = (HttpServletResponse) servletResponse;
-        resp.addHeader("Access-Control-Allow-Origin","*");
+        resp.addHeader("Access-Control-Allow-Origin","http://localhost:8081");
         resp.addHeader("Access-Control-Allow-Methods","GET,POST,PUT");
         resp.addHeader("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept");
 

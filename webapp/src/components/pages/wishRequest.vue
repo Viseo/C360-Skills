@@ -34,7 +34,9 @@
           }
       },
       mounted() {
-        this.getAllWishes()
+        this.getAllWishes();
+        console.log('Bearer ' + this.$store.state.token);
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.state.token;
       },
       computed: {
           isWish(){
@@ -64,7 +66,6 @@
               this.myViewBox = "0 0 " + parseInt(this.wishes.length*155) +" 250";
               console.log(this.myViewBox);
             })
-
         },
 
         validWish(wish){

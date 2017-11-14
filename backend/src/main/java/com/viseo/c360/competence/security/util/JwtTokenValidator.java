@@ -17,10 +17,10 @@ import org.springframework.stereotype.Component;
 public class JwtTokenValidator {
 
 
-    /*
+
     @Value("${jwt.secret}")
     private String secret;
-    */
+
 
     /**
      * Tries to parse specified String as a JWT token. If successful, returns User object with username, id and role prefilled (extracted from token).
@@ -34,7 +34,7 @@ public class JwtTokenValidator {
 
         try {
             Claims body = Jwts.parser()
-               //     .setSigningKey(secret)
+                    .setSigningKey(secret)
                     .parseClaimsJws(token)
                     .getBody();
 
@@ -42,7 +42,7 @@ public class JwtTokenValidator {
             collaboratorDTO.setEmail(body.getSubject())
                     .setIsAdmin((Boolean) body.get("roles"))
                     .setDefaultPicture((Boolean) body.get("defaultPicture"))
-                    .setId(Long.parseLong((String)body.get("id")));
+                    .setId(Long.parseLong(body.get("id").toString()));
         } catch (JwtException e) {
             // Simply print the exception and null will be returned for the userDto
             e.printStackTrace();

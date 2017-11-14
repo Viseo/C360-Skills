@@ -26,7 +26,12 @@ Vue.prototype.$sha256=sha256;
 
 
 // Vue.config.productionTip = false;
+/*
+var cors = require('cors');
 
+var app = express();
+app.use(cors());
+*/
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

@@ -29,6 +29,7 @@ import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.ChannelCallback;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.ConversionException;
 import org.springframework.web.bind.annotation.*;
 
@@ -69,6 +70,9 @@ public class CollaboratorWS {
     @Inject
     Queue responseCompetence;
 
+    @Value("${jwt.secret}")
+    String secret;
+
     String compactJws;
     private boolean compteExisteInOtherApp = false;
 
@@ -78,7 +82,8 @@ public class CollaboratorWS {
                 .claim("roles", user.getIsAdmin())
                 .claim("id", user.getId())
                 .claim("defaultPicture", user.getDefaultPicture())
-                .signWith(SignatureAlgorithm.HS512, generateKey())
+                //.signWith(SignatureAlgorithm.HS512, generateKey())
+                .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
 
