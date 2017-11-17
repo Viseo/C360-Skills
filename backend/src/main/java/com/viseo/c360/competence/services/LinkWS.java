@@ -1,6 +1,7 @@
 package com.viseo.c360.competence.services;
 
 
+import com.viseo.c360.competence.config.ServerConfig;
 import com.viseo.c360.competence.converters.skill.DescriptionToLink;
 import com.viseo.c360.competence.converters.skill.LinkToDescription;
 import com.viseo.c360.competence.dao.ExpertiseDAO;
@@ -33,7 +34,7 @@ public class LinkWS {
     @Inject
     ExceptionUtil exceptionUtil;
 
-    @CrossOrigin
+    @CrossOrigin (origins =  ServerConfig.adress)
     @RequestMapping(value = "${endpoint.addlink}", method = RequestMethod.POST)
     @ResponseBody
     public Boolean addLink(@RequestBody LinkDescription linkDescription){
@@ -55,7 +56,7 @@ public class LinkWS {
     }
 
 
-    @CrossOrigin
+    @CrossOrigin (origins =  ServerConfig.adress)
     @RequestMapping(value = "${endpoint.removelink}", method = RequestMethod.POST)
     @ResponseBody
     public Boolean removeLink(@RequestBody LinkDescription linkDescription){
@@ -69,7 +70,7 @@ public class LinkWS {
         }
     }
 
-    @CrossOrigin
+    @CrossOrigin (origins =  ServerConfig.adress)
     @RequestMapping(value = "${endpoint.links}", method = RequestMethod.GET)
     @ResponseBody
     public List<LinkDescription> getAllLinks() {

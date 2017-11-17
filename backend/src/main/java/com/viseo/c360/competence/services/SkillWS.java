@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.GetResponse;
 import com.viseo.c360.competence.amqp.*;
+import com.viseo.c360.competence.config.ServerConfig;
 import com.viseo.c360.competence.converters.skill.DescriptionToSkill;
 import com.viseo.c360.competence.converters.skill.SkillToDescription;
 import com.viseo.c360.competence.dao.ExpertiseDAO;
@@ -159,7 +160,7 @@ public class SkillWS {
         }
     }
 
-    @CrossOrigin
+    @CrossOrigin (origins =  ServerConfig.adress)
     @RequestMapping(value = "${endpoint.addskill}", method = RequestMethod.POST)
     @ResponseBody
     public Boolean addSkill(@RequestBody SkillDescription skillDescription){
@@ -177,7 +178,7 @@ public class SkillWS {
         }
     }
 
-    @CrossOrigin
+    @CrossOrigin (origins =  ServerConfig.adress)
     @RequestMapping(value = "${endpoint.updateskill}", method = RequestMethod.PUT)
     @ResponseBody
     public Boolean updateSkill(@RequestBody SkillDescription skillDescription){
@@ -190,7 +191,7 @@ public class SkillWS {
             else throw new UniqueFieldException(uniqueFieldErrors.getField());
         }
     }
-    @CrossOrigin
+    @CrossOrigin (origins =  ServerConfig.adress)
     @RequestMapping(value = "${endpoint.removeskill}", method = RequestMethod.POST)
     @ResponseBody
     public Boolean removeSkill(@RequestBody SkillDescription skillDescription){
@@ -221,7 +222,7 @@ public class SkillWS {
         }
     }
 
-    @CrossOrigin
+    @CrossOrigin (origins =  ServerConfig.adress)
     @RequestMapping(value = "${endpoint.skills}", method = RequestMethod.GET)
     @ResponseBody
     public List<SkillDescription> getAllSkills() {

@@ -1,5 +1,6 @@
 package com.viseo.c360.competence.services;
 
+import com.viseo.c360.competence.config.ServerConfig;
 import com.viseo.c360.competence.converters.skill.DescriptionToWish;
 import com.viseo.c360.competence.converters.skill.WishToDescription;
 import com.viseo.c360.competence.dao.WishDAO;
@@ -27,7 +28,7 @@ public class WishWS {
     @Inject
     ExceptionUtil exceptionUtil;
 
-    @CrossOrigin
+    @CrossOrigin (origins =  ServerConfig.adress)
     @RequestMapping(value = "${endpoint.addwish}", method = RequestMethod.POST)
     @ResponseBody
     public Boolean addWishes(@RequestBody WishDescription wishDescription) {
@@ -46,7 +47,7 @@ public class WishWS {
         }
     }
 
-    @CrossOrigin
+    @CrossOrigin (origins =  ServerConfig.adress)
     @RequestMapping(value = "${endpoint.wishes}", method = RequestMethod.GET)
     @ResponseBody
     public List<WishDescription> getAllWishes() {
@@ -59,7 +60,7 @@ public class WishWS {
         }
     }
 
-    @CrossOrigin
+    @CrossOrigin (origins =  ServerConfig.adress)
     @RequestMapping(value = "${endpoint.removewish}", method = RequestMethod.POST)
     @ResponseBody
     public boolean removeWish(@RequestBody WishDescription wishDescription) {
