@@ -36,7 +36,7 @@
       mounted() {
         this.getAllWishes();
         console.log('Bearer ' + this.$store.state.token);
-        axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.state.token;
+        //axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.state.token;
       },
       computed: {
           isWish(){

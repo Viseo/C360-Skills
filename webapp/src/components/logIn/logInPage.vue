@@ -212,6 +212,7 @@
           this.$store.commit('clearToken');
           this.userToken = response.data;
           this.$store.commit('setToken', this.userToken.userConnected);
+          axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.state.token;
           this.redirectIfAlreadyAuthenticated();
         }, response => {
           console.log(response);

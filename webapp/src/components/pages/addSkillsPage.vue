@@ -109,6 +109,7 @@
     mounted(){
       this.getAllSkills();
       this.getAllLinks();
+      //axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.state.token;
     },
     methods: {
       showCircleBlurOrNot(id){

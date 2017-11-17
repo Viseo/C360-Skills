@@ -109,7 +109,7 @@
       this.getAllLinks();
       this.getAllSkills();
       this.getAllExpertise();
-
+      //axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.state.token;
     },
 
     methods: {

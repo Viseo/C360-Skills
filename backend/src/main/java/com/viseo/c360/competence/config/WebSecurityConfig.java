@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -55,16 +56,29 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         httpSecurity
                 // we don't need CSRF because our token is invulnerable
                 .csrf().disable()
-                // All urls must be authenticated (filter for token always fires (/**)
+                /*
                 .authorizeRequests()
-                    .antMatchers("/login").permitAll()
-                    .anyRequest().authenticated()
-                .and()
-                .formLogin().loginPage("/login")
-                .and()
+                    .antMatchers(HttpMethod.OPTIONS).permitAll()
+                    .and()
+                    */
+                .authorizeRequests()
+                //The http.antMatcher states that this HttpSecurity will only be applicable to URLs that start with /api/
+                    .antMatchers("/api/**").authenticated()
+                    .and()
+
+                .authorizeRequests()
+                    .anyRequest().permitAll()
+                    .and()
+
+
+
+                .formLogin()
+                    .loginPage("/login").permitAll()
+                    .and()
                 // Call our errorHandler if authentication/authorisation fails
-                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
-                .and()
+                .exceptionHandling()
+                    .authenticationEntryPoint(unauthorizedHandler)
+                    .and()
                 // don't create session
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         // Custom JWT based security filter
@@ -76,6 +90,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/api/user");
+
+        web.ignoring().antMatchers("/api/user/**","/api/sendtoken/**");
+        web.ignoring().antMatchers(HttpMethod.OPTIONS);
+
+        //web.ignoring().anyRequest();
     }
+
 }
