@@ -34,7 +34,7 @@ public class LinkWS {
     @Inject
     ExceptionUtil exceptionUtil;
 
-    @CrossOrigin (origins =  ServerConfig.adress)
+    @CrossOrigin (origins =  ServerConfig.address)
     @RequestMapping(value = "${endpoint.addlink}", method = RequestMethod.POST)
     @ResponseBody
     public Boolean addLink(@RequestBody LinkDescription linkDescription){
@@ -56,7 +56,7 @@ public class LinkWS {
     }
 
 
-    @CrossOrigin (origins =  ServerConfig.adress)
+    @CrossOrigin (origins =  ServerConfig.address)
     @RequestMapping(value = "${endpoint.removelink}", method = RequestMethod.POST)
     @ResponseBody
     public Boolean removeLink(@RequestBody LinkDescription linkDescription){
@@ -70,7 +70,7 @@ public class LinkWS {
         }
     }
 
-    @CrossOrigin (origins =  ServerConfig.adress)
+    @CrossOrigin (origins =  ServerConfig.address)
     @RequestMapping(value = "${endpoint.links}", method = RequestMethod.GET)
     @ResponseBody
     public List<LinkDescription> getAllLinks() {

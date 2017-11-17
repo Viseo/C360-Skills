@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.IOException;
 import java.net.URL;
-@CrossOrigin (origins =  ServerConfig.adress)
+@CrossOrigin (origins =  ServerConfig.address)
 @WebServlet("/fileUpload")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
         maxFileSize = 1024 * 1024 * 5, // 5 MB

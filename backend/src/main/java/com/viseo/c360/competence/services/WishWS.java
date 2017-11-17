@@ -28,7 +28,7 @@ public class WishWS {
     @Inject
     ExceptionUtil exceptionUtil;
 
-    @CrossOrigin (origins =  ServerConfig.adress)
+    @CrossOrigin (origins =  ServerConfig.address)
     @RequestMapping(value = "${endpoint.addwish}", method = RequestMethod.POST)
     @ResponseBody
     public Boolean addWishes(@RequestBody WishDescription wishDescription) {
@@ -47,7 +47,7 @@ public class WishWS {
         }
     }
 
-    @CrossOrigin (origins =  ServerConfig.adress)
+    @CrossOrigin (origins =  ServerConfig.address)
     @RequestMapping(value = "${endpoint.wishes}", method = RequestMethod.GET)
     @ResponseBody
     public List<WishDescription> getAllWishes() {
@@ -60,7 +60,7 @@ public class WishWS {
         }
     }
 
-    @CrossOrigin (origins =  ServerConfig.adress)
+    @CrossOrigin (origins =  ServerConfig.address)
     @RequestMapping(value = "${endpoint.removewish}", method = RequestMethod.POST)
     @ResponseBody
     public boolean removeWish(@RequestBody WishDescription wishDescription) {

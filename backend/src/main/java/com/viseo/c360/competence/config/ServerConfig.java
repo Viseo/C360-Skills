@@ -6,5 +6,5 @@ package com.viseo.c360.competence.config;
 
 public class ServerConfig {
     //indicates the front nodeJs port
-    public static final String adress = "http://localhost:8081";
+    public static final String address = "http://localhost:8081";
 }

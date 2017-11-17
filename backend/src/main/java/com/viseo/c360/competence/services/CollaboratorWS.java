@@ -192,7 +192,7 @@ public class CollaboratorWS {
     }
 
     //public final String nVar = "http://localhost:8081";
-    @CrossOrigin (origins =  ServerConfig.adress)
+    @CrossOrigin (origins =  ServerConfig.address)
     @RequestMapping(value = "${endpoint.user}", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, String> getUserByLoginPassword(@RequestBody CollaboratorDescription myCollaboratorDescription) {
@@ -379,7 +379,7 @@ public class CollaboratorWS {
         mapUserCache.put(token, user);
     }
 
-    @CrossOrigin (origins =  ServerConfig.adress)
+    @CrossOrigin (origins =  ServerConfig.address)
     @RequestMapping(value = "${endpoint.getuserrole}", method = RequestMethod.POST)
     @ResponseBody
     public boolean checkIsAdminAlreadyConnected(@RequestBody String thisToken) {
@@ -391,7 +391,7 @@ public class CollaboratorWS {
         }
     }
 
-    @CrossOrigin (origins =  ServerConfig.adress)
+    @CrossOrigin (origins =  ServerConfig.address)
     @RequestMapping(value = "${endpoint.isconnected}", method = RequestMethod.POST)
     @ResponseBody
     public String checkIsAlreadyConnected(@RequestBody String thisToken) {
@@ -414,7 +414,7 @@ public class CollaboratorWS {
         }
     }
 
-    @CrossOrigin (origins =  ServerConfig.adress)
+    @CrossOrigin (origins =  ServerConfig.address)
     @RequestMapping(value = "${endpoint.userdisconnect}", method = RequestMethod.POST)
     @ResponseBody
     public Boolean deleteDisconnectedUserFromCache(@RequestBody String token) {
@@ -441,7 +441,7 @@ public class CollaboratorWS {
             return true;
     }
 
-    @CrossOrigin (origins =  ServerConfig.adress)
+    @CrossOrigin (origins =  ServerConfig.address)
     @RequestMapping(value = "${endpoint.collaborators}", method = RequestMethod.POST)
     @ResponseBody
     public CollaboratorDescription addCollaborator(@RequestBody CollaboratorDescription collaboratorDescription) {
@@ -512,7 +512,7 @@ public class CollaboratorWS {
         }
     }
 
-    @CrossOrigin (origins =  ServerConfig.adress)
+    @CrossOrigin (origins =  ServerConfig.address)
     @RequestMapping(value = "${endpoint.updatecollaborator}", method = RequestMethod.PUT)
     @ResponseBody
     public Map<String, CollaboratorDescription> updateCollaborator(@RequestBody CollaboratorDescription collaborator) {
@@ -540,7 +540,7 @@ public class CollaboratorWS {
         }
     }
 
-    @CrossOrigin (origins =  ServerConfig.adress)
+    @CrossOrigin (origins =  ServerConfig.address)
     @RequestMapping(value = "${endpoint.collaborators}", method = RequestMethod.GET)
     @ResponseBody
     public List<CollaboratorIdentity> getAllCollaborators() {
@@ -552,7 +552,7 @@ public class CollaboratorWS {
         }
     }
 
-    @CrossOrigin (origins =  ServerConfig.adress)
+    @CrossOrigin (origins =  ServerConfig.address)
     @RequestMapping(value = "${endpoint.collaboratorbyid}", method = RequestMethod.GET)
     @ResponseBody
     public CollaboratorIdentity getCollaboratorById(@PathVariable Long collab_id) {
@@ -564,7 +564,7 @@ public class CollaboratorWS {
         }
     }
 
-    @CrossOrigin (origins =  ServerConfig.adress)
+    @CrossOrigin (origins =  ServerConfig.address)
     @RequestMapping(value = "${endpoint.collabdescriptionbyid}", method = RequestMethod.GET)
     @ResponseBody
     public CollaboratorDescription getCollabDescriptionById(@PathVariable Long collab_id) {
@@ -578,7 +578,7 @@ public class CollaboratorWS {
 
 
     //Update Collaborator Password
-    @CrossOrigin (origins =  ServerConfig.adress)
+    @CrossOrigin (origins =  ServerConfig.address)
     @RequestMapping(value = "${endpoint.collaboratorspassword}", method = RequestMethod.PUT)
     @ResponseBody
     public CollaboratorDescription updateCollaboratorPassword(@PathVariable String collaboratorPassword, @PathVariable String collabId) {
@@ -593,7 +593,7 @@ public class CollaboratorWS {
     }
 
     //Send Collaborator Email
-    @CrossOrigin (origins =  ServerConfig.adress)
+    @CrossOrigin (origins =  ServerConfig.address)
     @RequestMapping(value = "${endpoint.collaboratorsemailpassword}", method = RequestMethod.POST)
     @ResponseBody
     public void sendCollaboratorEmail(@PathVariable String collaboratorId) {
@@ -612,7 +612,7 @@ public class CollaboratorWS {
         }
     }
 
-    @CrossOrigin (origins =  ServerConfig.adress)
+    @CrossOrigin (origins =  ServerConfig.address)
     @RequestMapping(value = "${endpoint.expertise}", method = RequestMethod.PUT)
     @ResponseBody
     public ExpertiseDescription updateExpertise(@RequestBody ExpertiseDescription expertiseDescription) {
@@ -627,7 +627,7 @@ public class CollaboratorWS {
         }
     }
 
-    @CrossOrigin (origins =  ServerConfig.adress)
+    @CrossOrigin (origins =  ServerConfig.address)
     @RequestMapping(value = "${endpoint.getcollabexpertises}", method = RequestMethod.GET)
     @ResponseBody
     public List<ExpertiseDescription> getAllExpertise(@PathVariable Long collaboratorId) {
@@ -639,7 +639,7 @@ public class CollaboratorWS {
         }
     }
 
-    @CrossOrigin (origins =  ServerConfig.adress)
+    @CrossOrigin (origins =  ServerConfig.address)
     @RequestMapping(value = "${endpoint.collaboratorsexpertises}", method = RequestMethod.POST)
     @ResponseBody
     public List<ExpertiseDescription> getCollabsByExpertises(@RequestBody List<ExpertiseDescription> list) {
@@ -652,7 +652,7 @@ public class CollaboratorWS {
         }
     }
 
-    @CrossOrigin (origins =  ServerConfig.adress)
+    @CrossOrigin (origins =  ServerConfig.address)
     @RequestMapping(value = "${endpoint.expertisebycollaborator}", method = RequestMethod.POST)
     @ResponseBody
     public List<ExpertiseDescription> getInductedExpertisesByCollaborators(@RequestBody List<ExpertiseDescription> list) {

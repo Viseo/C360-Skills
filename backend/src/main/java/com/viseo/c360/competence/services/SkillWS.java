@@ -160,7 +160,7 @@ public class SkillWS {
         }
     }
 
-    @CrossOrigin (origins =  ServerConfig.adress)
+    @CrossOrigin (origins =  ServerConfig.address)
     @RequestMapping(value = "${endpoint.addskill}", method = RequestMethod.POST)
     @ResponseBody
     public Boolean addSkill(@RequestBody SkillDescription skillDescription){
@@ -178,7 +178,7 @@ public class SkillWS {
         }
     }
 
-    @CrossOrigin (origins =  ServerConfig.adress)
+    @CrossOrigin (origins =  ServerConfig.address)
     @RequestMapping(value = "${endpoint.updateskill}", method = RequestMethod.PUT)
     @ResponseBody
     public Boolean updateSkill(@RequestBody SkillDescription skillDescription){
@@ -191,7 +191,7 @@ public class SkillWS {
             else throw new UniqueFieldException(uniqueFieldErrors.getField());
         }
     }
-    @CrossOrigin (origins =  ServerConfig.adress)
+    @CrossOrigin (origins =  ServerConfig.address)
     @RequestMapping(value = "${endpoint.removeskill}", method = RequestMethod.POST)
     @ResponseBody
     public Boolean removeSkill(@RequestBody SkillDescription skillDescription){
@@ -222,7 +222,7 @@ public class SkillWS {
         }
     }
 
-    @CrossOrigin (origins =  ServerConfig.adress)
+    @CrossOrigin (origins =  ServerConfig.address)
     @RequestMapping(value = "${endpoint.skills}", method = RequestMethod.GET)
     @ResponseBody
     public List<SkillDescription> getAllSkills() {
