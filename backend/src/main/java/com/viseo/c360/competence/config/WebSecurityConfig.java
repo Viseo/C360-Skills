@@ -61,20 +61,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                     .antMatchers(HttpMethod.OPTIONS).permitAll()
                     .and()
                     */
+
                 .authorizeRequests()
                 //The http.antMatcher states that this HttpSecurity will only be applicable to URLs that start with /api/
                     .antMatchers("/api/**").authenticated()
                     .and()
 
+
                 .authorizeRequests()
                     .anyRequest().permitAll()
                     .and()
 
-
-
                 .formLogin()
                     .loginPage("/login").permitAll()
                     .and()
+
                 // Call our errorHandler if authentication/authorisation fails
                 .exceptionHandling()
                     .authenticationEntryPoint(unauthorizedHandler)
@@ -88,13 +89,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         httpSecurity.headers().cacheControl();
     }
 
+
     @Override
     public void configure(WebSecurity web) throws Exception {
 
-        web.ignoring().antMatchers("/api/user/**","/api/sendtoken/**");
-        web.ignoring().antMatchers(HttpMethod.OPTIONS);
+        web.ignoring().antMatchers("/api/user/**", "/api/sendtoken/**");
+        web.ignoring().antMatchers(HttpMethod.OPTIONS, "/api/**");
 
         //web.ignoring().anyRequest();
     }
+
 
 }

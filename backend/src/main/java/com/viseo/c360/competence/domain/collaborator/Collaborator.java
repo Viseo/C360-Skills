@@ -104,14 +104,6 @@ public class Collaborator extends BaseEntity {
         this.isAdmin = admin;
     }
 
-    public Boolean getAdmin() {
-        return isAdmin;
-    }
-
-    public void setAdmin(Boolean admin) {
-        isAdmin = admin;
-    }
-
     public String getFunction() {
         return function;
     }

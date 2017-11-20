@@ -82,15 +82,6 @@ public class CollaboratorDescription extends BaseDTO {
         return this;
     }
 
-    public Boolean getAdmin() {
-        return isAdmin;
-    }
-
-    public CollaboratorDescription setAdmin(Boolean admin) {
-        isAdmin = admin;
-        return this;
-    }
-
     public String getFunction() {
         return function;
     }
