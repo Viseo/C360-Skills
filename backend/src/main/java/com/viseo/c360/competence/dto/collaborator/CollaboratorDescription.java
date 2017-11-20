@@ -18,14 +18,14 @@ public class CollaboratorDescription extends BaseDTO {
     String firstName;
     String email;
     String password;
-    Boolean isAdmin;
+    Boolean admin;
     String function;
     String businessUnit;
     Boolean defaultPicture;
     Date lastUpdateDate;
 
     public CollaboratorDescription() {
-        this.isAdmin = false;
+        this.admin = false;
     }
 
     public String getPersonnalIdNumber() {
@@ -73,12 +73,12 @@ public class CollaboratorDescription extends BaseDTO {
         return this;
     }
 
-    public Boolean getIsAdmin() {
-        return isAdmin;
+    public Boolean getAdmin() {
+        return admin;
     }
 
-    public CollaboratorDescription setIsAdmin(Boolean admin) {
-        this.isAdmin = admin;
+    public CollaboratorDescription setAdmin(Boolean admin) {
+        this.admin = admin;
         return this;
     }
 
