@@ -84,6 +84,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                     return false;
                 }
 
+                if (new AntPathRequestMatcher("/api/collaborateurs").matches(request)
+                        && Pattern.compile("^POST$").matcher(request.getMethod()).matches())
+                {
+                    // allow register action no token
+                    return false;
+                }
+
                 return true;
             } // method matches
 
@@ -93,7 +100,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 // we don't need CSRF because our token is invulnerable
                 .csrf().disable()
 
-                .requestMatcher(requestMatcher).authorizeRequests().and()
+                .requestMatcher(requestMatcher).authorizeRequests()
+                    .and()
                /* .antMatcher("/api/**").authorizeRequests().anyRequest().authenticated()
                     .and()
 

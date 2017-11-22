@@ -389,6 +389,7 @@
           this.collaboratorToLogIn = JSON.parse(JSON.stringify(this.user));
           axios.post(config.server + "/api/user", this.collaboratorToLogIn).then(response => {
             this.$store.commit('setToken', response.data['userConnected']);
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data['userConnected'];
             router.push("/showSkillsCollab");
             console.log(response);
           }, response => {
