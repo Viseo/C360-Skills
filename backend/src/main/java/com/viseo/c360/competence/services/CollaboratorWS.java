@@ -77,16 +77,20 @@ public class CollaboratorWS {
     @Value("${jwt.secret}")
     String secret;
 
-    String compactJws;
+    private static final Map<String, CollaboratorDescription> mapUserCache = new ConcurrentHashMap<>();
+    private String compactJws;
     private boolean compteExisteInOtherApp = false;
 
     private String createSecurityToken(CollaboratorDescription user){
         return Jwts.builder()
                 .setSubject(user.getEmail())
+                .claim("firstName", user.getFirstName())
+                .claim("lastName", user.getLastName())
                 .claim("roles", user.getAdmin())
+                .claim("email", user.getEmail())
+                .claim("version", user.getVersion())
                 .claim("id", user.getId())
                 .claim("defaultPicture", user.getDefaultPicture())
-                //.signWith(SignatureAlgorithm.HS512, generateKey())
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
@@ -199,7 +203,7 @@ public class CollaboratorWS {
         CollaboratorDescription externalDescription = checkIfCollaboratorExistElsewhere(myCollaboratorDescription);
         CollaboratorDescription user = handleReceivedCollaborator(myCollaboratorDescription,externalDescription);
         compactJws = createSecurityToken(user);
-        this.putUserInCache(compactJws, user);
+        this.mapUserCache.put(compactJws, user);
         Map<String, String> currentUserMap = new HashMap<>();
         currentUserMap.put("userConnected", compactJws);
         return currentUserMap;
@@ -373,11 +377,6 @@ public class CollaboratorWS {
         var2.close();*//*
     }*/
 
-    private static final Map<String, CollaboratorDescription> mapUserCache = new ConcurrentHashMap<>();
-
-    private void putUserInCache(String token, CollaboratorDescription user) {
-        mapUserCache.put(token, user);
-    }
 
     @CrossOrigin (origins =  ServerConfig.address)
     @RequestMapping(value = "${endpoint.getuserrole}", method = RequestMethod.POST)
@@ -517,20 +516,10 @@ public class CollaboratorWS {
     @ResponseBody
     public Map<String, CollaboratorDescription> updateCollaborator(@RequestBody CollaboratorDescription collaborator) {
         try {
-            Collaborator collaboratorToUpdate = collaboratorDAO.updateCollaborator(new DescriptionToCollaborator().convert(collaborator));
-            Key key = MacProvider.generateKey();
-            String compactJws = Jwts.builder()
-                    .claim("firstName", collaborator.getFirstName())
-                    .claim("lastName", collaborator.getLastName())
-                    .claim("isAdmin", collaborator.getAdmin())
-                    .claim("email", collaborator.getEmail())
-                    .claim("version", collaborator.getVersion())
-                    .claim("id", collaborator.getId())
-                    .claim("defaultPicture", collaborator.getDefaultPicture())
-                    .signWith(SignatureAlgorithm.HS512, key)
-                    .compact();
+            collaboratorDAO.updateCollaborator(new DescriptionToCollaborator().convert(collaborator));
+            String compactJws = this.createSecurityToken(collaborator);
             Map currentUserMap = new HashMap<>();
-            putUserInCache(compactJws, collaborator);
+            this.mapUserCache.put(compactJws, collaborator);
             currentUserMap.put("userConnected", compactJws);
             return currentUserMap;
         } catch (PersistenceException pe) {

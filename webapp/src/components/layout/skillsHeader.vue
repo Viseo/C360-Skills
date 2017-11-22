@@ -114,8 +114,8 @@
       },
 
       firstName: function () {
-        if (this.$store.getters.isAuthenticated && this.$store.getters.collaboratorLoggedIn.sub) {
-          return this.$store.getters.collaboratorLoggedIn.sub;
+        if (this.$store.getters.isAuthenticated && this.$store.state.collaboratorLoggedIn.firstName) {
+          return this.$store.state.collaboratorLoggedIn.firstName;
         }
         else {
           return null;
