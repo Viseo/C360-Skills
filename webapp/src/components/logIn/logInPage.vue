@@ -184,6 +184,8 @@
         if(d != -1){
         var token = window.location.href.slice(d+6,window.location.href.length);
         if(token != null && token!= 'undefined'){
+          axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+          console.log(token);
           axios.post(config.server + "/api/getuserifalreadyconnectedelsewhere",token).then((response) => {
               this.$store.commit('clearToken');
           this.userToken = response.data;

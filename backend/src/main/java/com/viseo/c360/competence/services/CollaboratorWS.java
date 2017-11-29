@@ -133,6 +133,7 @@ public class CollaboratorWS {
         }
     }
 
+    @CrossOrigin (origins =  ServerConfig.address)
     @RequestMapping(value = "${endpoint.getuserifalreadyconnectedelsewhere}", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, String> getUserIfAlreadyConnectedElseWhere(@RequestBody String theToken){

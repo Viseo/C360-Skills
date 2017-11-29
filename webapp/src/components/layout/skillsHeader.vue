@@ -125,12 +125,14 @@
     methods: {
       goToTrainingMicroservice(){
         var tempToken = this.$store.getters.token;
-        /*this.$store.commit('resetStore');
-        this.$store.commit('clearToken');
-        console.log("QQQQQQQQQQQQQQQQQQQQQ");*/
-        window.location.replace("http://localhost:8080/#/login?user=" + tempToken);
+        window.location.replace(config.formationServer + tempToken);
       },
-
+/*
+      goToCVMicroservice(){
+        var tempToken = this.$store.getters.token;
+        window.location.replace("http://localhost:8090/#/login?user=" + tempToken);
+      },
+*/
       setDisconnectedToTrue(){
         this.disconnect = true;
       },
