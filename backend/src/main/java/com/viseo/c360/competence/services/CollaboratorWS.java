@@ -282,7 +282,8 @@ public class CollaboratorWS {
                             deliveryTag = consumerResponse.getEnvelope().getDeliveryTag();
                             channel.basicAck(deliveryTag, true);
                             // check if the right msg type
-                            JSONObject jo = (JSONObject) new JSONParser().parse(new String(consumerResponse.getBody(), StandardCharsets.UTF_8));
+                            JSONObject jo = (JSONObject) new JSONParser()
+                                    .parse(new String(consumerResponse.getBody(), StandardCharsets.UTF_8));
                             RabbitMsg rbtMsg = ResolveMsgFactory.getFactory().get(jo.get("type")).apply(jo);
                             if(rbtMsg.getType() == MessageType.CONNECTION){
                                 ConnectionMessage rabbitMessageResponse = new ObjectMapper().readValue(consumerResponse.getBody(), ConnectionMessage.class);
@@ -331,11 +332,17 @@ public class CollaboratorWS {
             }
             else
                 return null;
-        } else {
+        }
+        else {
             //  COMPLET
             CollaboratorDescription storedcollaboratorDescription = new CollaboratorToDescription().convert(storedCollaborator);
 
-            if(receivedCollab == null || receivedCollab.getFirstName() == null || (storedcollaboratorDescription.getPassword().equals(receivedCollab.getPassword()) && (storedcollaboratorDescription.getPassword().equals(myCollaboratorDescription.getPassword()))) || (storedcollaboratorDescription.getLastUpdateDate().after(receivedCollab.getLastUpdateDate()) && storedcollaboratorDescription.getPassword().equals(myCollaboratorDescription.getPassword()))){
+            if(receivedCollab == null
+                    || receivedCollab.getFirstName() == null
+                    || (storedcollaboratorDescription.getPassword().equals(receivedCollab.getPassword())
+                        && storedcollaboratorDescription.getPassword().equals(myCollaboratorDescription.getPassword()))
+                    || (storedcollaboratorDescription.getLastUpdateDate().after(receivedCollab.getLastUpdateDate())
+                        && storedcollaboratorDescription.getPassword().equals(myCollaboratorDescription.getPassword()))){
                 System.out.println("MOT DE PASSE IDENTIQUE OU PLUS RECENT");
                 return storedcollaboratorDescription;
             }
@@ -345,7 +352,6 @@ public class CollaboratorWS {
             }
             else {
                 System.out.println("MOT DE PASSE MOINS RECENT");
-
                 return null;
             }
 

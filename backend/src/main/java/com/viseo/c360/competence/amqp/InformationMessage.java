@@ -1,6 +1,5 @@
 package com.viseo.c360.competence.amqp;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.viseo.c360.competence.dto.skill.SkillDescription;
 
 import javax.inject.Inject;

@@ -23,12 +23,6 @@ public class RequestProducerConfig {
         return connectionFactory;
     }
 
-
-    @Bean
-    public MessageConverter jsonMessageConverter(){
-        return new JsonMessageConverter();
-    }
-
     @Bean
     public FanoutExchange fanoutExchange() {
         return new FanoutExchange("amq.fanout");
@@ -44,6 +38,11 @@ public class RequestProducerConfig {
     }
 
     @Bean
+    public Queue fanoutQueue3() {
+        return new Queue("fanout-queue3", false);
+    }
+
+    @Bean
     public Queue responseCompetence() {
         return new Queue("response-competence", false);
     }
@@ -51,6 +50,11 @@ public class RequestProducerConfig {
     @Bean
     public Queue responseFormation() {
         return new Queue("response-formation", false);
+    }
+
+    @Bean
+    public Queue responseCV() {
+        return new Queue("response-cv", false);
     }
 
     @Bean
@@ -69,7 +73,10 @@ public class RequestProducerConfig {
         return BindingBuilder.bind(fanoutQueue2).to(fanoutExchange);
     }
 
-
+    @Bean
+    public Binding binding3(FanoutExchange fanoutExchange, Queue fanoutQueue3) {
+        return BindingBuilder.bind(fanoutQueue3).to(fanoutExchange);
+    }
 
     @Bean
     public SimpleMessageListenerContainer listenerContainer() {

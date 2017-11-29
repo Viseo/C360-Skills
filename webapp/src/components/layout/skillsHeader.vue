@@ -89,7 +89,6 @@
     },
 
     mounted() {
-      //axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.state.token;
       if (this.$route.name != "login" && localStorage.getItem("token")) {
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem("token");
         this.$store.commit('setTokenFromLocalStorage');

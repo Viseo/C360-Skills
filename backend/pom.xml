@@ -55,12 +55,6 @@
             <version>1.5.5</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.rabbitmq</groupId>
-            <artifactId>amqp-client</artifactId>
-            <version>4.1.1</version>
-        </dependency>
-
         <!-- TESTING -->
         <dependency>
             <groupId>junit</groupId>
@@ -104,11 +98,7 @@
             <version>4.1.1</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <version>1.9.13</version>
-        </dependency>
+
 
         <!-- SPRING -->
         <dependency>
