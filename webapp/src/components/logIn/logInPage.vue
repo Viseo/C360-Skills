@@ -187,10 +187,10 @@
           axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
           console.log(token);
           axios.post(config.server + "/api/getuserifalreadyconnectedelsewhere",token).then((response) => {
-              this.$store.commit('clearToken');
-          this.userToken = response.data;
-          this.$store.commit('setToken', this.userToken.userConnected);
-          this.redirectIfAlreadyAuthenticated();
+            this.$store.commit('clearToken');
+            this.userToken = response.data;
+            this.$store.commit('setToken', this.userToken.userConnected);
+            this.redirectIfAlreadyAuthenticated();
         }, response => {
             console.log(response);
           });

@@ -141,7 +141,7 @@ public class CollaboratorWS {
             ConnectionMessage request = new ConnectionMessage();
             UUID personalMessageSequence = UUID.randomUUID();
             request.setSequence(personalMessageSequence)
-                    .setToken(theToken.substring(0, theToken.length() - 1))
+                    .setToken(theToken.substring(0, theToken.length() - 1)) //why there's a '=' at the end?
                     .setMessageDate(new Date())
                     .setNameFileResponse(responseCompetence.getName());
             ObjectMapper mapper = new ObjectMapper();

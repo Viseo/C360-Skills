@@ -3,7 +3,8 @@
  */
 var config = {
   server : ' http://localhost:8083',
-  formationServer : 'http://localhost:8080/#/login?user='
+  formationServer : 'http://localhost:8080/#/login?user=',
+  cvServer : 'http://localhost:8090/#/login?user='
 };
 
 export default config;

@@ -46,7 +46,7 @@
                     <li>
                       <span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img
                         src="../../assets/microservices_icon/icon_cv.png"
-                        class="text-center  icon-app"><p>GCv</p></span>
+                        class="text-center icon-app" @click="goToCVMicroservice()"><p>GCv</p></span>
                       <!--<span class="col-lg-5 col-md-6 col-sm-6 col-xs-6"><img-->
                       <!--src="../../assets/microservices_icon/icon_competence.png"-->
                       <!--class="text-center icon-app"><p>GCon</p></span>-->
@@ -124,15 +124,13 @@
     },
     methods: {
       goToTrainingMicroservice(){
-        var tempToken = this.$store.getters.token;
-        window.location.replace(config.formationServer + tempToken);
+        window.location.replace(config.formationServer + this.$store.getters.token);
       },
-/*
+
       goToCVMicroservice(){
-        var tempToken = this.$store.getters.token;
-        window.location.replace("http://localhost:8090/#/login?user=" + tempToken);
+        window.location.replace(config.cvServer + this.$store.getters.token);
       },
-*/
+
       setDisconnectedToTrue(){
         this.disconnect = true;
       },
