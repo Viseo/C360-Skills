@@ -72,7 +72,7 @@ public class ConsumerMessageHandler {
                             ObjectMapper mapper = new ObjectMapper();
                             try{
                                 rabbitTemplate.convertAndSend(connectionMessageResponse.getNameFileResponse(), mapper.writeValueAsString(connectionMessageResponse));
-                                System.out.println("Collaborateur envoyé !");
+                                System.out.println("Collaborateur envoyé : " + mapper.writeValueAsString(connectionMessageResponse));
                             }catch (JsonProcessingException e){
                                 throw new RuntimeException(e);
                             }

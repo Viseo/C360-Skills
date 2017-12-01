@@ -107,6 +107,7 @@ public class CollaboratorWS {
                             .setMessageDate(new Date())
                             .setSequence(message.getSequence());
                     ObjectMapper mapper = new ObjectMapper();
+                    System.out.println("Collaborateur envoyé : " + mapper.writeValueAsString(response));
                     rabbitTemplate.convertAndSend(message.getNameFileResponse(), mapper.writeValueAsString(response));
                 }
             } else if (msg.getType() == MessageType.DISCONNECTION) {
@@ -347,7 +348,8 @@ public class CollaboratorWS {
                 System.out.println("MOT DE PASSE IDENTIQUE OU PLUS RECENT");
                 return storedcollaboratorDescription;
             }
-            else if( (myCollaboratorDescription.getPassword().equals(receivedCollab.getPassword())) && (storedcollaboratorDescription.getLastUpdateDate().before(receivedCollab.getLastUpdateDate()))){
+            else if( (myCollaboratorDescription.getPassword().equals(receivedCollab.getPassword()))
+                    && (storedcollaboratorDescription.getLastUpdateDate().before(receivedCollab.getLastUpdateDate()))){
                 storedcollaboratorDescription = updateCollaboratorPassword(receivedCollab.getPassword(),String.valueOf(storedcollaboratorDescription.getId()));
                 return storedcollaboratorDescription;
             }
