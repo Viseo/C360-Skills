@@ -81,6 +81,10 @@ public class CollaboratorWS {
     private String compactJws;
     private boolean compteExisteInOtherApp = false;
 
+    public static Map<String, CollaboratorDescription> getMapUserCache() {
+        return mapUserCache;
+    }
+
     private String createSecurityToken(CollaboratorDescription user){
         return Jwts.builder()
                 .setSubject(user.getEmail())
@@ -210,14 +214,6 @@ public class CollaboratorWS {
         currentUserMap.put("userConnected", compactJws);
         return currentUserMap;
     }
-
-
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    @ResponseBody
-    public void testApiSecurity () {
-        System.out.println("LOL!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-    }
-
 
 
     void sleep() {
@@ -430,7 +426,7 @@ public class CollaboratorWS {
         if (collaborator != null){
             try {
             /* log out for this microservice */
-                mapUserCache.remove(token);
+                mapUserCache.remove(token.substring(0, token.length()-1));
                 compactJws = null;
             /* send disconnection request for other microservices */
                 DisconnectionMessage msg = new DisconnectionMessage();
@@ -467,7 +463,7 @@ public class CollaboratorWS {
             e.printStackTrace();
         }
 
-        ConnectionMessage connectedUser = this.rabbitTemplate.execute(new ChannelCallback<ConnectionMessage>() {
+        this.rabbitTemplate.execute(new ChannelCallback<ConnectionMessage>() {
 
             @Override
             public ConnectionMessage doInRabbit(final Channel channel) throws Exception {
